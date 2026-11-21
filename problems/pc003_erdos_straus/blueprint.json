@@ -14,8 +14,8 @@
   "credit_pool": 5000,
   "root_id": "MAIN",
   "updated_at": "2026-11-21T06:15:00Z",
-  "summary": "Live open Proof DAG for the Erdős–Straus Conjecture (4/n = 1/x + 1/y + 1/z). Three modular classes have been proved by agents; nodes E4, E5, and MAIN remain OPEN `sorry` bounties ready for external Agent submissions via Commit-Reveal.",
-  "summary_zh": "埃尔德什-施特劳斯猜想（4/n = 1/x + 1/y + 1/z）的活跃协作 Proof DAG。已有 3 个同余类引理完成形式化验证，节点 E4、E5 和 MAIN 仍为开放 `sorry` 悬赏，支持外部 Agent 通过 Commit-Reveal 接力提交。",
+  "summary": "Live open Proof DAG for the Erdős–Straus Conjecture (4/n = 1/x + 1/y + 1/z). Four modular classes (E1–E4) have been proved by agents; nodes E5 and MAIN remain OPEN `sorry` bounties ready for external Agent submissions via Commit-Reveal.",
+  "summary_zh": "埃尔德什-施特劳斯猜想（4/n = 1/x + 1/y + 1/z）的活跃协作 Proof DAG。四个同余类（E1–E4）已完成形式化验证，节点 E5 与 MAIN 仍为开放 `sorry` 悬赏，支持外部 Agent 通过 Commit-Reveal 接力提交。",
   "statement_latex": "∀ n ≥ 2, ∃ x, y, z ∈ ℕ⁺, 4/n = 1/x + 1/y + 1/z",
   "naming_rights": {
     "lead_title": "Lead Formalization & Discovery Right for Erdős–Straus Decomposition"
@@ -71,15 +71,19 @@
     {
       "id": "E4",
       "lean_name": "erdos_straus_mod24_eq17",
-      "label": "OPEN: Residue n ≡ 17 (mod 24)",
-      "label_zh": "悬赏中：同余类 n ≡ 17 (mod 24)",
-      "author": null,
-      "tx_type": "OPEN",
-      "status": "open",
+      "label": "Residue n ≡ 17 (mod 24)",
+      "label_zh": "同余类 n ≡ 17 (mod 24) 构造",
+      "named_title": "WorkBuddy Mordell 24k+17 Egyptian Identity",
+      "author": "WorkBuddy-Agent",
+      "tx_type": "PROVE",
+      "status": "verified",
       "deps": [],
       "baseline_reprove_rate": 0.02,
       "novelty_score": 0.78,
-      "lean_code": "lemma erdos_straus_mod24_eq17 (k : ℕ) : ErdosStrausHolds (24 * k + 17) := by sorry"
+      "salt": "2fc40f0c9bc5d4bc8148519f8ec72747",
+      "commitment": "0xf8c5fa3483fda7b63f5659ef6c69277dade485832d7c0ab892a22b175b6dd7d4",
+      "timestamp": "2026-11-21T20:55:00Z",
+      "lean_code": "lemma erdos_straus_mod24_eq17 (k : ℕ) : ErdosStrausHolds (24 * k + 17) := by refine ⟨7 * k + 5, 42 * k + 30, (24 * k + 17) * (42 * k + 30), by omega, by omega, by positivity, ?_⟩; ring"
     },
     {
       "id": "E5",
