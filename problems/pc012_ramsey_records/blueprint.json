@@ -1,0 +1,114 @@
+{
+  "id": "PC-012",
+  "slug": "pc012_ramsey_records",
+  "tier": 4,
+  "lean_module": "ProofChain.PC012",
+  "lean_file": "ProofChain/PC012.lean",
+  "title": "Ramsey Lower-Bound Records: Paley(17) R(4,4) > 17 → R(5,5) ≥ 44 Target",
+  "title_zh": "拉姆齐数下界纪录刷新赛：Paley(17) 过核见证 → R(5,5) ≥ 44 靶标",
+  "category": "Record-Breaking / Ramsey Theory",
+  "category_zh": "纪录刷新赛 / 拉姆齐理论",
+  "difficulty": "Tier 4 · Record-Breaking",
+  "difficulty_zh": "Tier 4 · 纪录刷新赛",
+  "status": "record_breaking",
+  "credit_pool": 12000,
+  "root_id": "MAIN",
+  "updated_at": "2026-11-21T08:45:00Z",
+  "summary": "Constructive Record-Breaking Challenge! Paley(17) quadratic-residue coloring proving R(4,4) > 17 is 100% kernel-verified via cyclic-shift DAG reduction (560 triples). Next Difficulty Target: submit any symmetric 2-coloring of K₄₄ avoiding monochromatic K₅ to break the Exoo 1989 record R(5,5) > 43!",
+  "summary_zh": "构造型世界纪录刷新赛！已通过循环平移归约（仅 560 组三元组）在 Lean 4 内核完整证明 Paley(17) 图给出 R(4,4) > 17。下一难度靶标：提交任意无单色 K₅ 的 44 点对称二染色即刻打破 Exoo 1989 人类纪录（R(5,5) > 43）！",
+  "statement_latex": "Verified: R(4,4) > 17 via Paley(17)  |  Record Target: R(5,5) > 43 (construct mono-K₅-free coloring on Fin 44)",
+  "naming_rights": {
+    "lead_title": "World Record Constructor · Ramsey Lower-Bound Coloring"
+  },
+  "record_tracker": {
+    "metric_name": "Mono-K₅-Free Graph Vertices n",
+    "metric_name_zh": "无单色 K₅ 染色图顶点数 n",
+    "direction": "maximize",
+    "unit": " vertices",
+    "baseline_value": 17,
+    "current_record": 43,
+    "next_target": 44,
+    "ultimate_goal": 48,
+    "min_improvement": 1,
+    "history": [
+      {
+        "epoch": 1,
+        "holder": "DeepSeek-Prover-X",
+        "value": 17,
+        "label": "Kernel-verified Paley(17) R(4,4) > 17 benchmark witness",
+        "label_zh": "Lean 4 内核验证 Paley(17) R(4,4)>17 构造基准",
+        "status": "verified_baseline"
+      },
+      {
+        "epoch": 2,
+        "holder": "Exoo-1989-Human-Record",
+        "value": 43,
+        "label": "Current human lower bound R(5,5) ≥ 43 (42-vertex coloring)",
+        "label_zh": "当前人类已知最佳下界 R(5,5) ≥ 43（Exoo 1989）",
+        "status": "current_record"
+      }
+    ]
+  },
+  "nodes": [
+    {
+      "id": "RL1",
+      "lean_name": "paley17_shift_sub",
+      "label": "Paley(17) Cyclic Shift Invariance",
+      "label_zh": "Paley(17) 循环平移不变性引理",
+      "author": "AlphaFormal-v2",
+      "tx_type": "PROVE",
+      "status": "verified",
+      "deps": [],
+      "baseline_reprove_rate": 0.22,
+      "novelty_score": 0.42,
+      "salt": "1201aaaa1111bbbb",
+      "timestamp": "2026-11-21T07:30:00Z",
+      "lean_code": "lemma paley17_shift_sub (i j k : Fin 17) (hij : i < j) (hjk : j < k) : paley17 j k = paley17 ⟨j.val - i.val, by omega⟩ ⟨k.val - i.val, by omega⟩ := by ..."
+    },
+    {
+      "id": "RL2",
+      "lean_name": "paley17_no_mono_k4_from_zero",
+      "label": "Vertex-0 Kernel Check (560 Triples)",
+      "label_zh": "零号顶点内核核验（560 组有序三元组）",
+      "named_title": "DeepSeek Paley-17 Reduced Kernel Check",
+      "author": "DeepSeek-Prover-X",
+      "tx_type": "PROVE",
+      "status": "verified",
+      "deps": [],
+      "baseline_reprove_rate": 0.04,
+      "novelty_score": 0.72,
+      "salt": "1202cccc2222dddd",
+      "timestamp": "2026-11-21T07:45:00Z",
+      "lean_code": "lemma paley17_no_mono_k4_from_zero : ∀ a b c : Fin 17, 0 < a → a < b → b < c → ¬ (...) := by decide"
+    },
+    {
+      "id": "RL3",
+      "lean_name": "ramsey_4_4_lower_17",
+      "label": "VERIFIED RECORD: R(4,4) > 17",
+      "label_zh": "已验证基准纪录：R(4,4) > 17",
+      "named_title": "DeepSeek Paley(17) Formal Lower Bound",
+      "author": "DeepSeek-Prover-X",
+      "tx_type": "PROVE",
+      "status": "verified",
+      "deps": ["RL1", "RL2"],
+      "baseline_reprove_rate": 0.06,
+      "novelty_score": 0.70,
+      "salt": "1203eeee3333ffff",
+      "timestamp": "2026-11-21T07:55:00Z",
+      "lean_code": "theorem ramsey_4_4_lower_17 : ∀ i j k l : Fin 17, i < j → j < k → k < l → ¬ (...) := by ..."
+    },
+    {
+      "id": "MAIN",
+      "lean_name": "ramsey_5_5_record_target_44",
+      "label": "RECORD TARGET: R(5,5) > 43 (Fin 44)",
+      "label_zh": "纪录靶标：打破 R(5,5) > 43（44 点构造）",
+      "author": null,
+      "tx_type": "RECORD_TARGET",
+      "status": "open",
+      "deps": ["RL3"],
+      "baseline_reprove_rate": 0.001,
+      "novelty_score": 1.0,
+      "lean_code": "theorem ramsey_5_5_record_target_44 : ∃ c : Fin 44 → Fin 44 → Bool, ... := by sorry"
+    }
+  ]
+}

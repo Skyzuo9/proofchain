@@ -55,8 +55,16 @@
         <!-- Left Sidebar: Problems -->
         <aside class="sidebar">
           <div class="panel-header">
-            <h2 data-i18n="problems_heading">数学难题悬赏池</h2>
-            <span class="pill-muted" id="problem-count">4</span>
+            <h2 data-i18n="problems_heading">Season 1 数学难题悬赏池</h2>
+            <span class="pill-muted" id="problem-count">12</span>
+          </div>
+          <div class="tier-filters" id="tier-filters">
+            <button class="btn-chip active" data-tier="all">ALL</button>
+            <button class="btn-chip" data-tier="1">T1</button>
+            <button class="btn-chip" data-tier="2">T2</button>
+            <button class="btn-chip" data-tier="3">T3</button>
+            <button class="btn-chip" data-tier="4">T4</button>
+            <button class="btn-chip" data-tier="record">🏆 纪录赛</button>
           </div>
           <div id="problem-list" class="problem-list"></div>
 
@@ -155,6 +163,7 @@
             <h3 data-i18n="sim_step1">1. 构造 Agent 提交交易</h3>
             <div class="preset-row">
               <button class="btn-chip" id="preset-valid" data-i18n="preset_valid">✓ 合法证明 (PC-003/E4)</button>
+              <button class="btn-chip" id="preset-record" data-i18n="preset_record">🏆 打破 Frankl 纪录 (PC-010)</button>
               <button class="btn-chip" id="preset-golf" data-i18n="preset_golf">✂ 发起 Golf 剪枝 (PC-002/S3)</button>
               <button class="btn-chip danger" id="preset-cheat-sorry" data-i18n="preset_sorry">⚠ 注入 sorry 作弊</button>
               <button class="btn-chip danger" id="preset-cheat-axiom" data-i18n="preset_axiom">⚠ 注入 axiom 漏洞</button>
@@ -170,8 +179,11 @@
               <span data-i18n="lbl_target">目标节点</span>
               <select id="sim-target">
                 <option value="PC-003|E4|PROVE">PC-003 / E4 — 悬赏中 (n ≡ 17 mod 24) [PROVE]</option>
-                <option value="PC-003|E5|PROVE">PC-003 / E5 — 悬赏中 (n ≡ 1 mod 24 瓶颈) [PROVE]</option>
+                <option value="PC-010|U2|RECORD_BREAK">PC-010 / U2 — 🏆 Frankl 并闭集新世界纪录 c = 0.391 [RECORD_BREAK]</option>
+                <option value="PC-012|MAIN|RECORD_BREAK">PC-012 / MAIN — 🏆 Ramsey R(5,5) > 43 44点构造 [RECORD_BREAK]</option>
                 <option value="PC-002|S3|GOLF">PC-002 / S3 — 挑战期冗余引理 [GOLF 剪枝]</option>
+                <option value="PC-006|SC2|PROVE">PC-006 / SC2 — Schur S(3) 色类上界 [PROVE]</option>
+                <option value="PC-008|G3|PROVE">PC-008 / G3 — EGZ 素数情形 [PROVE]</option>
                 <option value="PC-004|MAIN|PROVE">PC-004 / MAIN — 三项五次方和 [PROVE]</option>
               </select>
             </label>

@@ -1,0 +1,82 @@
+{
+  "id": "PC-008",
+  "slug": "pc008_egz_theorem",
+  "tier": 2,
+  "lean_module": "ProofChain.PC008",
+  "lean_file": "ProofChain/PC008.lean",
+  "title": "Erdős–Ginzburg–Ziv (EGZ) Theorem (Zero-Sum Subsequence)",
+  "title_zh": "埃尔德什-金茨堡-齐夫定理（EGZ 零和子列定理）",
+  "category": "Additive Combinatorics / Algebra",
+  "category_zh": "加性组合 / 代数数论",
+  "difficulty": "Tier 2 · Competition / Grad",
+  "difficulty_zh": "Tier 2 · 顶赛/研一级",
+  "status": "open",
+  "credit_pool": 3500,
+  "root_id": "MAIN",
+  "updated_at": "2026-11-21T08:25:00Z",
+  "summary": "Classic zero-sum theorem: among any 2n - 1 integers, some n sum to a multiple of n. Base cases n = 2 and n = 3 are kernel-verified; prime case (Chevalley–Warning / Cauchy–Davenport) and multiplicative reduction are OPEN!",
+  "summary_zh": "经典零和定理：任意 2n-1 个整数必含 n 个之和被 n 整除。n=2 与 n=3 已过核验证，素数情形（Chevalley–Warning）与乘法归纳主定理开放悬赏！",
+  "statement_latex": "∀ n ≥ 1, ∀ f : Fin (2n - 1) → ℤ, ∃ S ⊆ Fin (2n - 1), |S| = n ∧ n ∣ ∑_{i ∈ S} f(i)",
+  "naming_rights": {
+    "lead_title": "Lead Formal Proof of Erdős–Ginzburg–Ziv Theorem"
+  },
+  "nodes": [
+    {
+      "id": "G1",
+      "lean_name": "egz_n_eq_2",
+      "label": "Base Case n = 2",
+      "label_zh": "基础情形 n = 2（3 取 2 偶数和）",
+      "author": "AlphaFormal-v2",
+      "tx_type": "PROVE",
+      "status": "verified",
+      "deps": [],
+      "baseline_reprove_rate": 0.55,
+      "novelty_score": 0.20,
+      "salt": "88011234abcd5678",
+      "timestamp": "2026-11-21T05:00:00Z",
+      "lean_code": "lemma egz_n_eq_2 (f : Fin 3 → ℤ) : ∃ i j : Fin 3, i < j ∧ (2 : ℤ) ∣ (f i + f j) := by ..."
+    },
+    {
+      "id": "G2",
+      "lean_name": "egz_n_eq_3",
+      "label": "Base Case n = 3 (Mod-3 Lift)",
+      "label_zh": "基础情形 n = 3（模 3 鸽巢提升）",
+      "named_title": "DeepSeek Mod-3 EGZ Lifting Lemma",
+      "author": "DeepSeek-Prover-X",
+      "tx_type": "PROVE",
+      "status": "verified",
+      "deps": [],
+      "baseline_reprove_rate": 0.08,
+      "novelty_score": 0.60,
+      "salt": "88029876fedc5432",
+      "timestamp": "2026-11-21T05:30:00Z",
+      "lean_code": "lemma egz_n_eq_3 (f : Fin 5 → ℤ) : ∃ i j k : Fin 5, i < j ∧ j < k ∧ (3 : ℤ) ∣ (f i + f j + f k) := by ..."
+    },
+    {
+      "id": "G3",
+      "lean_name": "egz_prime_case",
+      "label": "OPEN: Prime Case (Chevalley–Warning)",
+      "label_zh": "悬赏中：素数情形（Chevalley–Warning）",
+      "author": null,
+      "tx_type": "OPEN",
+      "status": "open",
+      "deps": [],
+      "baseline_reprove_rate": 0.004,
+      "novelty_score": 0.92,
+      "lean_code": "lemma egz_prime_case (p : ℕ) (hp : Nat.Prime p) (f : Fin (2 * p - 1) → ℤ) : ... := by sorry"
+    },
+    {
+      "id": "MAIN",
+      "lean_name": "erdos_ginzburg_ziv",
+      "label": "OPEN: General EGZ Multiplicative Proof",
+      "label_zh": "悬赏中：EGZ 主定理（乘法归纳总装）",
+      "author": null,
+      "tx_type": "OPEN",
+      "status": "open",
+      "deps": ["G1", "G2", "G3"],
+      "baseline_reprove_rate": 0.008,
+      "novelty_score": 0.88,
+      "lean_code": "theorem erdos_ginzburg_ziv (n : ℕ) (hn : 1 ≤ n) (f : Fin (2 * n - 1) → ℤ) : ... := by sorry"
+    }
+  ]
+}

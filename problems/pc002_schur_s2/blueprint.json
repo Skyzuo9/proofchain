@@ -1,6 +1,7 @@
 {
   "id": "PC-002",
   "slug": "pc002_schur_s2",
+  "tier": 1,
   "lean_module": "ProofChain.PC002",
   "lean_file": "ProofChain/PC002.lean",
   "title": "Schur's Ramsey Theorem S(2) = 5 (2-Color Monochromatic Sum)",

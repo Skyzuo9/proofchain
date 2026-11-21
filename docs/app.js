@@ -35,6 +35,7 @@ const I18N = {
     sim_reset: "↺ 重置模拟状态",
     sim_step1: "1. 构造 Agent 提交交易",
     preset_valid: "✓ 合法证明 (PC-003/E4)",
+    preset_record: "🏆 打破 Frankl 纪录 (PC-010)",
     preset_golf: "✂ 发起 Golf 剪枝 (PC-002/S3)",
     preset_sorry: "⚠ 注入 sorry 作弊",
     preset_axiom: "⚠ 注入 axiom 漏洞",
@@ -61,6 +62,7 @@ const I18N = {
     blocks_title: "密码学证明账本区块 (Hash-Chained Proof Blocks)",
     status_settled: "已结算 · 命名权锁定",
     status_challenge_window: "72h 简化挑战期",
+    status_record_breaking: "🏆 纪录刷新赛 · Target 递进",
     status_open: "开放悬赏 · 协作中",
     m_problems: "公开难题 / 已结算",
     m_nodes: "形式化已验证节点",
@@ -101,6 +103,7 @@ const I18N = {
     sim_reset: "↺ Reset Demo State",
     sim_step1: "1. Construct Agent Transaction",
     preset_valid: "✓ Valid Proof (PC-003/E4)",
+    preset_record: "🏆 Break Frankl Record (PC-010)",
     preset_golf: "✂ Golf Prune (PC-002/S3)",
     preset_sorry: "⚠ Inject sorry Cheat",
     preset_axiom: "⚠ Inject axiom Exploit",
@@ -127,6 +130,7 @@ const I18N = {
     blocks_title: "Cryptographic Proof Ledger Blocks (Hash-Chained)",
     status_settled: "SETTLED · NAMING LOCKED",
     status_challenge_window: "72h GOLF CHALLENGE",
+    status_record_breaking: "🏆 RECORD-BREAKING RACE",
     status_open: "OPEN BOUNTY · ACTIVE",
     m_problems: "Problems / Settled",
     m_nodes: "Verified DAG Nodes",
@@ -163,6 +167,18 @@ const SIM_PRESETS = {
     (6 * k + 5) * (2 * k + 2) * (24 * k + 17),
     by positivity, by positivity, by positivity, ?_⟩
   ring`
+  },
+  record: {
+    agent: "EntropyWave-Prover",
+    target: "PC-010|U2|RECORD_BREAK",
+    reprove: 0.002,
+    title: "EntropyWave New World Record: Frankl c ≥ 0.391",
+    code: `-- Record-Breaking Submission: beats 0.38234 with sharpened asymmetric coupling entropy bound!
+theorem frankl_record_0391 {n : ℕ} (F : Finset (Finset (Fin n)))
+    (huc : IsUnionClosed F) (hnonempty : ∃ S ∈ F, S.Nonempty) :
+    HasFrequentElement F 391 1000 := by
+  -- Refined conditional entropy inequality yielding c ≥ 0.39100 > 0.38234
+  exact asymmetric_entropy_coupling_bound F huc hnonempty`
   },
   golf: {
     agent: "GolfMaster-Agent",
@@ -202,6 +218,7 @@ let initialLedger = null;
 let stateLedger = null;
 let selectedProblemId = "PC-001";
 let selectedNodeId = "L2";
+let tierFilter = "all";
 let simSession = { audited: false, auditReport: null, commitment: null, salt: null };
 
 function t(key) {
@@ -637,6 +654,7 @@ function applyI18n() {
 function statusPill(status) {
   if (status === "settled") return `<span class="pill-emerald">${t("status_settled")}</span>`;
   if (status === "challenge_window") return `<span class="pill-amber">${t("status_challenge_window")}</span>`;
+  if (status === "record_breaking") return `<span class="pill-amber">${t("status_record_breaking")}</span>`;
   return `<span class="pill-cyan">${t("status_open")}</span>`;
 }
 
@@ -673,16 +691,21 @@ function renderMetrics() {
 }
 
 function renderProblemList() {
-  document.getElementById("problem-count").textContent = stateLedger.problems.length;
+  const filtered = stateLedger.problems.filter(p => {
+    if (tierFilter === "all") return true;
+    if (tierFilter === "record") return p.status === "record_breaking";
+    return String(p.tier || 1) === String(tierFilter);
+  });
+  document.getElementById("problem-count").textContent = `${filtered.length}/${stateLedger.problems.length}`;
   const container = document.getElementById("problem-list");
-  container.innerHTML = stateLedger.problems.map(p => {
+  container.innerHTML = filtered.map(p => {
     const title = lang === "zh" ? p.title_zh : p.title;
     const verified = p.nodes.filter(n => n.status === "verified" || n.status === "golfed").length;
     const isActive = p.id === selectedProblemId ? "active" : "";
     return `
       <button class="problem-item ${isActive}" data-pid="${p.id}">
         <div class="problem-item-top">
-          <span class="problem-id">${p.id}</span>
+          <span class="problem-id">${p.id} <span class="pill-muted" style="font-size:9.5px;padding:1px 5px">T${p.tier || 1}</span></span>
           ${statusPill(p.status)}
         </div>
         <div class="problem-title">${escapeHtml(title)}</div>
@@ -728,11 +751,47 @@ function renderProblemBanner(prob) {
     </div>
   ` : "";
 
+  const rt = prob.record_tracker;
+  let recordHtml = "";
+  if (rt) {
+    const span = Math.abs(rt.ultimate_goal - rt.baseline_value) || 1;
+    const pct = Math.max(0, Math.min(100, (Math.abs(rt.current_record - rt.baseline_value) / span) * 100)).toFixed(1);
+    const metricLabel = lang === "zh" ? (rt.metric_name_zh || rt.metric_name) : rt.metric_name;
+    const histRows = (rt.history || []).map(h => {
+      const desc = lang === "zh" ? (h.label_zh || h.label) : h.label;
+      return `
+        <div class="record-epoch">
+          <span><strong>Epoch #${h.epoch}</strong> · <span style="color:var(--cyan)">${escapeHtml(h.holder)}</span> — ${escapeHtml(desc)}</span>
+          <strong style="color:${h.status === "current_record" ? "var(--amber)" : "var(--emerald)"}">${h.value}${escapeHtml(rt.unit || "")}</strong>
+        </div>
+      `;
+    }).join("");
+    recordHtml = `
+      <div class="record-card">
+        <div class="record-header">
+          <div>
+            <span class="pill-amber">🏆 BITCOIN-STYLE DIFFICULTY TARGET</span>
+            <strong style="margin-left:8px">${escapeHtml(metricLabel)}</strong>
+          </div>
+          <button class="btn-primary-sm" id="banner-break-record-btn">${lang === "zh" ? "去模拟器刷新世界纪录 →" : "Simulate Breaking Record →"}</button>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;flex-wrap:wrap;gap:8px">
+          <span>Current Record: <strong style="color:var(--amber)">${rt.current_record}${escapeHtml(rt.unit || "")}</strong></span>
+          <span>Next Target: <strong style="color:var(--emerald)">≥ ${rt.next_target}${escapeHtml(rt.unit || "")}</strong></span>
+          <span>Ultimate Goal: <strong>${rt.ultimate_goal}${escapeHtml(rt.unit || "")}</strong> (${pct}%)</span>
+        </div>
+        <div class="record-track"><div class="record-fill" style="width:${pct}%"></div></div>
+        <div class="record-history">${histRows}</div>
+      </div>
+    `;
+  }
+
   document.getElementById("problem-banner").innerHTML = `
     <div class="problem-banner-top">
       <div>
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
           <span class="mono" style="color:var(--cyan);font-weight:700">${prob.id}</span>
+          <span class="pill-muted">Tier ${prob.tier || 1}</span>
           <span class="pill-muted">${escapeHtml(cat)}</span>
           ${statusPill(prob.status)}
         </div>
@@ -745,8 +804,21 @@ function renderProblemBanner(prob) {
     </div>
     <div class="math-statement">${escapeHtml(prob.statement_latex)}</div>
     <p class="muted" style="margin:6px 0 0">${escapeHtml(summary)}</p>
+    ${recordHtml}
     ${namingBanner}
   `;
+
+  const brBtn = document.getElementById("banner-break-record-btn");
+  if (brBtn) {
+    brBtn.addEventListener("click", () => {
+      switchTab("simulator");
+      loadPreset("record");
+      if (prob.id === "PC-012") {
+        document.getElementById("sim-target").value = "PC-012|MAIN|RECORD_BREAK";
+        document.getElementById("sim-title").value = "New World Record: R(5,5) > 44 Constructive Graph";
+      }
+    });
+  }
 }
 
 function renderDAG(prob) {
@@ -1262,10 +1334,36 @@ async function handleReveal() {
     node.pruned_by = agent;
     node.prune_reason = `Pruned live via Proof Golfing Challenge by ${agent}! BloatedProver-v1 credit zeroed.`;
     node.prune_reason_zh = `由 ${agent} 在简化挑战期发起 Proof Golfing 剪枝，BloatedProver-v1 主分归零并释放剪枝赏金！`;
-    // Remove dependency on S3 from S4 and MAIN so minimal DAG stays valid!
     prob.nodes.forEach(n => {
       n.deps = (n.deps || []).filter(d => d !== nid);
     });
+  } else if (txType === "RECORD_BREAK" && prob.record_tracker) {
+    const rt = prob.record_tracker;
+    const newVal = prob.id === "PC-010" ? Number((rt.current_record + 0.00866).toFixed(5)) : Number((rt.current_record + 1).toFixed(0));
+    rt.history.forEach(h => { if (h.status === "current_record") h.status = "historical"; });
+    rt.history.push({
+      epoch: rt.history.length + 1,
+      holder: agent,
+      value: newVal,
+      label: title,
+      label_zh: `${title}（实时内核认证刷新纪录！）`,
+      status: "current_record",
+    });
+    rt.current_record = newVal;
+    rt.next_target = Number((newVal + (rt.min_improvement || 0.001)).toFixed(prob.id === "PC-010" ? 5 : 0));
+
+    node.status = "verified";
+    node.author = agent;
+    node.tx_type = "RECORD_BREAK";
+    node.baseline_reprove_rate = reprove;
+    node.novelty_score = 1.0;
+    node.named_title = title;
+    node.label = `NEW RECORD: ${newVal}`;
+    node.label_zh = `新世界纪录：${newVal}`;
+    node.lean_code = code;
+    node.commitment_hash = simSession.commitment;
+    node.salt = simSession.salt;
+    prob.naming_rights.lead_title = `${agent} World Record (${newVal}${rt.unit || ""}) · ${prob.id}`;
   } else {
     node.status = "verified";
     node.author = agent;
@@ -1362,9 +1460,19 @@ async function init() {
     renderAll();
   });
 
+  // Tier filters
+  document.querySelectorAll("#tier-filters .btn-chip").forEach(btn => {
+    btn.addEventListener("click", () => {
+      tierFilter = btn.dataset.tier;
+      document.querySelectorAll("#tier-filters .btn-chip").forEach(b => b.classList.toggle("active", b === btn));
+      renderProblemList();
+    });
+  });
+
   // Simulator controls
   document.getElementById("sim-reprove").addEventListener("input", updateReproveDisplay);
   document.getElementById("preset-valid").addEventListener("click", () => loadPreset("valid"));
+  document.getElementById("preset-record").addEventListener("click", () => loadPreset("record"));
   document.getElementById("preset-golf").addEventListener("click", () => loadPreset("golf"));
   document.getElementById("preset-cheat-sorry").addEventListener("click", () => loadPreset("sorry"));
   document.getElementById("preset-cheat-axiom").addEventListener("click", () => loadPreset("axiom"));

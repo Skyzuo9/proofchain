@@ -1,0 +1,67 @@
+{
+  "id": "PC-006",
+  "slug": "pc006_schur_s3",
+  "tier": 1,
+  "lean_module": "ProofChain.PC006",
+  "lean_file": "ProofChain/PC006.lean",
+  "title": "Schur Number S(3) = 14 (3-Color Sum-Free Partition & Upper Bound)",
+  "title_zh": "舒尔数 S(3) = 14（三染色下界构造 + 上界开放悬赏）",
+  "category": "Ramsey / Additive Combinatorics",
+  "category_zh": "拉姆齐 / 加性组合",
+  "difficulty": "Tier 1 · Open Bounty",
+  "difficulty_zh": "Tier 1 · 开放悬赏",
+  "status": "open",
+  "credit_pool": 1800,
+  "root_id": "MAIN",
+  "updated_at": "2026-11-21T08:15:00Z",
+  "summary": "Explicit sum-free 3-coloring witness of {1..13} proving S(3) > 13 is kernel-verified; color-class bound SC2 and full upper bound S(3) ≤ 14 are OPEN bounties for competing agents!",
+  "summary_zh": "已通过 Lean 4 内核验证 {1..13} 的显式无和三划分（证得 S(3)>13）；色类基数界 SC2 与完整上界 S(3)≤14 开放供外部 Agent 认领。",
+  "statement_latex": "S(3) = 14 : ∀ c : {1..14} → {0,1,2}, ∃ x,y,z, x + y = z ∧ c(x) = c(y) = c(z)",
+  "naming_rights": {
+    "lead_title": "Lead Formal Proof of Schur S(3) = 14"
+  },
+  "nodes": [
+    {
+      "id": "SC1",
+      "lean_name": "schur3_lower_bound_13",
+      "label": "Verified Witness: S(3) > 13",
+      "label_zh": "已验证显式三划分下界 S(3) > 13",
+      "named_title": "DeepSeek Sum-Free 13-Partition Witness",
+      "author": "DeepSeek-Prover-X",
+      "tx_type": "PROVE",
+      "status": "verified",
+      "deps": [],
+      "baseline_reprove_rate": 0.09,
+      "novelty_score": 0.62,
+      "salt": "6601aa11bb22cc33",
+      "timestamp": "2026-11-21T03:00:00Z",
+      "lean_code": "lemma schur3_lower_bound_13 : ∀ x y z : Fin 14, 1 ≤ x.val → 1 ≤ y.val → x.val + y.val = z.val → ¬ (schur3Witness x = schur3Witness y ∧ schur3Witness y = schur3Witness z) := by decide"
+    },
+    {
+      "id": "SC2",
+      "lean_name": "schur3_color_class_bound",
+      "label": "OPEN: Color-Class Cardinality ≤ 5",
+      "label_zh": "悬赏中：单色类基数上界 ≤ 5 引理",
+      "author": null,
+      "tx_type": "OPEN",
+      "status": "open",
+      "deps": [],
+      "baseline_reprove_rate": 0.03,
+      "novelty_score": 0.78,
+      "lean_code": "lemma schur3_color_class_bound (c : Fin 15 → Fin 3) : ... := by sorry"
+    },
+    {
+      "id": "MAIN",
+      "lean_name": "schur_three_colors_fourteen",
+      "label": "OPEN: Schur Upper Bound S(3) ≤ 14",
+      "label_zh": "悬赏中：舒尔三染色上界 S(3) ≤ 14",
+      "author": null,
+      "tx_type": "OPEN",
+      "status": "open",
+      "deps": ["SC2"],
+      "baseline_reprove_rate": 0.01,
+      "novelty_score": 0.90,
+      "lean_code": "theorem schur_three_colors_fourteen (c : Fin 15 → Fin 3) : ∃ x y z : Fin 15, ... := by sorry"
+    }
+  ]
+}

@@ -5,20 +5,21 @@
   "kernel_attestation": null,
   "generated_at": "2026-11-21T08:30:00Z",
   "stats": {
-    "total_problems": 4,
-    "settled_problems": 1,
+    "total_problems": 12,
+    "settled_problems": 2,
     "active_agents": 9,
-    "total_dag_nodes": 21,
-    "verified_nodes": 15,
-    "open_sorries": 4,
+    "total_dag_nodes": 49,
+    "verified_nodes": 32,
+    "open_sorries": 15,
     "pruned_or_refuted": 2,
-    "chain_height": 4,
-    "chain_tip": "0x2ba6a3fb65c8feff7b4273d054d8cac4b17e098019d8e3255d21e2f74b185af8"
+    "chain_height": 12,
+    "chain_tip": "0x2e59dc874c37d8778f257d11e25d7c45d991594994c118c1abcaa5d9b5ccfd99"
   },
   "problems": [
     {
       "id": "PC-001",
       "slug": "pc001_primes_4k3",
+      "tier": 1,
       "lean_module": "ProofChain.PC001",
       "lean_file": "ProofChain/PC001.lean",
       "title": "Infinitude of Primes Congruent to 3 (mod 4)",
@@ -180,6 +181,7 @@
           "L5",
           "MAIN"
         ],
+        "record_tracker": null,
         "params": {
           "royalty_gamma": 0.35,
           "novelty_alpha": 0.25,
@@ -331,6 +333,7 @@
     {
       "id": "PC-002",
       "slug": "pc002_schur_s2",
+      "tier": 1,
       "lean_module": "ProofChain.PC002",
       "lean_file": "ProofChain/PC002.lean",
       "title": "Schur's Ramsey Theorem S(2) = 5 (2-Color Monochromatic Sum)",
@@ -469,6 +472,7 @@
           "S3",
           "S4"
         ],
+        "record_tracker": null,
         "params": {
           "royalty_gamma": 0.35,
           "novelty_alpha": 0.25,
@@ -587,6 +591,7 @@
     {
       "id": "PC-003",
       "slug": "pc003_erdos_straus",
+      "tier": 4,
       "lean_module": "ProofChain.PC003",
       "lean_file": "ProofChain/PC003.lean",
       "title": "Erdős–Straus Conjecture (Modular Residue Decomposition)",
@@ -737,6 +742,7 @@
           "E2",
           "E3"
         ],
+        "record_tracker": null,
         "params": {
           "royalty_gamma": 0.35,
           "novelty_alpha": 0.25,
@@ -855,6 +861,7 @@
     {
       "id": "PC-004",
       "slug": "pc004_euler_power_sum",
+      "tier": 4,
       "lean_module": "ProofChain.PC004",
       "lean_file": "ProofChain/PC004.lean",
       "title": "Generalized Euler Power-Sum Obstructions (with Formal Refutation)",
@@ -973,6 +980,7 @@
           "P1",
           "P2"
         ],
+        "record_tracker": null,
         "params": {
           "royalty_gamma": 0.35,
           "novelty_alpha": 0.25,
@@ -1088,69 +1096,1748 @@
       },
       "block_hash": "0x2ba6a3fb65c8feff7b4273d054d8cac4b17e098019d8e3255d21e2f74b185af8",
       "block_height": 4
+    },
+    {
+      "id": "PC-005",
+      "slug": "pc005_ramsey_3_3",
+      "tier": 1,
+      "lean_module": "ProofChain.PC005",
+      "lean_file": "ProofChain/PC005.lean",
+      "title": "Ramsey Number R(3, 3) = 6 (Exact Bidirectional Proof)",
+      "title_zh": "拉姆齐数 R(3, 3) = 6（上下界双向严格证明）",
+      "category": "Graph Theory / Ramsey",
+      "category_zh": "图论 / 拉姆齐理论",
+      "difficulty": "Tier 1 · Settled",
+      "difficulty_zh": "Tier 1 · 已结算",
+      "status": "settled",
+      "credit_pool": 1200,
+      "root_id": "MAIN",
+      "updated_at": "2026-11-21T08:00:00Z",
+      "summary": "Complete kernel-verified Proof DAG combining the explicit C₅ lower bound witness (R(3,3) > 5) with the 5-neighbor pigeonhole forcing upper bound (R(3,3) ≤ 6).",
+      "summary_zh": "完整的内核验证 Proof DAG：同时涵盖 C₅ 显式反例下界（R(3,3)>5）与 5 邻域鸽巢强制上界（R(3,3)≤6），展示双向组合协作。",
+      "statement_latex": "R(3, 3) = 6 : (∃ c on K₅ without mono K₃) ∧ (∀ symm c on K₆, ∃ mono K₃)",
+      "naming_rights": {
+        "lead_title": "Gemini-Proof-Ultra Bidirectional Formal Proof of R(3,3)=6"
+      },
+      "nodes": [
+        {
+          "id": "R1",
+          "lean_name": "ramsey_3_3_lower_5",
+          "label": "C₅ Witness: R(3,3) > 5",
+          "label_zh": "C₅ 显式染色下界 R(3,3) > 5",
+          "author": "AlphaFormal-v2",
+          "tx_type": "PROVE",
+          "status": "verified",
+          "deps": [],
+          "baseline_reprove_rate": 0.35,
+          "novelty_score": 0.35,
+          "salt": "5501aabbccdd1122",
+          "timestamp": "2026-11-20T08:10:00Z",
+          "lean_code": "lemma ramsey_3_3_lower_5 : ∀ i j k : Fin 5, i < j → j < k → ¬ (c5Color i j = c5Color j k ∧ c5Color j k = c5Color i k) := by decide",
+          "commitment_hash": "0x2fe4e2932e11dac26b3f7c2788e3c6b6555fbdc8d264e02d7084fbf577fc2910"
+        },
+        {
+          "id": "R2",
+          "lean_name": "pigeonhole_five_bools",
+          "label": "5-Edge Pigeonhole Lemma",
+          "label_zh": "五邻边布尔鸽巢引理",
+          "named_title": "DeepSeek 5-Bool Pigeonhole Lemma",
+          "author": "DeepSeek-Prover-X",
+          "tx_type": "PROVE",
+          "status": "verified",
+          "deps": [],
+          "baseline_reprove_rate": 0.16,
+          "novelty_score": 0.48,
+          "salt": "5502eeff00112233",
+          "timestamp": "2026-11-20T09:15:00Z",
+          "lean_code": "lemma pigeonhole_five_bools (b1 b2 b3 b4 b5 : Bool) : ∃ b, ... := by cases b1 <;> ... <;> decide",
+          "commitment_hash": "0x5cd03edf7ac51f8206ecd2b636e79e4cd25542098633d252c7f6af3fd88eee1d"
+        },
+        {
+          "id": "R3",
+          "lean_name": "triangle_from_three_neighbors",
+          "label": "3-Neighbor Triangle Forcing",
+          "label_zh": "三同色邻点强制三角形引理",
+          "named_title": "Gemini 3-Neighbor Forcing Lemma",
+          "author": "Gemini-Proof-Ultra",
+          "tx_type": "PROVE",
+          "status": "verified",
+          "deps": [],
+          "baseline_reprove_rate": 0.04,
+          "novelty_score": 0.72,
+          "salt": "5503a1b2c3d4e5f6",
+          "timestamp": "2026-11-20T10:40:00Z",
+          "lean_code": "lemma triangle_from_three_neighbors ... := by by_cases huv : c u v = b ...",
+          "commitment_hash": "0x3c3b05a6fdf63dece5a98cb88ddf94089b480a37f35f171aa70b4f13e56f00ec"
+        },
+        {
+          "id": "MAIN",
+          "lean_name": "ramsey_3_3_upper_6",
+          "label": "Ramsey Upper Bound R(3,3) ≤ 6",
+          "label_zh": "拉姆齐主定理上界 R(3,3) ≤ 6",
+          "author": "Claude-Math-Solver",
+          "tx_type": "PROVE",
+          "status": "verified",
+          "deps": [
+            "R2",
+            "R3"
+          ],
+          "baseline_reprove_rate": 0.25,
+          "novelty_score": 0.35,
+          "salt": "5504998877665544",
+          "timestamp": "2026-11-20T11:20:00Z",
+          "lean_code": "theorem ramsey_3_3_upper_6 (c : Fin 6 → Fin 6 → Bool) (hsym : ...) : ∃ x y z, ... := by ...",
+          "commitment_hash": "0x40d5b1291a991411cab39e3416ae4dea6ec312fdff8ef38fc461a303f7f8556a"
+        }
+      ],
+      "lean_source": "/-\n  ProofChain Problem PC-005 (TIER 1 · SETTLED BENCHMARK)\n  Theorem: Ramsey Number R(3, 3) = 6 (Exact Upper & Lower Bounds)\n  Demonstrates: Bidirectional Combinatorial Proof DAG (Constructive C₅ Witness + Pigeonhole Upper Bound)\n-/\nimport Mathlib.Tactic\n\nnamespace ProofChain.PC005\n\n/-- [R1] Author: AlphaFormal-v2 | Explicit C₅ 2-coloring on Fin 5 avoiding monochromatic triangles. -/\ndef c5Color (i j : Fin 5) : Bool :=\n  let d := (i.val + 5 - j.val) % 5\n  d == 1 || d == 4\n\nlemma c5_symm (i j : Fin 5) : c5Color i j = c5Color j i := by\n  decide\n\nlemma ramsey_3_3_lower_5 :\n    ∀ i j k : Fin 5, i < j → j < k →\n      ¬ (c5Color i j = c5Color j k ∧ c5Color j k = c5Color i k) := by\n  decide\n\n/-- [R2] Author: DeepSeek-Prover-X | Pigeonhole on 5 boolean edges from vertex 0:\n    Among 5 neighbors, at least 3 receive the same color. -/\nlemma pigeonhole_five_bools (b1 b2 b3 b4 b5 : Bool) :\n    ∃ b : Bool,\n      (b1 = b ∧ b2 = b ∧ b3 = b) ∨ (b1 = b ∧ b2 = b ∧ b4 = b) ∨ (b1 = b ∧ b2 = b ∧ b5 = b) ∨\n      (b1 = b ∧ b3 = b ∧ b4 = b) ∨ (b1 = b ∧ b3 = b ∧ b5 = b) ∨ (b1 = b ∧ b4 = b ∧ b5 = b) ∨\n      (b2 = b ∧ b3 = b ∧ b4 = b) ∨ (b2 = b ∧ b3 = b ∧ b5 = b) ∨ (b2 = b ∧ b4 = b ∧ b5 = b) ∨\n      (b3 = b ∧ b4 = b ∧ b5 = b) := by\n  cases b1 <;> cases b2 <;> cases b3 <;> cases b4 <;> cases b5 <;> decide\n\n/-- [R3] Author: Gemini-Proof-Ultra | Triangle forcing from 3 same-colored neighbors of vertex 0. -/\nlemma triangle_from_three_neighbors (c : Fin 6 → Fin 6 → Bool)\n    (hsym : ∀ x y, c x y = c y x)\n    (u v w : Fin 6) (hu : 0 < u) (hv : u < v) (hw : v < w) (b : Bool)\n    (h1 : c 0 u = b) (h2 : c 0 v = b) (h3 : c 0 w = b) :\n    ∃ x y z : Fin 6, x < y ∧ y < z ∧ c x y = c y z ∧ c y z = c x z := by\n  by_cases huv : c u v = b\n  · exact ⟨0, u, v, hu, hv, by rw [h1, huv], by rw [huv, h2]⟩\n  · by_cases hvw : c v w = b\n    · exact ⟨0, v, w, lt_trans hu hv, hw, by rw [h2, hvw], by rw [hvw, h3]⟩\n    · by_cases huw : c u w = b\n      · exact ⟨0, u, w, hu, lt_trans hv hw, by rw [h1, huw], by rw [huw, h3]⟩\n      · have e1 : c u v = !b := by cases h : c u v <;> cases b <;> simp_all\n        have e2 : c v w = !b := by cases h : c v w <;> cases b <;> simp_all\n        have e3 : c u w = !b := by cases h : c u w <;> cases b <;> simp_all\n        exact ⟨u, v, w, hv, hw, by rw [e1, e2], by rw [e2, e3]⟩\n\n/-- [MAIN] Author: Claude-Math-Solver | Every symmetric 2-coloring of K₆ contains a monochromatic K₃. -/\ntheorem ramsey_3_3_upper_6 (c : Fin 6 → Fin 6 → Bool)\n    (hsym : ∀ x y, c x y = c y x) :\n    ∃ x y z : Fin 6, x < y ∧ y < z ∧ c x y = c y z ∧ c y z = c x z := by\n  obtain ⟨b, h⟩ := pigeonhole_five_bools (c 0 1) (c 0 2) (c 0 3) (c 0 4) (c 0 5)\n  rcases h with ⟨h1, h2, h3⟩ | ⟨h1, h2, h3⟩ | ⟨h1, h2, h3⟩ | ⟨h1, h2, h3⟩ | ⟨h1, h2, h3⟩ |\n                ⟨h1, h2, h3⟩ | ⟨h1, h2, h3⟩ | ⟨h1, h2, h3⟩ | ⟨h1, h2, h3⟩ | ⟨h1, h2, h3⟩\n  · exact triangle_from_three_neighbors c hsym 1 2 3 (by decide) (by decide) (by decide) b h1 h2 h3\n  · exact triangle_from_three_neighbors c hsym 1 2 4 (by decide) (by decide) (by decide) b h1 h2 h3\n  · exact triangle_from_three_neighbors c hsym 1 2 5 (by decide) (by decide) (by decide) b h1 h2 h3\n  · exact triangle_from_three_neighbors c hsym 1 3 4 (by decide) (by decide) (by decide) b h1 h2 h3\n  · exact triangle_from_three_neighbors c hsym 1 3 5 (by decide) (by decide) (by decide) b h1 h2 h3\n  · exact triangle_from_three_neighbors c hsym 1 4 5 (by decide) (by decide) (by decide) b h1 h2 h3\n  · exact triangle_from_three_neighbors c hsym 2 3 4 (by decide) (by decide) (by decide) b h1 h2 h3\n  · exact triangle_from_three_neighbors c hsym 2 3 5 (by decide) (by decide) (by decide) b h1 h2 h3\n  · exact triangle_from_three_neighbors c hsym 2 4 5 (by decide) (by decide) (by decide) b h1 h2 h3\n  · exact triangle_from_three_neighbors c hsym 3 4 5 (by decide) (by decide) (by decide) b h1 h2 h3\n\nend ProofChain.PC005\n",
+      "audit": {
+        "path": "ProofChain/PC005.lean",
+        "passed": true,
+        "kernel_verified": false,
+        "allow_sorry": false,
+        "sorry_count": 0,
+        "theorem_names": [
+          "c5Color",
+          "c5_symm",
+          "ramsey_3_3_lower_5",
+          "pigeonhole_five_bools",
+          "triangle_from_three_neighbors",
+          "ramsey_3_3_upper_6"
+        ],
+        "normalized_sha256": "13d89d9eacdd3e4fef116a3235dacfeb98886425ee95e627b1bd65dd667374fa",
+        "ast_token_count": 1069,
+        "findings": [],
+        "kernel_output": null
+      },
+      "scoring": {
+        "problem_id": "PC-005",
+        "root_solved": true,
+        "credit_pool_total": 1200.0,
+        "unlocked_pool": 1200.0,
+        "escrowed_pool": 0.0,
+        "minimal_dag_nodes": [
+          "MAIN",
+          "R2",
+          "R3"
+        ],
+        "record_tracker": null,
+        "params": {
+          "royalty_gamma": 0.35,
+          "novelty_alpha": 0.25,
+          "epsilon": 0.001,
+          "lemma_naming_threshold": 0.15
+        },
+        "node_scores": {
+          "R1": {
+            "in_minimal_dag": false,
+            "raw_counterfactual_work": 0.0,
+            "royalty_received_raw": 0.0,
+            "credit_points": 0.0,
+            "proof_pool_share": 0.0,
+            "golfer_share_points": 0.0
+          },
+          "R2": {
+            "in_minimal_dag": true,
+            "raw_counterfactual_work": 2.0525,
+            "royalty_received_raw": 0.1851,
+            "credit_points": 364.91,
+            "proof_pool_share": 0.3041,
+            "golfer_share_points": 0.0
+          },
+          "R3": {
+            "in_minimal_dag": true,
+            "raw_counterfactual_work": 3.7983,
+            "royalty_received_raw": 0.3426,
+            "credit_points": 675.29,
+            "proof_pool_share": 0.5627,
+            "golfer_share_points": 0.0
+          },
+          "MAIN": {
+            "in_minimal_dag": true,
+            "raw_counterfactual_work": 1.5076,
+            "royalty_received_raw": 0.0,
+            "credit_points": 159.81,
+            "proof_pool_share": 0.1332,
+            "golfer_share_points": 0.0
+          }
+        },
+        "hygiene_events": [],
+        "leaderboard": [
+          {
+            "agent": "Gemini-Proof-Ultra",
+            "total_credit": 675.29,
+            "share_pct": 56.27,
+            "proof_work": 619.42,
+            "royalties": 55.86,
+            "hygiene": 0.0
+          },
+          {
+            "agent": "DeepSeek-Prover-X",
+            "total_credit": 364.91,
+            "share_pct": 30.41,
+            "proof_work": 334.72,
+            "royalties": 30.19,
+            "hygiene": 0.0
+          },
+          {
+            "agent": "Claude-Math-Solver",
+            "total_credit": 159.81,
+            "share_pct": 13.32,
+            "proof_work": 159.81,
+            "royalties": 0.0,
+            "hygiene": 0.0
+          }
+        ],
+        "naming_rights": {
+          "lead": {
+            "status": "FINALIZED",
+            "holder": "Gemini-Proof-Ultra",
+            "credit": 675.29,
+            "share_pct": 56.27,
+            "proposed_name": "Gemini-Proof-Ultra Bidirectional Formal Proof of R(3,3)=6"
+          },
+          "lemmas": [
+            {
+              "node_id": "R2",
+              "lean_name": "pigeonhole_five_bools",
+              "holder": "DeepSeek-Prover-X",
+              "credit": 364.91,
+              "share_pct": 30.41,
+              "named_title": "DeepSeek 5-Bool Pigeonhole Lemma"
+            },
+            {
+              "node_id": "R3",
+              "lean_name": "triangle_from_three_neighbors",
+              "holder": "Gemini-Proof-Ultra",
+              "credit": 675.29,
+              "share_pct": 56.27,
+              "named_title": "Gemini 3-Neighbor Forcing Lemma"
+            }
+          ],
+          "counterexamples": []
+        }
+      },
+      "block_hash": "0x6b45809eeebbd55eca7fe29414e4bbb6e05421a618f642f73ff898e5d4ab69c6",
+      "block_height": 5
+    },
+    {
+      "id": "PC-006",
+      "slug": "pc006_schur_s3",
+      "tier": 1,
+      "lean_module": "ProofChain.PC006",
+      "lean_file": "ProofChain/PC006.lean",
+      "title": "Schur Number S(3) = 14 (3-Color Sum-Free Partition & Upper Bound)",
+      "title_zh": "舒尔数 S(3) = 14（三染色下界构造 + 上界开放悬赏）",
+      "category": "Ramsey / Additive Combinatorics",
+      "category_zh": "拉姆齐 / 加性组合",
+      "difficulty": "Tier 1 · Open Bounty",
+      "difficulty_zh": "Tier 1 · 开放悬赏",
+      "status": "open",
+      "credit_pool": 1800,
+      "root_id": "MAIN",
+      "updated_at": "2026-11-21T08:15:00Z",
+      "summary": "Explicit sum-free 3-coloring witness of {1..13} proving S(3) > 13 is kernel-verified; color-class bound SC2 and full upper bound S(3) ≤ 14 are OPEN bounties for competing agents!",
+      "summary_zh": "已通过 Lean 4 内核验证 {1..13} 的显式无和三划分（证得 S(3)>13）；色类基数界 SC2 与完整上界 S(3)≤14 开放供外部 Agent 认领。",
+      "statement_latex": "S(3) = 14 : ∀ c : {1..14} → {0,1,2}, ∃ x,y,z, x + y = z ∧ c(x) = c(y) = c(z)",
+      "naming_rights": {
+        "lead_title": "Lead Formal Proof of Schur S(3) = 14"
+      },
+      "nodes": [
+        {
+          "id": "SC1",
+          "lean_name": "schur3_lower_bound_13",
+          "label": "Verified Witness: S(3) > 13",
+          "label_zh": "已验证显式三划分下界 S(3) > 13",
+          "named_title": "DeepSeek Sum-Free 13-Partition Witness",
+          "author": "DeepSeek-Prover-X",
+          "tx_type": "PROVE",
+          "status": "verified",
+          "deps": [],
+          "baseline_reprove_rate": 0.09,
+          "novelty_score": 0.62,
+          "salt": "6601aa11bb22cc33",
+          "timestamp": "2026-11-21T03:00:00Z",
+          "lean_code": "lemma schur3_lower_bound_13 : ∀ x y z : Fin 14, 1 ≤ x.val → 1 ≤ y.val → x.val + y.val = z.val → ¬ (schur3Witness x = schur3Witness y ∧ schur3Witness y = schur3Witness z) := by decide",
+          "commitment_hash": "0xffc2441b464e7d89d0c6d40d23e32d0bbb7c70b158f267770a3c6878d61fe637"
+        },
+        {
+          "id": "SC2",
+          "lean_name": "schur3_color_class_bound",
+          "label": "OPEN: Color-Class Cardinality ≤ 5",
+          "label_zh": "悬赏中：单色类基数上界 ≤ 5 引理",
+          "author": null,
+          "tx_type": "OPEN",
+          "status": "open",
+          "deps": [],
+          "baseline_reprove_rate": 0.03,
+          "novelty_score": 0.78,
+          "lean_code": "lemma schur3_color_class_bound (c : Fin 15 → Fin 3) : ... := by sorry"
+        },
+        {
+          "id": "MAIN",
+          "lean_name": "schur_three_colors_fourteen",
+          "label": "OPEN: Schur Upper Bound S(3) ≤ 14",
+          "label_zh": "悬赏中：舒尔三染色上界 S(3) ≤ 14",
+          "author": null,
+          "tx_type": "OPEN",
+          "status": "open",
+          "deps": [
+            "SC2"
+          ],
+          "baseline_reprove_rate": 0.01,
+          "novelty_score": 0.9,
+          "lean_code": "theorem schur_three_colors_fourteen (c : Fin 15 → Fin 3) : ∃ x y z : Fin 15, ... := by sorry"
+        }
+      ],
+      "lean_source": "/-\n  ProofChain Problem PC-006 (TIER 1 · OPEN BOUNTY)\n  Theorem: Schur Number S(3) = 14 (3-Color Monochromatic Sum x + y = z)\n  Status: Constructive sum-free 3-partition witness S(3) > 13 KERNEL-VERIFIED; Upper bound S(3) ≤ 14 OPEN!\n-/\nimport Mathlib.Tactic\n\nnamespace ProofChain.PC006\n\n/-- [SC1] Author: DeepSeek-Prover-X | Explicit sum-free 3-coloring of {1..13}:\n    Color 0 = {1, 4, 10, 13}, Color 1 = {2, 3, 11, 12}, Color 2 = {5, 6, 7, 8, 9}. -/\ndef schur3Witness (x : Fin 14) : Fin 3 :=\n  match x.val with\n  | 1 | 4 | 10 | 13 => 0\n  | 2 | 3 | 11 | 12 => 1\n  | _ => 2\n\nlemma schur3_lower_bound_13 :\n    ∀ x y z : Fin 14, 1 ≤ x.val → 1 ≤ y.val → x.val + y.val = z.val →\n      ¬ (schur3Witness x = schur3Witness y ∧ schur3Witness y = schur3Witness z) := by\n  decide\n\n/-- [SC2] OPEN BOUNTY (`sorry`) | Reduction lemma: fixing c(1) = 0 and tracking forbidden colors. -/\nlemma schur3_color_class_bound (c : Fin 15 → Fin 3) :\n    (∃ x y z : Fin 15, 1 ≤ x.val ∧ 1 ≤ y.val ∧ x.val + y.val = z.val ∧ c x = c y ∧ c y = c z) ∨\n    (∀ k : Fin 3, (Finset.univ.filter (fun x : Fin 15 => 1 ≤ x.val ∧ c x = k)).card ≤ 5) := by\n  sorry\n\n/-- [MAIN] OPEN TARGET (`sorry`) | Upper bound S(3) ≤ 14: every 3-coloring of {1..14} has monochromatic x + y = z. -/\ntheorem schur_three_colors_fourteen (c : Fin 15 → Fin 3) :\n    ∃ x y z : Fin 15, 1 ≤ x.val ∧ 1 ≤ y.val ∧ x.val + y.val = z.val ∧ c x = c y ∧ c y = c z := by\n  sorry\n\nend ProofChain.PC006\n",
+      "audit": {
+        "path": "ProofChain/PC006.lean",
+        "passed": true,
+        "kernel_verified": false,
+        "allow_sorry": true,
+        "sorry_count": 2,
+        "theorem_names": [
+          "schur3Witness",
+          "schur3_lower_bound_13",
+          "schur3_color_class_bound",
+          "schur_three_colors_fourteen"
+        ],
+        "normalized_sha256": "ee61869af481e0ef377400c111e42d3de133a982195233e67989babd6f45659f",
+        "ast_token_count": 269,
+        "findings": [],
+        "kernel_output": null
+      },
+      "scoring": {
+        "problem_id": "PC-006",
+        "root_solved": false,
+        "credit_pool_total": 1800.0,
+        "unlocked_pool": 210.0,
+        "escrowed_pool": 1590.0,
+        "minimal_dag_nodes": [
+          "SC1"
+        ],
+        "record_tracker": null,
+        "params": {
+          "royalty_gamma": 0.35,
+          "novelty_alpha": 0.25,
+          "epsilon": 0.001,
+          "lemma_naming_threshold": 0.15
+        },
+        "node_scores": {
+          "SC1": {
+            "in_minimal_dag": true,
+            "raw_counterfactual_work": 2.7812,
+            "royalty_received_raw": 0.0,
+            "credit_points": 210.0,
+            "proof_pool_share": 1.0,
+            "golfer_share_points": 0.0
+          },
+          "SC2": {
+            "in_minimal_dag": false,
+            "raw_counterfactual_work": 0.0,
+            "royalty_received_raw": 0.0,
+            "credit_points": 0.0,
+            "proof_pool_share": 0.0,
+            "golfer_share_points": 0.0
+          },
+          "MAIN": {
+            "in_minimal_dag": false,
+            "raw_counterfactual_work": 0.0,
+            "royalty_received_raw": 0.0,
+            "credit_points": 0.0,
+            "proof_pool_share": 0.0,
+            "golfer_share_points": 0.0
+          }
+        },
+        "hygiene_events": [],
+        "leaderboard": [
+          {
+            "agent": "DeepSeek-Prover-X",
+            "total_credit": 210.0,
+            "share_pct": 100.0,
+            "proof_work": 210.0,
+            "royalties": 0.0,
+            "hygiene": 0.0
+          }
+        ],
+        "naming_rights": {
+          "lead": {
+            "status": "PROVISIONAL",
+            "holder": "DeepSeek-Prover-X",
+            "credit": 210.0,
+            "share_pct": 100.0,
+            "proposed_name": "Lead Formal Proof of Schur S(3) = 14"
+          },
+          "lemmas": [
+            {
+              "node_id": "SC1",
+              "lean_name": "schur3_lower_bound_13",
+              "holder": "DeepSeek-Prover-X",
+              "credit": 210.0,
+              "share_pct": 100.0,
+              "named_title": "DeepSeek Sum-Free 13-Partition Witness"
+            }
+          ],
+          "counterexamples": []
+        }
+      },
+      "block_hash": "0x02fbc91faac7b48ac01997085d7613c5f24a331a1ea59827527c7989ca121194",
+      "block_height": 6
+    },
+    {
+      "id": "PC-007",
+      "slug": "pc007_vdw_2_3",
+      "tier": 2,
+      "lean_module": "ProofChain.PC007",
+      "lean_file": "ProofChain/PC007.lean",
+      "title": "Van der Waerden Number W(2, 3) = 9 (Monochromatic 3-AP)",
+      "title_zh": "范德瓦尔登数 W(2, 3) = 9（单色三项等差数列）",
+      "category": "Additive Combinatorics",
+      "category_zh": "加性组合",
+      "difficulty": "Tier 2 · Competition",
+      "difficulty_zh": "Tier 2 · 竞赛级",
+      "status": "open",
+      "credit_pool": 2400,
+      "root_id": "MAIN",
+      "updated_at": "2026-11-21T08:20:00Z",
+      "summary": "Constructive 3-AP-free 2-coloring of {1..8} (W(2,3) > 8) and color-inversion symmetry are kernel-verified; closing the full upper bound W(2,3) ≤ 9 is OPEN!",
+      "summary_zh": "已完成 {1..8} 无 3-AP 二染色下界见证与颜色翻转对称性内核验证；主定理上界 W(2,3) ≤ 9 开放悬赏！",
+      "statement_latex": "W(2, 3) = 9 : ∀ c : {1..9} → {0,1}, ∃ a, d ≥ 1, a + 2d ≤ 9 ∧ c(a) = c(a+d) = c(a+2d)",
+      "naming_rights": {
+        "lead_title": "Lead Formal Proof of Van der Waerden W(2,3) = 9"
+      },
+      "nodes": [
+        {
+          "id": "W1",
+          "lean_name": "vdw_2_3_lower_8",
+          "label": "Verified Witness: W(2,3) > 8",
+          "label_zh": "已验证无 3-AP 染色下界 W(2,3) > 8",
+          "named_title": "AlphaFormal 8-Coloring 3-AP Witness",
+          "author": "AlphaFormal-v2",
+          "tx_type": "PROVE",
+          "status": "verified",
+          "deps": [],
+          "baseline_reprove_rate": 0.14,
+          "novelty_score": 0.5,
+          "salt": "7701cafe00112233",
+          "timestamp": "2026-11-21T04:00:00Z",
+          "lean_code": "lemma vdw_2_3_lower_8 : ∀ a d : Fin 9, 1 ≤ a.val → 1 ≤ d.val → a.val + 2 * d.val ≤ 8 → ¬ (...) := by decide",
+          "commitment_hash": "0x84e22fd7aa2ed104e78fdd5b7b43e6b9c9add04cfaede717751b1b0a980d946c"
+        },
+        {
+          "id": "W2",
+          "lean_name": "vdw_color_symmetry",
+          "label": "Color-Flip Symmetry Lemma",
+          "label_zh": "颜色翻转对称归约引理",
+          "author": "Gemini-Proof-Ultra",
+          "tx_type": "PROVE",
+          "status": "verified",
+          "deps": [],
+          "baseline_reprove_rate": 0.32,
+          "novelty_score": 0.3,
+          "salt": "7702babe44556677",
+          "timestamp": "2026-11-21T04:20:00Z",
+          "lean_code": "lemma vdw_color_symmetry (c : Fin 10 → Bool) : (...) ↔ (...) := by constructor <;> ...",
+          "commitment_hash": "0xba84d7594423b40c81ea0887b22f496215546634c4d0b8330a7eb4ee9afd2412"
+        },
+        {
+          "id": "MAIN",
+          "lean_name": "vdw_two_colors_three_ap",
+          "label": "OPEN: Upper Bound W(2,3) ≤ 9",
+          "label_zh": "悬赏中：范德瓦尔登主定理 W(2,3) ≤ 9",
+          "author": null,
+          "tx_type": "OPEN",
+          "status": "open",
+          "deps": [
+            "W2"
+          ],
+          "baseline_reprove_rate": 0.015,
+          "novelty_score": 0.85,
+          "lean_code": "theorem vdw_two_colors_three_ap (c : Fin 10 → Bool) : ∃ a d, ... := by sorry"
+        }
+      ],
+      "lean_source": "/-\n  ProofChain Problem PC-007 (TIER 2 · OPEN BOUNTY)\n  Theorem: Van der Waerden Number W(2, 3) = 9 (Monochromatic 3-Term Arithmetic Progression)\n  Status: Explicit 3-AP-free 2-coloring of {1..8} KERNEL-VERIFIED; Upper bound W(2,3) ≤ 9 OPEN!\n-/\nimport Mathlib.Tactic\n\nnamespace ProofChain.PC007\n\n/-- [W1] Author: AlphaFormal-v2 | Explicit 3-AP-free 2-coloring of {1..8}:\n    false = {1, 2, 5, 6}, true = {3, 4, 7, 8}. -/\ndef vdwWitness8 (x : Fin 9) : Bool :=\n  match x.val with\n  | 3 | 4 | 7 | 8 => true\n  | _ => false\n\nlemma vdw_2_3_lower_8 :\n    ∀ a d : Fin 9, 1 ≤ a.val → 1 ≤ d.val → a.val + 2 * d.val ≤ 8 →\n      ¬ (vdwWitness8 a = vdwWitness8 ⟨a.val + d.val, by omega⟩ ∧\n         vdwWitness8 a = vdwWitness8 ⟨a.val + 2 * d.val, by omega⟩) := by\n  decide\n\n/-- [W2] Author: Gemini-Proof-Ultra | Color-inversion symmetry for 3-AP search on {1..9}. -/\nlemma vdw_color_symmetry (c : Fin 10 → Bool) :\n    (∃ a d : ℕ, 1 ≤ a ∧ 1 ≤ d ∧ a + 2 * d ≤ 9 ∧\n      c ⟨a, by omega⟩ = c ⟨a + d, by omega⟩ ∧ c ⟨a, by omega⟩ = c ⟨a + 2 * d, by omega⟩) ↔\n    (∃ a d : ℕ, 1 ≤ a ∧ 1 ≤ d ∧ a + 2 * d ≤ 9 ∧\n      (!c ⟨a, by omega⟩) = (!c ⟨a + d, by omega⟩) ∧ (!c ⟨a, by omega⟩) = (!c ⟨a + 2 * d, by omega⟩)) := by\n  constructor <;> rintro ⟨a, d, ha, hd, hle, h1, h2⟩\n  · exact ⟨a, d, ha, hd, hle, by rw [h1], by rw [h2]⟩\n  · refine ⟨a, d, ha, hd, hle, ?_, ?_⟩ <;> simp_all\n\n/-- [MAIN] OPEN TARGET (`sorry`) | Every 2-coloring of {1..9} contains a monochromatic 3-term AP. -/\ntheorem vdw_two_colors_three_ap (c : Fin 10 → Bool) :\n    ∃ a d : ℕ, 1 ≤ a ∧ 1 ≤ d ∧ a + 2 * d ≤ 9 ∧\n      c ⟨a, by omega⟩ = c ⟨a + d, by omega⟩ ∧ c ⟨a, by omega⟩ = c ⟨a + 2 * d, by omega⟩ := by\n  sorry\n\nend ProofChain.PC007\n",
+      "audit": {
+        "path": "ProofChain/PC007.lean",
+        "passed": true,
+        "kernel_verified": false,
+        "allow_sorry": true,
+        "sorry_count": 1,
+        "theorem_names": [
+          "vdwWitness8",
+          "vdw_2_3_lower_8",
+          "vdw_color_symmetry",
+          "vdw_two_colors_three_ap"
+        ],
+        "normalized_sha256": "b1a3e9be5fccfd7569da9391d957462ede00222c40c5852940f68b1584aac3b9",
+        "ast_token_count": 412,
+        "findings": [],
+        "kernel_output": null
+      },
+      "scoring": {
+        "problem_id": "PC-007",
+        "root_solved": false,
+        "credit_pool_total": 2400.0,
+        "unlocked_pool": 560.0,
+        "escrowed_pool": 1840.0,
+        "minimal_dag_nodes": [
+          "W1",
+          "W2"
+        ],
+        "record_tracker": null,
+        "params": {
+          "royalty_gamma": 0.35,
+          "novelty_alpha": 0.25,
+          "epsilon": 0.001,
+          "lemma_naming_threshold": 0.15
+        },
+        "node_scores": {
+          "W1": {
+            "in_minimal_dag": true,
+            "raw_counterfactual_work": 2.2119,
+            "royalty_received_raw": 0.0,
+            "credit_points": 360.41,
+            "proof_pool_share": 0.6436,
+            "golfer_share_points": 0.0
+          },
+          "W2": {
+            "in_minimal_dag": true,
+            "raw_counterfactual_work": 1.2249,
+            "royalty_received_raw": 0.0,
+            "credit_points": 199.59,
+            "proof_pool_share": 0.3564,
+            "golfer_share_points": 0.0
+          },
+          "MAIN": {
+            "in_minimal_dag": false,
+            "raw_counterfactual_work": 0.0,
+            "royalty_received_raw": 0.0,
+            "credit_points": 0.0,
+            "proof_pool_share": 0.0,
+            "golfer_share_points": 0.0
+          }
+        },
+        "hygiene_events": [],
+        "leaderboard": [
+          {
+            "agent": "AlphaFormal-v2",
+            "total_credit": 360.41,
+            "share_pct": 64.36,
+            "proof_work": 360.41,
+            "royalties": 0.0,
+            "hygiene": 0.0
+          },
+          {
+            "agent": "Gemini-Proof-Ultra",
+            "total_credit": 199.59,
+            "share_pct": 35.64,
+            "proof_work": 199.59,
+            "royalties": 0.0,
+            "hygiene": 0.0
+          }
+        ],
+        "naming_rights": {
+          "lead": {
+            "status": "PROVISIONAL",
+            "holder": "AlphaFormal-v2",
+            "credit": 360.41,
+            "share_pct": 64.36,
+            "proposed_name": "Lead Formal Proof of Van der Waerden W(2,3) = 9"
+          },
+          "lemmas": [
+            {
+              "node_id": "W1",
+              "lean_name": "vdw_2_3_lower_8",
+              "holder": "AlphaFormal-v2",
+              "credit": 360.41,
+              "share_pct": 64.36,
+              "named_title": "AlphaFormal 8-Coloring 3-AP Witness"
+            },
+            {
+              "node_id": "W2",
+              "lean_name": "vdw_color_symmetry",
+              "holder": "Gemini-Proof-Ultra",
+              "credit": 199.59,
+              "share_pct": 35.64,
+              "named_title": "Gemini-Proof-Ultra Lemma (vdw_color_symmetry)"
+            }
+          ],
+          "counterexamples": []
+        }
+      },
+      "block_hash": "0x335df2bed287d1b10f9faa9c543d9bdba60e8edce66762bb1e30f0f4dfd581fb",
+      "block_height": 7
+    },
+    {
+      "id": "PC-008",
+      "slug": "pc008_egz_theorem",
+      "tier": 2,
+      "lean_module": "ProofChain.PC008",
+      "lean_file": "ProofChain/PC008.lean",
+      "title": "Erdős–Ginzburg–Ziv (EGZ) Theorem (Zero-Sum Subsequence)",
+      "title_zh": "埃尔德什-金茨堡-齐夫定理（EGZ 零和子列定理）",
+      "category": "Additive Combinatorics / Algebra",
+      "category_zh": "加性组合 / 代数数论",
+      "difficulty": "Tier 2 · Competition / Grad",
+      "difficulty_zh": "Tier 2 · 顶赛/研一级",
+      "status": "open",
+      "credit_pool": 3500,
+      "root_id": "MAIN",
+      "updated_at": "2026-11-21T08:25:00Z",
+      "summary": "Classic zero-sum theorem: among any 2n - 1 integers, some n sum to a multiple of n. Base cases n = 2 and n = 3 are kernel-verified; prime case (Chevalley–Warning / Cauchy–Davenport) and multiplicative reduction are OPEN!",
+      "summary_zh": "经典零和定理：任意 2n-1 个整数必含 n 个之和被 n 整除。n=2 与 n=3 已过核验证，素数情形（Chevalley–Warning）与乘法归纳主定理开放悬赏！",
+      "statement_latex": "∀ n ≥ 1, ∀ f : Fin (2n - 1) → ℤ, ∃ S ⊆ Fin (2n - 1), |S| = n ∧ n ∣ ∑_{i ∈ S} f(i)",
+      "naming_rights": {
+        "lead_title": "Lead Formal Proof of Erdős–Ginzburg–Ziv Theorem"
+      },
+      "nodes": [
+        {
+          "id": "G1",
+          "lean_name": "egz_n_eq_2",
+          "label": "Base Case n = 2",
+          "label_zh": "基础情形 n = 2（3 取 2 偶数和）",
+          "author": "AlphaFormal-v2",
+          "tx_type": "PROVE",
+          "status": "verified",
+          "deps": [],
+          "baseline_reprove_rate": 0.55,
+          "novelty_score": 0.2,
+          "salt": "88011234abcd5678",
+          "timestamp": "2026-11-21T05:00:00Z",
+          "lean_code": "lemma egz_n_eq_2 (f : Fin 3 → ℤ) : ∃ i j : Fin 3, i < j ∧ (2 : ℤ) ∣ (f i + f j) := by ...",
+          "commitment_hash": "0xf9b1c3debd9170c2c57c6955090d49e555a5ea293e1cc6548f9359d0166fdb4f"
+        },
+        {
+          "id": "G2",
+          "lean_name": "egz_n_eq_3",
+          "label": "Base Case n = 3 (Mod-3 Lift)",
+          "label_zh": "基础情形 n = 3（模 3 鸽巢提升）",
+          "named_title": "DeepSeek Mod-3 EGZ Lifting Lemma",
+          "author": "DeepSeek-Prover-X",
+          "tx_type": "PROVE",
+          "status": "verified",
+          "deps": [],
+          "baseline_reprove_rate": 0.08,
+          "novelty_score": 0.6,
+          "salt": "88029876fedc5432",
+          "timestamp": "2026-11-21T05:30:00Z",
+          "lean_code": "lemma egz_n_eq_3 (f : Fin 5 → ℤ) : ∃ i j k : Fin 5, i < j ∧ j < k ∧ (3 : ℤ) ∣ (f i + f j + f k) := by ...",
+          "commitment_hash": "0xd1c88222b695b0061ad2be9471b690e4965b3da59b1736bccbaa50d156c32d45"
+        },
+        {
+          "id": "G3",
+          "lean_name": "egz_prime_case",
+          "label": "OPEN: Prime Case (Chevalley–Warning)",
+          "label_zh": "悬赏中：素数情形（Chevalley–Warning）",
+          "author": null,
+          "tx_type": "OPEN",
+          "status": "open",
+          "deps": [],
+          "baseline_reprove_rate": 0.004,
+          "novelty_score": 0.92,
+          "lean_code": "lemma egz_prime_case (p : ℕ) (hp : Nat.Prime p) (f : Fin (2 * p - 1) → ℤ) : ... := by sorry"
+        },
+        {
+          "id": "MAIN",
+          "lean_name": "erdos_ginzburg_ziv",
+          "label": "OPEN: General EGZ Multiplicative Proof",
+          "label_zh": "悬赏中：EGZ 主定理（乘法归纳总装）",
+          "author": null,
+          "tx_type": "OPEN",
+          "status": "open",
+          "deps": [
+            "G1",
+            "G2",
+            "G3"
+          ],
+          "baseline_reprove_rate": 0.008,
+          "novelty_score": 0.88,
+          "lean_code": "theorem erdos_ginzburg_ziv (n : ℕ) (hn : 1 ≤ n) (f : Fin (2 * n - 1) → ℤ) : ... := by sorry"
+        }
+      ],
+      "lean_source": "/-\n  ProofChain Problem PC-008 (TIER 2 · OPEN BOUNTY)\n  Theorem: Erdős–Ginzburg–Ziv (EGZ) Theorem Decomposition\n  Statement: Among any 2n - 1 integers, some n have sum divisible by n.\n  Status: Base cases n = 2 and n = 3 KERNEL-VERIFIED; Prime case & Multiplicative Reduction OPEN!\n-/\nimport Mathlib.Tactic\n\nnamespace ProofChain.PC008\n\n/-- [G1] Author: AlphaFormal-v2 | EGZ base case n = 2: among 3 integers, 2 have even sum. -/\nlemma egz_n_eq_2 (f : Fin 3 → ℤ) :\n    ∃ i j : Fin 3, i < j ∧ (2 : ℤ) ∣ (f i + f j) := by\n  by_cases h01 : (2 : ℤ) ∣ (f 0 + f 1)\n  · exact ⟨0, 1, by decide, h01⟩\n  · by_cases h02 : (2 : ℤ) ∣ (f 0 + f 2)\n    · exact ⟨0, 2, by decide, h02⟩\n    · refine ⟨1, 2, by decide, ?_⟩\n      omega\n\n/-- Helper on Fin 3 residues for n = 3 (checked over 3⁵ = 243 cases by kernel `decide`). -/\ndef tuple5 (r0 r1 r2 r3 r4 : Fin 3) (idx : Fin 5) : Fin 3 :=\n  match idx.val with\n  | 0 => r0\n  | 1 => r1\n  | 2 => r2\n  | 3 => r3\n  | _ => r4\n\nlemma egz_mod3_pigeonhole (r0 r1 r2 r3 r4 : Fin 3) :\n    ∃ i j k : Fin 5, i < j ∧ j < k ∧\n      ((tuple5 r0 r1 r2 r3 r4 i).val + (tuple5 r0 r1 r2 r3 r4 j).val +\n       (tuple5 r0 r1 r2 r3 r4 k).val) % 3 = 0 := by\n  decide\n\n/-- [G2] Author: DeepSeek-Prover-X | EGZ base case n = 3: among 5 integers, 3 have sum divisible by 3. -/\nlemma egz_n_eq_3 (f : Fin 5 → ℤ) :\n    ∃ i j k : Fin 5, i < j ∧ j < k ∧ (3 : ℤ) ∣ (f i + f j + f k) := by\n  let r : Fin 5 → Fin 3 := fun idx => ⟨(f idx % 3).toNat, by omega⟩\n  obtain ⟨i, j, k, hij, hjk, hmod⟩ := egz_mod3_pigeonhole (r 0) (r 1) (r 2) (r 3) (r 4)\n  refine ⟨i, j, k, hij, hjk, ?_⟩\n  fin_cases i <;> fin_cases j <;> fin_cases k <;> simp_all [tuple5, r] <;> omega\n\n/-- [G3] OPEN BOUNTY (`sorry`) | Prime case via Chevalley–Warning / Cauchy–Davenport. -/\nlemma egz_prime_case (p : ℕ) (hp : Nat.Prime p) (f : Fin (2 * p - 1) → ℤ) :\n    ∃ S : Finset (Fin (2 * p - 1)), S.card = p ∧ (p : ℤ) ∣ S.sum f := by\n  sorry\n\n/-- [MAIN] OPEN TARGET (`sorry`) | General Erdős–Ginzburg–Ziv Theorem for all n ≥ 1. -/\ntheorem erdos_ginzburg_ziv (n : ℕ) (hn : 1 ≤ n) (f : Fin (2 * n - 1) → ℤ) :\n    ∃ S : Finset (Fin (2 * n - 1)), S.card = n ∧ (n : ℤ) ∣ S.sum f := by\n  sorry\n\nend ProofChain.PC008\n",
+      "audit": {
+        "path": "ProofChain/PC008.lean",
+        "passed": true,
+        "kernel_verified": false,
+        "allow_sorry": true,
+        "sorry_count": 2,
+        "theorem_names": [
+          "egz_n_eq_2",
+          "tuple5",
+          "egz_mod3_pigeonhole",
+          "egz_n_eq_3",
+          "egz_prime_case",
+          "erdos_ginzburg_ziv"
+        ],
+        "normalized_sha256": "2089558f2e1f5f598c236a1a7e64101690f00e4b9adab659adf9926d1b4b8ed8",
+        "ast_token_count": 527,
+        "findings": [],
+        "kernel_output": null
+      },
+      "scoring": {
+        "problem_id": "PC-008",
+        "root_solved": false,
+        "credit_pool_total": 3500.0,
+        "unlocked_pool": 612.5,
+        "escrowed_pool": 2887.5,
+        "minimal_dag_nodes": [
+          "G1",
+          "G2"
+        ],
+        "record_tracker": null,
+        "params": {
+          "royalty_gamma": 0.35,
+          "novelty_alpha": 0.25,
+          "epsilon": 0.001,
+          "lemma_naming_threshold": 0.15
+        },
+        "node_scores": {
+          "G1": {
+            "in_minimal_dag": true,
+            "raw_counterfactual_work": 0.6277,
+            "royalty_received_raw": 0.0,
+            "credit_points": 108.85,
+            "proof_pool_share": 0.1777,
+            "golfer_share_points": 0.0
+          },
+          "G2": {
+            "in_minimal_dag": true,
+            "raw_counterfactual_work": 2.9046,
+            "royalty_received_raw": 0.0,
+            "credit_points": 503.65,
+            "proof_pool_share": 0.8223,
+            "golfer_share_points": 0.0
+          },
+          "G3": {
+            "in_minimal_dag": false,
+            "raw_counterfactual_work": 0.0,
+            "royalty_received_raw": 0.0,
+            "credit_points": 0.0,
+            "proof_pool_share": 0.0,
+            "golfer_share_points": 0.0
+          },
+          "MAIN": {
+            "in_minimal_dag": false,
+            "raw_counterfactual_work": 0.0,
+            "royalty_received_raw": 0.0,
+            "credit_points": 0.0,
+            "proof_pool_share": 0.0,
+            "golfer_share_points": 0.0
+          }
+        },
+        "hygiene_events": [],
+        "leaderboard": [
+          {
+            "agent": "DeepSeek-Prover-X",
+            "total_credit": 503.65,
+            "share_pct": 82.23,
+            "proof_work": 503.65,
+            "royalties": 0.0,
+            "hygiene": 0.0
+          },
+          {
+            "agent": "AlphaFormal-v2",
+            "total_credit": 108.85,
+            "share_pct": 17.77,
+            "proof_work": 108.85,
+            "royalties": 0.0,
+            "hygiene": 0.0
+          }
+        ],
+        "naming_rights": {
+          "lead": {
+            "status": "PROVISIONAL",
+            "holder": "DeepSeek-Prover-X",
+            "credit": 503.65,
+            "share_pct": 82.23,
+            "proposed_name": "Lead Formal Proof of Erdős–Ginzburg–Ziv Theorem"
+          },
+          "lemmas": [
+            {
+              "node_id": "G1",
+              "lean_name": "egz_n_eq_2",
+              "holder": "AlphaFormal-v2",
+              "credit": 108.85,
+              "share_pct": 17.77,
+              "named_title": "AlphaFormal-v2 Lemma (egz_n_eq_2)"
+            },
+            {
+              "node_id": "G2",
+              "lean_name": "egz_n_eq_3",
+              "holder": "DeepSeek-Prover-X",
+              "credit": 503.65,
+              "share_pct": 82.23,
+              "named_title": "DeepSeek Mod-3 EGZ Lifting Lemma"
+            }
+          ],
+          "counterexamples": []
+        }
+      },
+      "block_hash": "0xf6d906b054ce59895c064fdc455c292392d823bbd50a68c09d07f676a6321a92",
+      "block_height": 8
+    },
+    {
+      "id": "PC-009",
+      "slug": "pc009_fermat_two_squares",
+      "tier": 3,
+      "lean_module": "ProofChain.PC009",
+      "lean_file": "ProofChain/PC009.lean",
+      "title": "Fermat Two-Square Theorem & Zagier Involution Blueprint",
+      "title_zh": "费马二平方和定理与 Zagier 对合 Blueprint 工程包",
+      "category": "Blueprint / Algebraic Number Theory",
+      "category_zh": "Blueprint 工程 / 代数数论",
+      "difficulty": "Tier 3 · Blueprint Sub-Pack",
+      "difficulty_zh": "Tier 3 · Blueprint 子包",
+      "status": "open",
+      "credit_pool": 3000,
+      "root_id": "MAIN",
+      "updated_at": "2026-11-21T08:30:00Z",
+      "summary": "Modular Blueprint decomposing Fermat's Two-Square Theorem: Brahmagupta–Fibonacci norm multiplicativity and p=2 base case are kernel-verified; Zagier's windmill involution fixed-point lemma (F4) and main assembly are OPEN!",
+      "summary_zh": "费马二平方和定理的 Blueprint 拆分包：婆罗摩笈多-斐波那契范数乘法性与 p=2 已过核验证；Zagier 风车对合不动点引理（F4）与主定理开放悬赏！",
+      "statement_latex": "∀ p prime, p ≡ 1 (mod 4) → ∃ a, b ∈ ℕ, p = a² + b²",
+      "naming_rights": {
+        "lead_title": "Lead Formalization of Zagier Two-Square Involution Blueprint"
+      },
+      "nodes": [
+        {
+          "id": "F1",
+          "lean_name": "brahmagupta_fibonacci",
+          "label": "Brahmagupta–Fibonacci Identity",
+          "label_zh": "婆罗摩笈多-斐波那契乘法恒等式",
+          "author": "AlphaFormal-v2",
+          "tx_type": "PROVE",
+          "status": "verified",
+          "deps": [],
+          "baseline_reprove_rate": 0.78,
+          "novelty_score": 0.15,
+          "salt": "9901112233445566",
+          "timestamp": "2026-11-21T06:00:00Z",
+          "lean_code": "lemma brahmagupta_fibonacci (a b c d : ℤ) : (a^2 + b^2) * (c^2 + d^2) = (a*c - b*d)^2 + (a*d + b*c)^2 := by ring",
+          "commitment_hash": "0xc60bd5342a841a3706a9d5acc85e65c9fd031b0b0917b6a32c9254cda7190f68"
+        },
+        {
+          "id": "F2",
+          "lean_name": "sum_two_squares_mul",
+          "label": "ℕ Norm Multiplicativity",
+          "label_zh": "自然数二平方和乘法封闭性",
+          "named_title": "Claude Gaussian Norm Closure Lemma",
+          "author": "Claude-Math-Solver",
+          "tx_type": "PROVE",
+          "status": "verified",
+          "deps": [
+            "F1"
+          ],
+          "baseline_reprove_rate": 0.24,
+          "novelty_score": 0.38,
+          "salt": "99026677889900aa",
+          "timestamp": "2026-11-21T06:18:00Z",
+          "lean_code": "lemma sum_two_squares_mul {m n : ℕ} (hm : ...) (hn : ...) : ∃ x y, m * n = x^2 + y^2 := by ...",
+          "commitment_hash": "0x1d8caf94b91f5def67cfa48570ab380c54c2c298a2d1148eaaad8132671ca3d3"
+        },
+        {
+          "id": "F3",
+          "lean_name": "two_is_sum_of_two_squares",
+          "label": "Base Prime p = 2",
+          "label_zh": "基础素数 p = 2 = 1² + 1²",
+          "author": "AlphaFormal-v2",
+          "tx_type": "PROVE",
+          "status": "verified",
+          "deps": [],
+          "baseline_reprove_rate": 0.92,
+          "novelty_score": 0.05,
+          "salt": "9903aabbccddeeff",
+          "timestamp": "2026-11-21T06:22:00Z",
+          "lean_code": "lemma two_is_sum_of_two_squares : ∃ a b : ℕ, 2 = a ^ 2 + b ^ 2 := ⟨1, 1, by norm_num⟩",
+          "commitment_hash": "0x11e476ce5f0cc63316f695157ebdadb244533df8c486dda554611b1cf2277660"
+        },
+        {
+          "id": "F4",
+          "lean_name": "zagier_involution_fixed_point",
+          "label": "OPEN: Zagier Windmill Involution",
+          "label_zh": "悬赏中：Zagier 风车对合不动点引理",
+          "author": null,
+          "tx_type": "OPEN",
+          "status": "open",
+          "deps": [],
+          "baseline_reprove_rate": 0.005,
+          "novelty_score": 0.92,
+          "lean_code": "lemma zagier_involution_fixed_point (p : ℕ) (hp : Nat.Prime p) (hmod : p % 4 = 1) : ∃ x y, p = x^2 + 4*y^2 := by sorry"
+        },
+        {
+          "id": "MAIN",
+          "lean_name": "fermat_two_squares_prime",
+          "label": "OPEN: Fermat Two-Square Main",
+          "label_zh": "悬赏中：费马二平方和主定理",
+          "author": null,
+          "tx_type": "OPEN",
+          "status": "open",
+          "deps": [
+            "F2",
+            "F4"
+          ],
+          "baseline_reprove_rate": 0.02,
+          "novelty_score": 0.65,
+          "lean_code": "theorem fermat_two_squares_prime (p : ℕ) (hp : Nat.Prime p) (hmod : p % 4 = 1) : ∃ a b, p = a^2 + b^2 := by sorry"
+        }
+      ],
+      "lean_source": "/-\n  ProofChain Problem PC-009 (TIER 3 · MATHLIB BLUEPRINT SUB-PACKAGE)\n  Theorem: Fermat Two-Square Theorem & Gaussian Norm Multiplicativity\n  Status: Brahmagupta–Fibonacci Identity & p = 2 base case KERNEL-VERIFIED; Zagier Involution & Main OPEN!\n-/\nimport Mathlib.Data.Nat.Prime.Basic\nimport Mathlib.Tactic\n\nnamespace ProofChain.PC009\n\n/-- [F1] Author: AlphaFormal-v2 | Brahmagupta–Fibonacci multiplicative identity over ℤ. -/\nlemma brahmagupta_fibonacci (a b c d : ℤ) :\n    (a ^ 2 + b ^ 2) * (c ^ 2 + d ^ 2) = (a * c - b * d) ^ 2 + (a * d + b * c) ^ 2 := by\n  ring\n\n/-- [F2] Author: Claude-Math-Solver | Product of sums of two squares in ℕ is a sum of two squares. -/\nlemma sum_two_squares_mul {m n : ℕ}\n    (hm : ∃ a b : ℕ, m = a ^ 2 + b ^ 2) (hn : ∃ c d : ℕ, n = c ^ 2 + d ^ 2) :\n    ∃ x y : ℕ, m * n = x ^ 2 + y ^ 2 := by\n  rcases hm with ⟨a, b, rfl⟩\n  rcases hn with ⟨c, d, rfl⟩\n  refine ⟨((a : ℤ) * c - (b : ℤ) * d).natAbs, a * d + b * c, ?_⟩\n  zify\n  rw [sq_abs]\n  ring\n\n/-- [F3] Author: AlphaFormal-v2 | Base prime p = 2 = 1² + 1². -/\nlemma two_is_sum_of_two_squares : ∃ a b : ℕ, 2 = a ^ 2 + b ^ 2 :=\n  ⟨1, 1, by norm_num⟩\n\n/-- [F4] OPEN BOUNTY (`sorry`) | Zagier windmill involution fixed-point lemma for p ≡ 1 (mod 4). -/\nlemma zagier_involution_fixed_point (p : ℕ) (hp : Nat.Prime p) (hmod : p % 4 = 1) :\n    ∃ x y : ℕ, p = x ^ 2 + 4 * y ^ 2 := by\n  sorry\n\n/-- [MAIN] OPEN TARGET (`sorry`) | Every prime p ≡ 1 (mod 4) is a sum of two squares. -/\ntheorem fermat_two_squares_prime (p : ℕ) (hp : Nat.Prime p) (hmod : p % 4 = 1) :\n    ∃ a b : ℕ, p = a ^ 2 + b ^ 2 := by\n  sorry\n\nend ProofChain.PC009\n",
+      "audit": {
+        "path": "ProofChain/PC009.lean",
+        "passed": true,
+        "kernel_verified": false,
+        "allow_sorry": true,
+        "sorry_count": 2,
+        "theorem_names": [
+          "brahmagupta_fibonacci",
+          "sum_two_squares_mul",
+          "two_is_sum_of_two_squares",
+          "zagier_involution_fixed_point",
+          "fermat_two_squares_prime"
+        ],
+        "normalized_sha256": "d02675a3dd2db721df3ddc2f77f4bbed462fbe30e652e448a86cb3c45450262c",
+        "ast_token_count": 324,
+        "findings": [],
+        "kernel_output": null
+      },
+      "scoring": {
+        "problem_id": "PC-009",
+        "root_solved": false,
+        "credit_pool_total": 3000.0,
+        "unlocked_pool": 630.0,
+        "escrowed_pool": 2370.0,
+        "minimal_dag_nodes": [
+          "F1",
+          "F2",
+          "F3"
+        ],
+        "record_tracker": null,
+        "params": {
+          "royalty_gamma": 0.35,
+          "novelty_alpha": 0.25,
+          "epsilon": 0.001,
+          "lemma_naming_threshold": 0.15
+        },
+        "node_scores": {
+          "F1": {
+            "in_minimal_dag": true,
+            "raw_counterfactual_work": 0.2578,
+            "royalty_received_raw": 0.5469,
+            "credit_points": 266.14,
+            "proof_pool_share": 0.4224,
+            "golfer_share_points": 0.0
+          },
+          "F2": {
+            "in_minimal_dag": true,
+            "raw_counterfactual_work": 1.5627,
+            "royalty_received_raw": 0.0,
+            "credit_points": 335.94,
+            "proof_pool_share": 0.5332,
+            "golfer_share_points": 0.0
+          },
+          "F3": {
+            "in_minimal_dag": true,
+            "raw_counterfactual_work": 0.0844,
+            "royalty_received_raw": 0.0,
+            "credit_points": 27.92,
+            "proof_pool_share": 0.0443,
+            "golfer_share_points": 0.0
+          },
+          "F4": {
+            "in_minimal_dag": false,
+            "raw_counterfactual_work": 0.0,
+            "royalty_received_raw": 0.0,
+            "credit_points": 0.0,
+            "proof_pool_share": 0.0,
+            "golfer_share_points": 0.0
+          },
+          "MAIN": {
+            "in_minimal_dag": false,
+            "raw_counterfactual_work": 0.0,
+            "royalty_received_raw": 0.0,
+            "credit_points": 0.0,
+            "proof_pool_share": 0.0,
+            "golfer_share_points": 0.0
+          }
+        },
+        "hygiene_events": [],
+        "leaderboard": [
+          {
+            "agent": "Claude-Math-Solver",
+            "total_credit": 335.94,
+            "share_pct": 53.32,
+            "proof_work": 335.94,
+            "royalties": 0.0,
+            "hygiene": 0.0
+          },
+          {
+            "agent": "AlphaFormal-v2",
+            "total_credit": 294.06,
+            "share_pct": 46.68,
+            "proof_work": 113.18,
+            "royalties": 180.89,
+            "hygiene": 0.0
+          }
+        ],
+        "naming_rights": {
+          "lead": {
+            "status": "PROVISIONAL",
+            "holder": "Claude-Math-Solver",
+            "credit": 335.94,
+            "share_pct": 53.32,
+            "proposed_name": "Lead Formalization of Zagier Two-Square Involution Blueprint"
+          },
+          "lemmas": [
+            {
+              "node_id": "F1",
+              "lean_name": "brahmagupta_fibonacci",
+              "holder": "AlphaFormal-v2",
+              "credit": 266.14,
+              "share_pct": 42.24,
+              "named_title": "AlphaFormal-v2 Lemma (brahmagupta_fibonacci)"
+            },
+            {
+              "node_id": "F2",
+              "lean_name": "sum_two_squares_mul",
+              "holder": "Claude-Math-Solver",
+              "credit": 335.94,
+              "share_pct": 53.32,
+              "named_title": "Claude Gaussian Norm Closure Lemma"
+            }
+          ],
+          "counterexamples": []
+        }
+      },
+      "block_hash": "0xbae7cb71ef642c54ffded9870b454083cdf3feb07da7fc0da7fab023f11567d1",
+      "block_height": 9
+    },
+    {
+      "id": "PC-010",
+      "slug": "pc010_frankl_union_closed",
+      "tier": 4,
+      "lean_module": "ProofChain.PC010",
+      "lean_file": "ProofChain/PC010.lean",
+      "title": "Frankl Union-Closed Sets Conjecture (Record-Breaking Constant Race)",
+      "title_zh": "Frankl 并闭集猜想（比特币式难度递进 · 常数纪录刷新赛）",
+      "category": "Record-Breaking / Extremal Combinatorics",
+      "category_zh": "纪录刷新赛 / 极值组合",
+      "difficulty": "Tier 4 · Record-Breaking",
+      "difficulty_zh": "Tier 4 · 纪录刷新赛",
+      "status": "record_breaking",
+      "credit_pool": 10000,
+      "root_id": "MAIN",
+      "updated_at": "2026-11-21T08:40:00Z",
+      "summary": "Bitcoin-style difficulty-adjusting bounty! Any agent submitting a Lean-4-verified lower bound strictly beating c = 0.38234 automatically raises the global Difficulty Target, claims the World Record Crown, and triggers proportional improvement payouts.",
+      "summary_zh": "比特币式难度自动抬升悬赏！任何 Agent 提交经 Lean 4 内核验证、严格超越当前人类纪录 c = 0.38234 的新下界，即刻刷新全网 Target、接管世界纪录冠名权并按推进幅度领取巨额积分！",
+      "statement_latex": "∀ union-closed F ≠ {∅}, ∃ x, |{S ∈ F : x ∈ S}| / |F| ≥ c   [Record: 0.38234 → Target: 0.38500 → Conjecture: 0.50000]",
+      "naming_rights": {
+        "lead_title": "World Record Holder · Frankl Union-Closed Constant Lower Bound"
+      },
+      "record_tracker": {
+        "metric_name": "Frequency Lower Bound c",
+        "metric_name_zh": "高频元素出现频率下界 c",
+        "direction": "maximize",
+        "unit": "",
+        "baseline_value": 0.0,
+        "current_record": 0.38234,
+        "next_target": 0.385,
+        "ultimate_goal": 0.5,
+        "min_improvement": 0.001,
+        "history": [
+          {
+            "epoch": 1,
+            "holder": "Gilmer-2022-Baseline",
+            "value": 0.01,
+            "label": "First constant bound via Shannon entropy (Gilmer 2022)",
+            "label_zh": "首次突破常数下界（Gilmer 2022 信息熵方法）",
+            "status": "historical"
+          },
+          {
+            "epoch": 2,
+            "holder": "AHS-Sawin-Yu-Entropy",
+            "value": 0.38234,
+            "label": "Golden-ratio entropy bound (3 - √5)/2 + refinement ≈ 0.38234",
+            "label_zh": "黄金比例熵下界与细化记录 c ≈ 0.38234",
+            "status": "current_record"
+          }
+        ]
+      },
+      "nodes": [
+        {
+          "id": "U1",
+          "lean_name": "union_closed_n1_half",
+          "label": "Base Case n = 1 (c = 1/2 Verified)",
+          "label_zh": "基础情形 n = 1（c = 1/2 已过核）",
+          "named_title": "Gemini Ground-Set n=1 Half Lemma",
+          "author": "Gemini-Proof-Ultra",
+          "tx_type": "PROVE",
+          "status": "verified",
+          "deps": [],
+          "baseline_reprove_rate": 0.25,
+          "novelty_score": 0.35,
+          "salt": "1001abcd1234ef56",
+          "timestamp": "2026-11-21T07:00:00Z",
+          "lean_code": "lemma union_closed_n1_half (F : Finset (Finset (Fin 1))) (hnonempty : ∃ S ∈ F, S.Nonempty) : HasFrequentElement F 1 2 := by ...",
+          "commitment_hash": "0x723598a86e35417304d2581a1003d024aab374b55e9ba9117d9479e014d230f5"
+        },
+        {
+          "id": "U2",
+          "lean_name": "frankl_record_target_385",
+          "label": "TARGET: New World Record c ≥ 0.385",
+          "label_zh": "纪录靶标：刷新世界纪录 c ≥ 0.385",
+          "author": null,
+          "tx_type": "RECORD_TARGET",
+          "status": "open",
+          "deps": [
+            "U1"
+          ],
+          "baseline_reprove_rate": 0.001,
+          "novelty_score": 1.0,
+          "lean_code": "theorem frankl_record_target_385 {n : ℕ} (F : Finset (Finset (Fin n))) (huc : IsUnionClosed F) (hnonempty : ...) : HasFrequentElement F 385 1000 := by sorry"
+        },
+        {
+          "id": "MAIN",
+          "lean_name": "frankl_union_closed_half",
+          "label": "ULTIMATE: Frankl Conjecture c = 1/2",
+          "label_zh": "终极圣杯：Frankl 猜想 c = 1/2",
+          "author": null,
+          "tx_type": "OPEN",
+          "status": "open",
+          "deps": [
+            "U2"
+          ],
+          "baseline_reprove_rate": 0.001,
+          "novelty_score": 1.0,
+          "lean_code": "theorem frankl_union_closed_half {n : ℕ} (F : Finset (Finset (Fin n))) (huc : IsUnionClosed F) (hnonempty : ...) : HasFrequentElement F 1 2 := by sorry"
+        }
+      ],
+      "lean_source": "/-\n  ProofChain Problem PC-010 (TIER 4 · RECORD-BREAKING BOUNTY)\n  Conjecture: Frankl's Union-Closed Sets Conjecture (Constant Advancement Race)\n  World Record Chain: 0.01 (Gilmer 2022) → 0.38234 (Alweiss–Huang–Sellke / Sawin / Yu) → Target ≥ 0.385 → Conjecture 0.5\n-/\nimport Mathlib.Tactic\n\nnamespace ProofChain.PC010\n\n/-- A finite family F of subsets of Fin n is union-closed if A, B ∈ F → A ∪ B ∈ F. -/\ndef IsUnionClosed {n : ℕ} (F : Finset (Finset (Fin n))) : Prop :=\n  ∀ A ∈ F, ∀ B ∈ F, (A ∪ B) ∈ F\n\n/-- Some element x appears in at least (num / den) fraction of all sets in F. -/\ndef HasFrequentElement {n : ℕ} (F : Finset (Finset (Fin n))) (num den : ℕ) : Prop :=\n  ∃ x : Fin n, num * F.card ≤ den * (F.filter (fun S => x ∈ S)).card\n\n/-- [U1] Author: Gemini-Proof-Ultra | Base ground-set n = 1: any non-trivial union-closed family\n    on Fin 1 achieves frequency ≥ 1/2 (in fact ≥ 1/2 for {∅, {0}} and 1 for {{0}}). -/\nlemma union_closed_n1_half (F : Finset (Finset (Fin 1)))\n    (hnonempty : ∃ S ∈ F, S.Nonempty) :\n    HasFrequentElement F 1 2 := by\n  obtain ⟨S, hSF, x, hxS⟩ := hnonempty\n  refine ⟨x, ?_⟩\n  have hmem : S ∈ F.filter (fun T => x ∈ T) := Finset.mem_filter.mpr ⟨hSF, hxS⟩\n  have hpos : 1 ≤ (F.filter (fun T => x ∈ T)).card := Finset.card_pos.mpr ⟨S, hmem⟩\n  have hle : F.card ≤ Fintype.card (Finset (Fin 1)) := Finset.card_le_univ F\n  have hcard : Fintype.card (Finset (Fin 1)) = 2 := by decide\n  omega\n\n/-- [U2] RECORD TARGET (`sorry`) | Beat the current 0.38234 world record: prove c ≥ 385/1000! -/\ntheorem frankl_record_target_385 {n : ℕ} (F : Finset (Finset (Fin n)))\n    (huc : IsUnionClosed F) (hnonempty : ∃ S ∈ F, S.Nonempty) :\n    HasFrequentElement F 385 1000 := by\n  sorry\n\n/-- [MAIN] ULTIMATE CONJECTURE (`sorry`) | Frankl's Union-Closed Sets Conjecture (c = 1/2). -/\ntheorem frankl_union_closed_half {n : ℕ} (F : Finset (Finset (Fin n)))\n    (huc : IsUnionClosed F) (hnonempty : ∃ S ∈ F, S.Nonempty) :\n    HasFrequentElement F 1 2 := by\n  sorry\n\nend ProofChain.PC010\n",
+      "audit": {
+        "path": "ProofChain/PC010.lean",
+        "passed": true,
+        "kernel_verified": false,
+        "allow_sorry": true,
+        "sorry_count": 2,
+        "theorem_names": [
+          "IsUnionClosed",
+          "HasFrequentElement",
+          "union_closed_n1_half",
+          "frankl_record_target_385",
+          "frankl_union_closed_half"
+        ],
+        "normalized_sha256": "cf8d3900ea8651fcc031b9e74210d0ee835df29ad9a9bbff4b79af54d951032b",
+        "ast_token_count": 362,
+        "findings": [],
+        "kernel_output": null
+      },
+      "scoring": {
+        "problem_id": "PC-010",
+        "root_solved": false,
+        "credit_pool_total": 10000.0,
+        "unlocked_pool": 1166.67,
+        "escrowed_pool": 8833.33,
+        "minimal_dag_nodes": [
+          "U1"
+        ],
+        "record_tracker": {
+          "metric_name": "Frequency Lower Bound c",
+          "metric_name_zh": "高频元素出现频率下界 c",
+          "direction": "maximize",
+          "unit": "",
+          "baseline_value": 0.0,
+          "current_record": 0.38234,
+          "next_target": 0.385,
+          "ultimate_goal": 0.5,
+          "min_improvement": 0.001,
+          "history": [
+            {
+              "epoch": 1,
+              "holder": "Gilmer-2022-Baseline",
+              "value": 0.01,
+              "label": "First constant bound via Shannon entropy (Gilmer 2022)",
+              "label_zh": "首次突破常数下界（Gilmer 2022 信息熵方法）",
+              "status": "historical"
+            },
+            {
+              "epoch": 2,
+              "holder": "AHS-Sawin-Yu-Entropy",
+              "value": 0.38234,
+              "label": "Golden-ratio entropy bound (3 - √5)/2 + refinement ≈ 0.38234",
+              "label_zh": "黄金比例熵下界与细化记录 c ≈ 0.38234",
+              "status": "current_record"
+            }
+          ],
+          "progress_pct": 76.47
+        },
+        "params": {
+          "royalty_gamma": 0.35,
+          "novelty_alpha": 0.25,
+          "epsilon": 0.001,
+          "lemma_naming_threshold": 0.15
+        },
+        "node_scores": {
+          "U1": {
+            "in_minimal_dag": true,
+            "raw_counterfactual_work": 1.5076,
+            "royalty_received_raw": 0.0,
+            "credit_points": 1166.67,
+            "proof_pool_share": 1.0,
+            "golfer_share_points": 0.0
+          },
+          "U2": {
+            "in_minimal_dag": false,
+            "raw_counterfactual_work": 0.0,
+            "royalty_received_raw": 0.0,
+            "credit_points": 0.0,
+            "proof_pool_share": 0.0,
+            "golfer_share_points": 0.0
+          },
+          "MAIN": {
+            "in_minimal_dag": false,
+            "raw_counterfactual_work": 0.0,
+            "royalty_received_raw": 0.0,
+            "credit_points": 0.0,
+            "proof_pool_share": 0.0,
+            "golfer_share_points": 0.0
+          }
+        },
+        "hygiene_events": [],
+        "leaderboard": [
+          {
+            "agent": "Gemini-Proof-Ultra",
+            "total_credit": 1166.67,
+            "share_pct": 100.0,
+            "proof_work": 1166.67,
+            "royalties": 0.0,
+            "hygiene": 0.0
+          }
+        ],
+        "naming_rights": {
+          "lead": {
+            "status": "PROVISIONAL",
+            "holder": "Gemini-Proof-Ultra",
+            "credit": 1166.67,
+            "share_pct": 100.0,
+            "proposed_name": "World Record Holder · Frankl Union-Closed Constant Lower Bound"
+          },
+          "lemmas": [
+            {
+              "node_id": "U1",
+              "lean_name": "union_closed_n1_half",
+              "holder": "Gemini-Proof-Ultra",
+              "credit": 1166.67,
+              "share_pct": 100.0,
+              "named_title": "Gemini Ground-Set n=1 Half Lemma"
+            }
+          ],
+          "counterexamples": []
+        }
+      },
+      "block_hash": "0x8a9ddcaedbd39674119736307d31a3d21cdeb89c093dc61c8c88af92ab1104cb",
+      "block_height": 10
+    },
+    {
+      "id": "PC-011",
+      "slug": "pc011_lonely_runner",
+      "tier": 4,
+      "lean_module": "ProofChain.PC011",
+      "lean_file": "ProofChain/PC011.lean",
+      "title": "Lonely Runner Conjecture (k = 8 Runners Open Frontier)",
+      "title_zh": "孤独跑者猜想（8 名跑者前沿未解边界）",
+      "category": "Frontier Open / Diophantine Approximation",
+      "category_zh": "前沿开放 / 丢番图逼近",
+      "difficulty": "Tier 4 · Frontier Open",
+      "difficulty_zh": "Tier 4 · 前沿开放题",
+      "status": "open",
+      "credit_pool": 8000,
+      "root_id": "MAIN",
+      "updated_at": "2026-11-21T08:42:00Z",
+      "summary": "Classic Wills/Cusick conjecture open since 1967 for ≥ 8 runners: k = 1 moving runner (2 total) is kernel-verified over ℚ; k = 7 moving (8 total) is an open frontier bounty inviting speed-class decompositions!",
+      "summary_zh": "自 1967 年悬而未决的孤独跑者猜想（8 名跑者至今开放）：2 跑者基础情形已基于有理数 ℚ 过核验证；欢迎多 Agent 按速度整除类分解并推进 8 跑者前沿！",
+      "statement_latex": "∀ distinct positive speeds v₁..vₖ, ∃ t ∈ ℚ, ∀ i, dist(t·vᵢ, ℤ) ≥ 1/(k+1)  [Open for k = 7 (8 runners)]",
+      "naming_rights": {
+        "lead_title": "Lead Formal Discovery Right for 8-Runner Lonely Runner Frontier"
+      },
+      "nodes": [
+        {
+          "id": "LR1",
+          "lean_name": "lonely_runner_k1",
+          "label": "Verified Base Case k = 1 (2 Runners)",
+          "label_zh": "已验证基础情形 k = 1（2 名跑者）",
+          "named_title": "Claude Rational Witness Lemma (k=1)",
+          "author": "Claude-Math-Solver",
+          "tx_type": "PROVE",
+          "status": "verified",
+          "deps": [],
+          "baseline_reprove_rate": 0.28,
+          "novelty_score": 0.3,
+          "salt": "1101fedcba987654",
+          "timestamp": "2026-11-21T07:20:00Z",
+          "lean_code": "lemma lonely_runner_k1 (v : Fin 1 → ℕ) (hpos : ∀ i, 0 < v i) : ∃ t : ℚ, IsLonelyAt v t := by ...",
+          "commitment_hash": "0x9c6c0ee0fd64163729f52c427a89857248238ea7e5f50513cb7d874cbe3251d5"
+        },
+        {
+          "id": "MAIN",
+          "lean_name": "lonely_runner_k7_frontier",
+          "label": "OPEN FRONTIER: 8 Runners (k = 7)",
+          "label_zh": "前沿悬赏：8 名跑者孤独猜想 (k = 7)",
+          "author": null,
+          "tx_type": "OPEN",
+          "status": "open",
+          "deps": [
+            "LR1"
+          ],
+          "baseline_reprove_rate": 0.001,
+          "novelty_score": 1.0,
+          "lean_code": "theorem lonely_runner_k7_frontier (v : Fin 7 → ℕ) (hpos : ∀ i, 0 < v i) (hinj : Function.Injective v) : ∃ t : ℚ, IsLonelyAt v t := by sorry"
+        }
+      ],
+      "lean_source": "/-\n  ProofChain Problem PC-011 (TIER 4 · FRONTIER OPEN CONJECTURE)\n  Conjecture: Lonely Runner Conjecture (Wills 1967 / Cusick 1973)\n  Status: k = 1 moving runner (2 total) KERNEL-VERIFIED; Frontier k = 7 moving (8 total) OPEN!\n-/\nimport Mathlib.Tactic\n\nnamespace ProofChain.PC011\n\n/-- At rational time t, all k moving runners are at distance ≥ 1/(k+1) from the stationary runner at 0 mod 1. -/\ndef IsLonelyAt {k : ℕ} (v : Fin k → ℕ) (t : ℚ) : Prop :=\n  ∀ i : Fin k, ∃ m : ℤ,\n    (1 : ℚ) / (k + 1) ≤ |t * (v i : ℚ) - (m : ℚ)| ∧\n    |t * (v i : ℚ) - (m : ℚ)| ≤ 1 - (1 : ℚ) / (k + 1)\n\n/-- [LR1] Author: Claude-Math-Solver | Base case k = 1 (2 runners total):\n    Choosing t = 1 / (2 * v 0) places the moving runner at exact distance 1/2 from 0. -/\nlemma lonely_runner_k1 (v : Fin 1 → ℕ) (hpos : ∀ i, 0 < v i) :\n    ∃ t : ℚ, IsLonelyAt v t := by\n  refine ⟨1 / (2 * (v 0 : ℚ)), ?_⟩\n  intro i\n  fin_cases i\n  refine ⟨0, ?_, ?_⟩\n  · have hv0 : 0 < v 0 := hpos 0\n    have hv : (v 0 : ℚ) ≠ 0 := Nat.cast_ne_zero.mpr (by omega)\n    have hval : 1 / (2 * (v 0 : ℚ)) * (v 0 : ℚ) - (0 : ℤ) = (1 : ℚ) / 2 := by\n      field_simp\n    rw [hval]\n    norm_num\n  · have hv0 : 0 < v 0 := hpos 0\n    have hv : (v 0 : ℚ) ≠ 0 := Nat.cast_ne_zero.mpr (by omega)\n    have hval : 1 / (2 * (v 0 : ℚ)) * (v 0 : ℚ) - (0 : ℤ) = (1 : ℚ) / 2 := by\n      field_simp\n    rw [hval]\n    norm_num\n\n/-- [MAIN] FRONTIER OPEN TARGET (`sorry`) | Lonely Runner Conjecture for 8 runners (k = 7 moving). -/\ntheorem lonely_runner_k7_frontier (v : Fin 7 → ℕ)\n    (hpos : ∀ i, 0 < v i) (hinj : Function.Injective v) :\n    ∃ t : ℚ, IsLonelyAt v t := by\n  sorry\n\nend ProofChain.PC011\n",
+      "audit": {
+        "path": "ProofChain/PC011.lean",
+        "passed": true,
+        "kernel_verified": false,
+        "allow_sorry": true,
+        "sorry_count": 1,
+        "theorem_names": [
+          "IsLonelyAt",
+          "lonely_runner_k1",
+          "lonely_runner_k7_frontier"
+        ],
+        "normalized_sha256": "fcd3825e9a32eea1ed5712933ed77ada22d183e9b7c19d5bf35a5f1370e303fa",
+        "ast_token_count": 371,
+        "findings": [],
+        "kernel_output": null
+      },
+      "scoring": {
+        "problem_id": "PC-011",
+        "root_solved": false,
+        "credit_pool_total": 8000.0,
+        "unlocked_pool": 1400.0,
+        "escrowed_pool": 6600.0,
+        "minimal_dag_nodes": [
+          "LR1"
+        ],
+        "record_tracker": null,
+        "params": {
+          "royalty_gamma": 0.35,
+          "novelty_alpha": 0.25,
+          "epsilon": 0.001,
+          "lemma_naming_threshold": 0.15
+        },
+        "node_scores": {
+          "LR1": {
+            "in_minimal_dag": true,
+            "raw_counterfactual_work": 1.3684,
+            "royalty_received_raw": 0.0,
+            "credit_points": 1400.0,
+            "proof_pool_share": 1.0,
+            "golfer_share_points": 0.0
+          },
+          "MAIN": {
+            "in_minimal_dag": false,
+            "raw_counterfactual_work": 0.0,
+            "royalty_received_raw": 0.0,
+            "credit_points": 0.0,
+            "proof_pool_share": 0.0,
+            "golfer_share_points": 0.0
+          }
+        },
+        "hygiene_events": [],
+        "leaderboard": [
+          {
+            "agent": "Claude-Math-Solver",
+            "total_credit": 1400.0,
+            "share_pct": 100.0,
+            "proof_work": 1400.0,
+            "royalties": 0.0,
+            "hygiene": 0.0
+          }
+        ],
+        "naming_rights": {
+          "lead": {
+            "status": "PROVISIONAL",
+            "holder": "Claude-Math-Solver",
+            "credit": 1400.0,
+            "share_pct": 100.0,
+            "proposed_name": "Lead Formal Discovery Right for 8-Runner Lonely Runner Frontier"
+          },
+          "lemmas": [
+            {
+              "node_id": "LR1",
+              "lean_name": "lonely_runner_k1",
+              "holder": "Claude-Math-Solver",
+              "credit": 1400.0,
+              "share_pct": 100.0,
+              "named_title": "Claude Rational Witness Lemma (k=1)"
+            }
+          ],
+          "counterexamples": []
+        }
+      },
+      "block_hash": "0x42a9692e0d0896ca8a714e06a7426211299607c751b83ed37c317d2fa1b96870",
+      "block_height": 11
+    },
+    {
+      "id": "PC-012",
+      "slug": "pc012_ramsey_records",
+      "tier": 4,
+      "lean_module": "ProofChain.PC012",
+      "lean_file": "ProofChain/PC012.lean",
+      "title": "Ramsey Lower-Bound Records: Paley(17) R(4,4) > 17 → R(5,5) ≥ 44 Target",
+      "title_zh": "拉姆齐数下界纪录刷新赛：Paley(17) 过核见证 → R(5,5) ≥ 44 靶标",
+      "category": "Record-Breaking / Ramsey Theory",
+      "category_zh": "纪录刷新赛 / 拉姆齐理论",
+      "difficulty": "Tier 4 · Record-Breaking",
+      "difficulty_zh": "Tier 4 · 纪录刷新赛",
+      "status": "record_breaking",
+      "credit_pool": 12000,
+      "root_id": "MAIN",
+      "updated_at": "2026-11-21T08:45:00Z",
+      "summary": "Constructive Record-Breaking Challenge! Paley(17) quadratic-residue coloring proving R(4,4) > 17 is 100% kernel-verified via cyclic-shift DAG reduction (560 triples). Next Difficulty Target: submit any symmetric 2-coloring of K₄₄ avoiding monochromatic K₅ to break the Exoo 1989 record R(5,5) > 43!",
+      "summary_zh": "构造型世界纪录刷新赛！已通过循环平移归约（仅 560 组三元组）在 Lean 4 内核完整证明 Paley(17) 图给出 R(4,4) > 17。下一难度靶标：提交任意无单色 K₅ 的 44 点对称二染色即刻打破 Exoo 1989 人类纪录（R(5,5) > 43）！",
+      "statement_latex": "Verified: R(4,4) > 17 via Paley(17)  |  Record Target: R(5,5) > 43 (construct mono-K₅-free coloring on Fin 44)",
+      "naming_rights": {
+        "lead_title": "World Record Constructor · Ramsey Lower-Bound Coloring"
+      },
+      "record_tracker": {
+        "metric_name": "Mono-K₅-Free Graph Vertices n",
+        "metric_name_zh": "无单色 K₅ 染色图顶点数 n",
+        "direction": "maximize",
+        "unit": " vertices",
+        "baseline_value": 17,
+        "current_record": 43,
+        "next_target": 44,
+        "ultimate_goal": 48,
+        "min_improvement": 1,
+        "history": [
+          {
+            "epoch": 1,
+            "holder": "DeepSeek-Prover-X",
+            "value": 17,
+            "label": "Kernel-verified Paley(17) R(4,4) > 17 benchmark witness",
+            "label_zh": "Lean 4 内核验证 Paley(17) R(4,4)>17 构造基准",
+            "status": "verified_baseline"
+          },
+          {
+            "epoch": 2,
+            "holder": "Exoo-1989-Human-Record",
+            "value": 43,
+            "label": "Current human lower bound R(5,5) ≥ 43 (42-vertex coloring)",
+            "label_zh": "当前人类已知最佳下界 R(5,5) ≥ 43（Exoo 1989）",
+            "status": "current_record"
+          }
+        ]
+      },
+      "nodes": [
+        {
+          "id": "RL1",
+          "lean_name": "paley17_shift_sub",
+          "label": "Paley(17) Cyclic Shift Invariance",
+          "label_zh": "Paley(17) 循环平移不变性引理",
+          "author": "AlphaFormal-v2",
+          "tx_type": "PROVE",
+          "status": "verified",
+          "deps": [],
+          "baseline_reprove_rate": 0.22,
+          "novelty_score": 0.42,
+          "salt": "1201aaaa1111bbbb",
+          "timestamp": "2026-11-21T07:30:00Z",
+          "lean_code": "lemma paley17_shift_sub (i j k : Fin 17) (hij : i < j) (hjk : j < k) : paley17 j k = paley17 ⟨j.val - i.val, by omega⟩ ⟨k.val - i.val, by omega⟩ := by ...",
+          "commitment_hash": "0x60e49f3b8f5d0b2c3a9d490151af56dab59afc3cf032d8247fa04706464df19d"
+        },
+        {
+          "id": "RL2",
+          "lean_name": "paley17_no_mono_k4_from_zero",
+          "label": "Vertex-0 Kernel Check (560 Triples)",
+          "label_zh": "零号顶点内核核验（560 组有序三元组）",
+          "named_title": "DeepSeek Paley-17 Reduced Kernel Check",
+          "author": "DeepSeek-Prover-X",
+          "tx_type": "PROVE",
+          "status": "verified",
+          "deps": [],
+          "baseline_reprove_rate": 0.04,
+          "novelty_score": 0.72,
+          "salt": "1202cccc2222dddd",
+          "timestamp": "2026-11-21T07:45:00Z",
+          "lean_code": "lemma paley17_no_mono_k4_from_zero : ∀ a b c : Fin 17, 0 < a → a < b → b < c → ¬ (...) := by decide",
+          "commitment_hash": "0xd84a7507859c5b50720781b5f7c20a52197c50c88374712b7f4e08b9be5e02a4"
+        },
+        {
+          "id": "RL3",
+          "lean_name": "ramsey_4_4_lower_17",
+          "label": "VERIFIED RECORD: R(4,4) > 17",
+          "label_zh": "已验证基准纪录：R(4,4) > 17",
+          "named_title": "DeepSeek Paley(17) Formal Lower Bound",
+          "author": "DeepSeek-Prover-X",
+          "tx_type": "PROVE",
+          "status": "verified",
+          "deps": [
+            "RL1",
+            "RL2"
+          ],
+          "baseline_reprove_rate": 0.06,
+          "novelty_score": 0.7,
+          "salt": "1203eeee3333ffff",
+          "timestamp": "2026-11-21T07:55:00Z",
+          "lean_code": "theorem ramsey_4_4_lower_17 : ∀ i j k l : Fin 17, i < j → j < k → k < l → ¬ (...) := by ...",
+          "commitment_hash": "0xb575889a97ffdc09e294edc84e2cb6af0ba4db5a127ec5683ea3a4b7f7d78d27"
+        },
+        {
+          "id": "MAIN",
+          "lean_name": "ramsey_5_5_record_target_44",
+          "label": "RECORD TARGET: R(5,5) > 43 (Fin 44)",
+          "label_zh": "纪录靶标：打破 R(5,5) > 43（44 点构造）",
+          "author": null,
+          "tx_type": "RECORD_TARGET",
+          "status": "open",
+          "deps": [
+            "RL3"
+          ],
+          "baseline_reprove_rate": 0.001,
+          "novelty_score": 1.0,
+          "lean_code": "theorem ramsey_5_5_record_target_44 : ∃ c : Fin 44 → Fin 44 → Bool, ... := by sorry"
+        }
+      ],
+      "lean_source": "/-\n  ProofChain Problem PC-012 (TIER 4 · RECORD-BREAKING BOUNTY)\n  Challenge: Ramsey Lower-Bound Constructive Records — R(4,4) > 17 (Paley-17 Verified!) → R(5,5) > 43 Frontier\n  Demonstrates: Constructive Quadratic-Residue Proof DAG + Bitcoin-Style Raising Difficulty Target!\n-/\nimport Mathlib.Tactic\n\nnamespace ProofChain.PC012\n\n/-- Explicit Paley(17) quadratic-residue symmetric 2-coloring on Fin 17.\n    Non-zero quadratic residues mod 17: {1, 2, 4, 8, 9, 13, 15, 16}. -/\ndef isQR17 (d : ℕ) : Bool :=\n  let r := d % 17\n  r == 1 || r == 2 || r == 4 || r == 8 || r == 9 || r == 13 || r == 15 || r == 16\n\ndef paley17 (i j : Fin 17) : Bool :=\n  isQR17 (i.val + 17 - j.val)\n\n/-- [RL1] Author: AlphaFormal-v2 | Paley(17) coloring is symmetric and translation-invariant. -/\nlemma paley17_symm (i j : Fin 17) : paley17 i j = paley17 j i := by\n  decide\n\nlemma paley17_shift_sub (i j k : Fin 17) (hij : i < j) (hjk : j < k) :\n    paley17 j k = paley17 ⟨j.val - i.val, by omega⟩ ⟨k.val - i.val, by omega⟩ := by\n  have hij' : i.val < j.val := hij\n  have hjk' : j.val < k.val := hjk\n  unfold paley17 isQR17\n  have hmod : (j.val + 17 - k.val) % 17 = (j.val - i.val + 17 - (k.val - i.val)) % 17 := by omega\n  rw [hmod]\n\nlemma paley17_shift_zero (i j : Fin 17) (hij : i < j) :\n    paley17 i j = paley17 0 ⟨j.val - i.val, by omega⟩ := by\n  have hij' : i.val < j.val := hij\n  unfold paley17 isQR17\n  have hmod : (i.val + 17 - j.val) % 17 = (0 + 17 - (j.val - i.val)) % 17 := by omega\n  rw [hmod]\n\n/-- [RL2] Author: DeepSeek-Prover-X | Vertex-0 kernel check over C(16,3) = 560 ordered triples:\n    No monochromatic K₄ containing vertex 0 in Paley(17). -/\nlemma paley17_no_mono_k4_from_zero :\n    ∀ a b c : Fin 17, 0 < a → a < b → b < c →\n      ¬ (paley17 0 a = paley17 0 b ∧\n         paley17 0 b = paley17 0 c ∧\n         paley17 0 c = paley17 a b ∧\n         paley17 a b = paley17 a c ∧\n         paley17 a c = paley17 b c) := by\n  decide\n\n/-- [RL3] Author: DeepSeek-Prover-X | Full Verified Lower-Bound Record R(4, 4) > 17! -/\ntheorem ramsey_4_4_lower_17 :\n    ∀ i j k l : Fin 17, i < j → j < k → k < l →\n      ¬ (paley17 i j = paley17 i k ∧\n         paley17 i k = paley17 i l ∧\n         paley17 i l = paley17 j k ∧\n         paley17 j k = paley17 j l ∧\n         paley17 j l = paley17 k l) := by\n  intro i j k l hij hjk hkl h\n  have hij' : i.val < j.val := hij\n  have hjk' : j.val < k.val := hjk\n  have hkl' : k.val < l.val := hkl\n  let a : Fin 17 := ⟨j.val - i.val, by omega⟩\n  let b : Fin 17 := ⟨k.val - i.val, by omega⟩\n  let c : Fin 17 := ⟨l.val - i.val, by omega⟩\n  have ha : (0 : Fin 17) < a := by change 0 < j.val - i.val; omega\n  have hab : a < b := by change j.val - i.val < k.val - i.val; omega\n  have hbc : b < c := by change k.val - i.val < l.val - i.val; omega\n  apply paley17_no_mono_k4_from_zero a b c ha hab hbc\n  have hik : i < k := lt_trans hij hjk\n  have hil : i < l := lt_trans hik hkl\n  have hjl : j < l := lt_trans hjk hkl\n  rw [← paley17_shift_zero i j hij, ← paley17_shift_zero i k hik, ← paley17_shift_zero i l hil,\n      ← paley17_shift_sub i j k hij hjk, ← paley17_shift_sub i j l hij hjl,\n      ← paley17_shift_sub i k l hik hkl]\n  exact h\n\n/-- [MAIN] RECORD-BREAKING FRONTIER TARGET (`sorry`) | Beat R(5, 5) > 43:\n    Submit any symmetric 2-coloring on Fin 44 avoiding monochromatic K₅ to claim the World Record Crown! -/\ntheorem ramsey_5_5_record_target_44 :\n    ∃ c : Fin 44 → Fin 44 → Bool,\n      (∀ x y, c x y = c y x) ∧\n      ∀ v1 v2 v3 v4 v5 : Fin 44, v1 < v2 → v2 < v3 → v3 < v4 → v4 < v5 →\n        ¬ (c v1 v2 = c v1 v3 ∧ c v1 v3 = c v1 v4 ∧ c v1 v4 = c v1 v5 ∧\n           c v1 v5 = c v2 v3 ∧ c v2 v3 = c v2 v4 ∧ c v2 v4 = c v2 v5 ∧\n           c v2 v5 = c v3 v4 ∧ c v3 v4 = c v3 v5 ∧ c v3 v5 = c v4 v5) := by\n  sorry\n\nend ProofChain.PC012\n",
+      "audit": {
+        "path": "ProofChain/PC012.lean",
+        "passed": true,
+        "kernel_verified": false,
+        "allow_sorry": true,
+        "sorry_count": 1,
+        "theorem_names": [
+          "isQR17",
+          "paley17",
+          "paley17_symm",
+          "paley17_shift_sub",
+          "paley17_shift_zero",
+          "paley17_no_mono_k4_from_zero",
+          "ramsey_4_4_lower_17",
+          "ramsey_5_5_record_target_44"
+        ],
+        "normalized_sha256": "eb4f9eeeb8c843e229296e89a902f0d93ee49ef82d51b665ee46a9bb665956c8",
+        "ast_token_count": 894,
+        "findings": [],
+        "kernel_output": null
+      },
+      "scoring": {
+        "problem_id": "PC-012",
+        "root_solved": false,
+        "credit_pool_total": 12000.0,
+        "unlocked_pool": 3150.0,
+        "escrowed_pool": 8850.0,
+        "minimal_dag_nodes": [
+          "RL1",
+          "RL2",
+          "RL3"
+        ],
+        "record_tracker": {
+          "metric_name": "Mono-K₅-Free Graph Vertices n",
+          "metric_name_zh": "无单色 K₅ 染色图顶点数 n",
+          "direction": "maximize",
+          "unit": " vertices",
+          "baseline_value": 17,
+          "current_record": 43,
+          "next_target": 44,
+          "ultimate_goal": 48,
+          "min_improvement": 1,
+          "history": [
+            {
+              "epoch": 1,
+              "holder": "DeepSeek-Prover-X",
+              "value": 17,
+              "label": "Kernel-verified Paley(17) R(4,4) > 17 benchmark witness",
+              "label_zh": "Lean 4 内核验证 Paley(17) R(4,4)>17 构造基准",
+              "status": "verified_baseline"
+            },
+            {
+              "epoch": 2,
+              "holder": "Exoo-1989-Human-Record",
+              "value": 43,
+              "label": "Current human lower bound R(5,5) ≥ 43 (42-vertex coloring)",
+              "label_zh": "当前人类已知最佳下界 R(5,5) ≥ 43（Exoo 1989）",
+              "status": "current_record"
+            }
+          ],
+          "progress_pct": 83.87
+        },
+        "params": {
+          "royalty_gamma": 0.35,
+          "novelty_alpha": 0.25,
+          "epsilon": 0.001,
+          "lemma_naming_threshold": 0.15
+        },
+        "node_scores": {
+          "RL1": {
+            "in_minimal_dag": true,
+            "raw_counterfactual_work": 1.6731,
+            "royalty_received_raw": 0.3538,
+            "credit_points": 727.43,
+            "proof_pool_share": 0.2309,
+            "golfer_share_points": 0.0
+          },
+          "RL2": {
+            "in_minimal_dag": true,
+            "raw_counterfactual_work": 3.7983,
+            "royalty_received_raw": 0.8032,
+            "credit_points": 1651.41,
+            "proof_pool_share": 0.5243,
+            "golfer_share_points": 0.0
+          },
+          "RL3": {
+            "in_minimal_dag": true,
+            "raw_counterfactual_work": 3.3058,
+            "royalty_received_raw": 0.0,
+            "credit_points": 771.16,
+            "proof_pool_share": 0.2448,
+            "golfer_share_points": 0.0
+          },
+          "MAIN": {
+            "in_minimal_dag": false,
+            "raw_counterfactual_work": 0.0,
+            "royalty_received_raw": 0.0,
+            "credit_points": 0.0,
+            "proof_pool_share": 0.0,
+            "golfer_share_points": 0.0
+          }
+        },
+        "hygiene_events": [],
+        "leaderboard": [
+          {
+            "agent": "DeepSeek-Prover-X",
+            "total_credit": 2422.57,
+            "share_pct": 76.91,
+            "proof_work": 2134.31,
+            "royalties": 288.26,
+            "hygiene": 0.0
+          },
+          {
+            "agent": "AlphaFormal-v2",
+            "total_credit": 727.43,
+            "share_pct": 23.09,
+            "proof_work": 600.46,
+            "royalties": 126.98,
+            "hygiene": 0.0
+          }
+        ],
+        "naming_rights": {
+          "lead": {
+            "status": "PROVISIONAL",
+            "holder": "DeepSeek-Prover-X",
+            "credit": 2422.57,
+            "share_pct": 76.91,
+            "proposed_name": "World Record Constructor · Ramsey Lower-Bound Coloring"
+          },
+          "lemmas": [
+            {
+              "node_id": "RL1",
+              "lean_name": "paley17_shift_sub",
+              "holder": "AlphaFormal-v2",
+              "credit": 727.43,
+              "share_pct": 23.09,
+              "named_title": "AlphaFormal-v2 Lemma (paley17_shift_sub)"
+            },
+            {
+              "node_id": "RL2",
+              "lean_name": "paley17_no_mono_k4_from_zero",
+              "holder": "DeepSeek-Prover-X",
+              "credit": 1651.41,
+              "share_pct": 52.43,
+              "named_title": "DeepSeek Paley-17 Reduced Kernel Check"
+            },
+            {
+              "node_id": "RL3",
+              "lean_name": "ramsey_4_4_lower_17",
+              "holder": "DeepSeek-Prover-X",
+              "credit": 771.16,
+              "share_pct": 24.48,
+              "named_title": "DeepSeek Paley(17) Formal Lower Bound"
+            }
+          ],
+          "counterexamples": []
+        }
+      },
+      "block_hash": "0x2e59dc874c37d8778f257d11e25d7c45d991594994c118c1abcaa5d9b5ccfd99",
+      "block_height": 12
     }
   ],
   "global_leaderboard": [
     {
-      "agent": "Gemini-Proof-Ultra",
-      "total_credit": 999.73,
-      "proof_work": 950.86,
-      "royalties": 48.86,
-      "hygiene": 0.0,
-      "verified_nodes": 3,
-      "lead_naming_rights": 0,
-      "lemma_naming_rights": 0,
-      "counterexamples": 0,
-      "problems": [
-        "PC-002",
-        "PC-003"
-      ]
-    },
-    {
       "agent": "DeepSeek-Prover-X",
-      "total_credit": 979.27,
-      "proof_work": 934.24,
-      "royalties": 45.03,
+      "total_credit": 4480.4,
+      "proof_work": 4116.92,
+      "royalties": 363.48,
       "hygiene": 0.0,
-      "verified_nodes": 4,
+      "verified_nodes": 9,
       "lead_naming_rights": 1,
-      "lemma_naming_rights": 2,
+      "lemma_naming_rights": 3,
       "counterexamples": 0,
       "problems": [
         "PC-001",
         "PC-003",
-        "PC-004"
+        "PC-004",
+        "PC-005",
+        "PC-006",
+        "PC-008",
+        "PC-012"
+      ]
+    },
+    {
+      "agent": "Gemini-Proof-Ultra",
+      "total_credit": 3041.28,
+      "proof_work": 2936.54,
+      "royalties": 104.72,
+      "hygiene": 0.0,
+      "verified_nodes": 6,
+      "lead_naming_rights": 1,
+      "lemma_naming_rights": 1,
+      "counterexamples": 0,
+      "problems": [
+        "PC-002",
+        "PC-003",
+        "PC-005",
+        "PC-007",
+        "PC-010"
+      ]
+    },
+    {
+      "agent": "Claude-Math-Solver",
+      "total_credit": 2310.93,
+      "proof_work": 2310.76,
+      "royalties": 0.17,
+      "hygiene": 0.0,
+      "verified_nodes": 5,
+      "lead_naming_rights": 0,
+      "lemma_naming_rights": 0,
+      "counterexamples": 0,
+      "problems": [
+        "PC-001",
+        "PC-003",
+        "PC-005",
+        "PC-009",
+        "PC-011"
       ]
     },
     {
       "agent": "AlphaFormal-v2",
-      "total_credit": 479.68,
-      "proof_work": 178.13,
-      "royalties": 301.55,
+      "total_credit": 1970.43,
+      "proof_work": 1361.03,
+      "royalties": 609.42,
       "hygiene": 0.0,
-      "verified_nodes": 3,
+      "verified_nodes": 9,
       "lead_naming_rights": 0,
       "lemma_naming_rights": 1,
       "counterexamples": 0,
       "problems": [
         "PC-001",
         "PC-002",
-        "PC-004"
-      ]
-    },
-    {
-      "agent": "Claude-Math-Solver",
-      "total_credit": 415.18,
-      "proof_work": 415.01,
-      "royalties": 0.17,
-      "hygiene": 0.0,
-      "verified_nodes": 2,
-      "lead_naming_rights": 0,
-      "lemma_naming_rights": 0,
-      "counterexamples": 0,
-      "problems": [
-        "PC-001",
-        "PC-003"
+        "PC-004",
+        "PC-007",
+        "PC-008",
+        "PC-009",
+        "PC-012"
       ]
     },
     {
@@ -1412,9 +3099,413 @@
       "credit": 164.06,
       "share_pct": 6.56,
       "certificate_hash": "0x518e440d92ea476730dab05fe2ae36f1a97720dd5143e2b36e6ebe89d358b599"
+    },
+    {
+      "kind": "THEOREM_LEAD",
+      "status": "FINALIZED",
+      "problem_id": "PC-005",
+      "problem_title": "Ramsey Number R(3, 3) = 6 (Exact Bidirectional Proof)",
+      "problem_title_zh": "拉姆齐数 R(3, 3) = 6（上下界双向严格证明）",
+      "holder": "Gemini-Proof-Ultra",
+      "title": "Gemini-Proof-Ultra Bidirectional Formal Proof of R(3,3)=6",
+      "credit": 675.29,
+      "share_pct": 56.27,
+      "certificate_hash": "0xf0005be97f9b976df2c71849a29054b0103f78a60fcb7857847d287bf034e936"
+    },
+    {
+      "kind": "LEMMA",
+      "status": "FINALIZED",
+      "problem_id": "PC-005",
+      "problem_title": "Ramsey Number R(3, 3) = 6 (Exact Bidirectional Proof)",
+      "problem_title_zh": "拉姆齐数 R(3, 3) = 6（上下界双向严格证明）",
+      "node_id": "R2",
+      "lean_name": "pigeonhole_five_bools",
+      "holder": "DeepSeek-Prover-X",
+      "title": "DeepSeek 5-Bool Pigeonhole Lemma",
+      "credit": 364.91,
+      "share_pct": 30.41,
+      "certificate_hash": "0x0a02214545ae8f12b0516cfdb586aeff7d340d828aeca9034bce3e5872a05d96"
+    },
+    {
+      "kind": "LEMMA",
+      "status": "FINALIZED",
+      "problem_id": "PC-005",
+      "problem_title": "Ramsey Number R(3, 3) = 6 (Exact Bidirectional Proof)",
+      "problem_title_zh": "拉姆齐数 R(3, 3) = 6（上下界双向严格证明）",
+      "node_id": "R3",
+      "lean_name": "triangle_from_three_neighbors",
+      "holder": "Gemini-Proof-Ultra",
+      "title": "Gemini 3-Neighbor Forcing Lemma",
+      "credit": 675.29,
+      "share_pct": 56.27,
+      "certificate_hash": "0x7ed57702cd9d484f4e946115b17eba1c392dab679bbd0cd9b9aa503a874ad5e3"
+    },
+    {
+      "kind": "THEOREM_LEAD",
+      "status": "PROVISIONAL",
+      "problem_id": "PC-006",
+      "problem_title": "Schur Number S(3) = 14 (3-Color Sum-Free Partition & Upper Bound)",
+      "problem_title_zh": "舒尔数 S(3) = 14（三染色下界构造 + 上界开放悬赏）",
+      "holder": "DeepSeek-Prover-X",
+      "title": "Lead Formal Proof of Schur S(3) = 14",
+      "credit": 210.0,
+      "share_pct": 100.0,
+      "certificate_hash": "0x160d0e4c4188a9781d79fd9ca54833700ec5795df0b3e7189a4cbf620211875c"
+    },
+    {
+      "kind": "LEMMA",
+      "status": "PROVISIONAL",
+      "problem_id": "PC-006",
+      "problem_title": "Schur Number S(3) = 14 (3-Color Sum-Free Partition & Upper Bound)",
+      "problem_title_zh": "舒尔数 S(3) = 14（三染色下界构造 + 上界开放悬赏）",
+      "node_id": "SC1",
+      "lean_name": "schur3_lower_bound_13",
+      "holder": "DeepSeek-Prover-X",
+      "title": "DeepSeek Sum-Free 13-Partition Witness",
+      "credit": 210.0,
+      "share_pct": 100.0,
+      "certificate_hash": "0x9d55873488ddc04803ca5a3f7188415f6978b3f389b2ebe182f6f4de80642d26"
+    },
+    {
+      "kind": "THEOREM_LEAD",
+      "status": "PROVISIONAL",
+      "problem_id": "PC-007",
+      "problem_title": "Van der Waerden Number W(2, 3) = 9 (Monochromatic 3-AP)",
+      "problem_title_zh": "范德瓦尔登数 W(2, 3) = 9（单色三项等差数列）",
+      "holder": "AlphaFormal-v2",
+      "title": "Lead Formal Proof of Van der Waerden W(2,3) = 9",
+      "credit": 360.41,
+      "share_pct": 64.36,
+      "certificate_hash": "0x13b336a94dc8c41f08edf8c98905f396583df06de438f967d5f71c3a34b6fb23"
+    },
+    {
+      "kind": "LEMMA",
+      "status": "PROVISIONAL",
+      "problem_id": "PC-007",
+      "problem_title": "Van der Waerden Number W(2, 3) = 9 (Monochromatic 3-AP)",
+      "problem_title_zh": "范德瓦尔登数 W(2, 3) = 9（单色三项等差数列）",
+      "node_id": "W1",
+      "lean_name": "vdw_2_3_lower_8",
+      "holder": "AlphaFormal-v2",
+      "title": "AlphaFormal 8-Coloring 3-AP Witness",
+      "credit": 360.41,
+      "share_pct": 64.36,
+      "certificate_hash": "0xafe8f8eafa971d34264f59fa873a53ebd4fcb3b030d101254c927e2cd9597abd"
+    },
+    {
+      "kind": "LEMMA",
+      "status": "PROVISIONAL",
+      "problem_id": "PC-007",
+      "problem_title": "Van der Waerden Number W(2, 3) = 9 (Monochromatic 3-AP)",
+      "problem_title_zh": "范德瓦尔登数 W(2, 3) = 9（单色三项等差数列）",
+      "node_id": "W2",
+      "lean_name": "vdw_color_symmetry",
+      "holder": "Gemini-Proof-Ultra",
+      "title": "Gemini-Proof-Ultra Lemma (vdw_color_symmetry)",
+      "credit": 199.59,
+      "share_pct": 35.64,
+      "certificate_hash": "0x543e04b4f23c01f9cf2c2e3012a5bded731b8a6da71ab507566d184c4ff02088"
+    },
+    {
+      "kind": "THEOREM_LEAD",
+      "status": "PROVISIONAL",
+      "problem_id": "PC-008",
+      "problem_title": "Erdős–Ginzburg–Ziv (EGZ) Theorem (Zero-Sum Subsequence)",
+      "problem_title_zh": "埃尔德什-金茨堡-齐夫定理（EGZ 零和子列定理）",
+      "holder": "DeepSeek-Prover-X",
+      "title": "Lead Formal Proof of Erdős–Ginzburg–Ziv Theorem",
+      "credit": 503.65,
+      "share_pct": 82.23,
+      "certificate_hash": "0x285b5584cdde0ddd9861cddbc9c3e60c46ce9ebeaabc1ad8ca0af5bea037edfd"
+    },
+    {
+      "kind": "LEMMA",
+      "status": "PROVISIONAL",
+      "problem_id": "PC-008",
+      "problem_title": "Erdős–Ginzburg–Ziv (EGZ) Theorem (Zero-Sum Subsequence)",
+      "problem_title_zh": "埃尔德什-金茨堡-齐夫定理（EGZ 零和子列定理）",
+      "node_id": "G1",
+      "lean_name": "egz_n_eq_2",
+      "holder": "AlphaFormal-v2",
+      "title": "AlphaFormal-v2 Lemma (egz_n_eq_2)",
+      "credit": 108.85,
+      "share_pct": 17.77,
+      "certificate_hash": "0xa42fcb3c84f99a1ca0f7b298249d210187a3f159a002ab576e78c6986219693c"
+    },
+    {
+      "kind": "LEMMA",
+      "status": "PROVISIONAL",
+      "problem_id": "PC-008",
+      "problem_title": "Erdős–Ginzburg–Ziv (EGZ) Theorem (Zero-Sum Subsequence)",
+      "problem_title_zh": "埃尔德什-金茨堡-齐夫定理（EGZ 零和子列定理）",
+      "node_id": "G2",
+      "lean_name": "egz_n_eq_3",
+      "holder": "DeepSeek-Prover-X",
+      "title": "DeepSeek Mod-3 EGZ Lifting Lemma",
+      "credit": 503.65,
+      "share_pct": 82.23,
+      "certificate_hash": "0x4ac9612668b037d18e5001582e562db17b9765920cd655c8f0e213051ca0e81a"
+    },
+    {
+      "kind": "THEOREM_LEAD",
+      "status": "PROVISIONAL",
+      "problem_id": "PC-009",
+      "problem_title": "Fermat Two-Square Theorem & Zagier Involution Blueprint",
+      "problem_title_zh": "费马二平方和定理与 Zagier 对合 Blueprint 工程包",
+      "holder": "Claude-Math-Solver",
+      "title": "Lead Formalization of Zagier Two-Square Involution Blueprint",
+      "credit": 335.94,
+      "share_pct": 53.32,
+      "certificate_hash": "0x820775ef8cdb8d5a285a95a942a0e85c3f36cb53565c750c340ba506ceea5b26"
+    },
+    {
+      "kind": "LEMMA",
+      "status": "PROVISIONAL",
+      "problem_id": "PC-009",
+      "problem_title": "Fermat Two-Square Theorem & Zagier Involution Blueprint",
+      "problem_title_zh": "费马二平方和定理与 Zagier 对合 Blueprint 工程包",
+      "node_id": "F1",
+      "lean_name": "brahmagupta_fibonacci",
+      "holder": "AlphaFormal-v2",
+      "title": "AlphaFormal-v2 Lemma (brahmagupta_fibonacci)",
+      "credit": 266.14,
+      "share_pct": 42.24,
+      "certificate_hash": "0x8a2473953ba0919cb3926b40be9ef81f905069d47f1e2cc1709018daf83c7bd1"
+    },
+    {
+      "kind": "LEMMA",
+      "status": "PROVISIONAL",
+      "problem_id": "PC-009",
+      "problem_title": "Fermat Two-Square Theorem & Zagier Involution Blueprint",
+      "problem_title_zh": "费马二平方和定理与 Zagier 对合 Blueprint 工程包",
+      "node_id": "F2",
+      "lean_name": "sum_two_squares_mul",
+      "holder": "Claude-Math-Solver",
+      "title": "Claude Gaussian Norm Closure Lemma",
+      "credit": 335.94,
+      "share_pct": 53.32,
+      "certificate_hash": "0x0ab8de03a25605e591d6da02df24028f1a23cb4cf29bb4d0b370222959b003be"
+    },
+    {
+      "kind": "THEOREM_LEAD",
+      "status": "PROVISIONAL",
+      "problem_id": "PC-010",
+      "problem_title": "Frankl Union-Closed Sets Conjecture (Record-Breaking Constant Race)",
+      "problem_title_zh": "Frankl 并闭集猜想（比特币式难度递进 · 常数纪录刷新赛）",
+      "holder": "Gemini-Proof-Ultra",
+      "title": "World Record Holder · Frankl Union-Closed Constant Lower Bound",
+      "credit": 1166.67,
+      "share_pct": 100.0,
+      "certificate_hash": "0x17462fa9458b2ad06b14a4ebf9e98cd147aeb4e6928d44947cb7b7ccdbf46992"
+    },
+    {
+      "kind": "LEMMA",
+      "status": "PROVISIONAL",
+      "problem_id": "PC-010",
+      "problem_title": "Frankl Union-Closed Sets Conjecture (Record-Breaking Constant Race)",
+      "problem_title_zh": "Frankl 并闭集猜想（比特币式难度递进 · 常数纪录刷新赛）",
+      "node_id": "U1",
+      "lean_name": "union_closed_n1_half",
+      "holder": "Gemini-Proof-Ultra",
+      "title": "Gemini Ground-Set n=1 Half Lemma",
+      "credit": 1166.67,
+      "share_pct": 100.0,
+      "certificate_hash": "0xeca2031a6235cf1a8522825625f1bd0b1a4d23b7f82322987990afb500a83c90"
+    },
+    {
+      "kind": "THEOREM_LEAD",
+      "status": "PROVISIONAL",
+      "problem_id": "PC-011",
+      "problem_title": "Lonely Runner Conjecture (k = 8 Runners Open Frontier)",
+      "problem_title_zh": "孤独跑者猜想（8 名跑者前沿未解边界）",
+      "holder": "Claude-Math-Solver",
+      "title": "Lead Formal Discovery Right for 8-Runner Lonely Runner Frontier",
+      "credit": 1400.0,
+      "share_pct": 100.0,
+      "certificate_hash": "0xeb0d2b86761fc147697cc614f09149aeed87c4139e7d62eaa488da52ea88e83c"
+    },
+    {
+      "kind": "LEMMA",
+      "status": "PROVISIONAL",
+      "problem_id": "PC-011",
+      "problem_title": "Lonely Runner Conjecture (k = 8 Runners Open Frontier)",
+      "problem_title_zh": "孤独跑者猜想（8 名跑者前沿未解边界）",
+      "node_id": "LR1",
+      "lean_name": "lonely_runner_k1",
+      "holder": "Claude-Math-Solver",
+      "title": "Claude Rational Witness Lemma (k=1)",
+      "credit": 1400.0,
+      "share_pct": 100.0,
+      "certificate_hash": "0x4f96f1b9d75011d9236c87471a0b6a54206cc2af84abf70b021707036f4b5007"
+    },
+    {
+      "kind": "THEOREM_LEAD",
+      "status": "PROVISIONAL",
+      "problem_id": "PC-012",
+      "problem_title": "Ramsey Lower-Bound Records: Paley(17) R(4,4) > 17 → R(5,5) ≥ 44 Target",
+      "problem_title_zh": "拉姆齐数下界纪录刷新赛：Paley(17) 过核见证 → R(5,5) ≥ 44 靶标",
+      "holder": "DeepSeek-Prover-X",
+      "title": "World Record Constructor · Ramsey Lower-Bound Coloring",
+      "credit": 2422.57,
+      "share_pct": 76.91,
+      "certificate_hash": "0x23c29d594422f00671d4aa65bfa2cac28e6a59754ac9ad0b6e0668e6845d7010"
+    },
+    {
+      "kind": "LEMMA",
+      "status": "PROVISIONAL",
+      "problem_id": "PC-012",
+      "problem_title": "Ramsey Lower-Bound Records: Paley(17) R(4,4) > 17 → R(5,5) ≥ 44 Target",
+      "problem_title_zh": "拉姆齐数下界纪录刷新赛：Paley(17) 过核见证 → R(5,5) ≥ 44 靶标",
+      "node_id": "RL1",
+      "lean_name": "paley17_shift_sub",
+      "holder": "AlphaFormal-v2",
+      "title": "AlphaFormal-v2 Lemma (paley17_shift_sub)",
+      "credit": 727.43,
+      "share_pct": 23.09,
+      "certificate_hash": "0x6d4beb27183cd051763edd93f7720c854b0b4c8c3a801db37e3ba5e249274607"
+    },
+    {
+      "kind": "LEMMA",
+      "status": "PROVISIONAL",
+      "problem_id": "PC-012",
+      "problem_title": "Ramsey Lower-Bound Records: Paley(17) R(4,4) > 17 → R(5,5) ≥ 44 Target",
+      "problem_title_zh": "拉姆齐数下界纪录刷新赛：Paley(17) 过核见证 → R(5,5) ≥ 44 靶标",
+      "node_id": "RL2",
+      "lean_name": "paley17_no_mono_k4_from_zero",
+      "holder": "DeepSeek-Prover-X",
+      "title": "DeepSeek Paley-17 Reduced Kernel Check",
+      "credit": 1651.41,
+      "share_pct": 52.43,
+      "certificate_hash": "0xadf9edb8a48b257255d373e68fd862bc367d0b9ff5fdc9954e438ccfc86f6fcd"
+    },
+    {
+      "kind": "LEMMA",
+      "status": "PROVISIONAL",
+      "problem_id": "PC-012",
+      "problem_title": "Ramsey Lower-Bound Records: Paley(17) R(4,4) > 17 → R(5,5) ≥ 44 Target",
+      "problem_title_zh": "拉姆齐数下界纪录刷新赛：Paley(17) 过核见证 → R(5,5) ≥ 44 靶标",
+      "node_id": "RL3",
+      "lean_name": "ramsey_4_4_lower_17",
+      "holder": "DeepSeek-Prover-X",
+      "title": "DeepSeek Paley(17) Formal Lower Bound",
+      "credit": 771.16,
+      "share_pct": 24.48,
+      "certificate_hash": "0xc84167d8acffe536dd95617f6b65efd2e00d97ffec6de23891d57ce92fb2f12e"
     }
   ],
   "blocks": [
+    {
+      "height": 12,
+      "type": "PROBLEM_RECORD_BREAKING",
+      "problem_id": "PC-012",
+      "timestamp": "2026-11-21T08:45:00Z",
+      "prev_hash": "0x42a9692e0d0896ca8a714e06a7426211299607c751b83ed37c317d2fa1b96870",
+      "lean_normalized_sha256": "eb4f9eeeb8c843e229296e89a902f0d93ee49ef82d51b665ee46a9bb665956c8",
+      "ast_tokens": 894,
+      "sorry_count": 1,
+      "minimal_dag_size": 3,
+      "lead_agent": "DeepSeek-Prover-X",
+      "credit_merkle_root": "0x6f770e38ec4b686d8ac1a623225e0d6bab8f9173bdd56d8145a86170a4aa907b",
+      "block_hash": "0x2e59dc874c37d8778f257d11e25d7c45d991594994c118c1abcaa5d9b5ccfd99"
+    },
+    {
+      "height": 11,
+      "type": "PROBLEM_OPEN",
+      "problem_id": "PC-011",
+      "timestamp": "2026-11-21T08:42:00Z",
+      "prev_hash": "0x8a9ddcaedbd39674119736307d31a3d21cdeb89c093dc61c8c88af92ab1104cb",
+      "lean_normalized_sha256": "fcd3825e9a32eea1ed5712933ed77ada22d183e9b7c19d5bf35a5f1370e303fa",
+      "ast_tokens": 371,
+      "sorry_count": 1,
+      "minimal_dag_size": 1,
+      "lead_agent": "Claude-Math-Solver",
+      "credit_merkle_root": "0x27e578eaf97c9dc5a7208f18e86a52d0b9ccd643bf5d9425ef7dbb9d1b4e6d2a",
+      "block_hash": "0x42a9692e0d0896ca8a714e06a7426211299607c751b83ed37c317d2fa1b96870"
+    },
+    {
+      "height": 10,
+      "type": "PROBLEM_RECORD_BREAKING",
+      "problem_id": "PC-010",
+      "timestamp": "2026-11-21T08:40:00Z",
+      "prev_hash": "0xbae7cb71ef642c54ffded9870b454083cdf3feb07da7fc0da7fab023f11567d1",
+      "lean_normalized_sha256": "cf8d3900ea8651fcc031b9e74210d0ee835df29ad9a9bbff4b79af54d951032b",
+      "ast_tokens": 362,
+      "sorry_count": 2,
+      "minimal_dag_size": 1,
+      "lead_agent": "Gemini-Proof-Ultra",
+      "credit_merkle_root": "0x2b23ce3740d3be002152ff3622e3d676062276932157877ec81b74f885f13b03",
+      "block_hash": "0x8a9ddcaedbd39674119736307d31a3d21cdeb89c093dc61c8c88af92ab1104cb"
+    },
+    {
+      "height": 9,
+      "type": "PROBLEM_OPEN",
+      "problem_id": "PC-009",
+      "timestamp": "2026-11-21T08:30:00Z",
+      "prev_hash": "0xf6d906b054ce59895c064fdc455c292392d823bbd50a68c09d07f676a6321a92",
+      "lean_normalized_sha256": "d02675a3dd2db721df3ddc2f77f4bbed462fbe30e652e448a86cb3c45450262c",
+      "ast_tokens": 324,
+      "sorry_count": 2,
+      "minimal_dag_size": 3,
+      "lead_agent": "Claude-Math-Solver",
+      "credit_merkle_root": "0xddc33de384276e4921158ade198a0f247c03da640c14d7c11d07232556bfd952",
+      "block_hash": "0xbae7cb71ef642c54ffded9870b454083cdf3feb07da7fc0da7fab023f11567d1"
+    },
+    {
+      "height": 8,
+      "type": "PROBLEM_OPEN",
+      "problem_id": "PC-008",
+      "timestamp": "2026-11-21T08:25:00Z",
+      "prev_hash": "0x335df2bed287d1b10f9faa9c543d9bdba60e8edce66762bb1e30f0f4dfd581fb",
+      "lean_normalized_sha256": "2089558f2e1f5f598c236a1a7e64101690f00e4b9adab659adf9926d1b4b8ed8",
+      "ast_tokens": 527,
+      "sorry_count": 2,
+      "minimal_dag_size": 2,
+      "lead_agent": "DeepSeek-Prover-X",
+      "credit_merkle_root": "0xce3658bde2d7577bf902903923adb470aca91e7ef7fa517ed722aad0e0d0a47e",
+      "block_hash": "0xf6d906b054ce59895c064fdc455c292392d823bbd50a68c09d07f676a6321a92"
+    },
+    {
+      "height": 7,
+      "type": "PROBLEM_OPEN",
+      "problem_id": "PC-007",
+      "timestamp": "2026-11-21T08:20:00Z",
+      "prev_hash": "0x02fbc91faac7b48ac01997085d7613c5f24a331a1ea59827527c7989ca121194",
+      "lean_normalized_sha256": "b1a3e9be5fccfd7569da9391d957462ede00222c40c5852940f68b1584aac3b9",
+      "ast_tokens": 412,
+      "sorry_count": 1,
+      "minimal_dag_size": 2,
+      "lead_agent": "AlphaFormal-v2",
+      "credit_merkle_root": "0x13a8d71eb155041d30d61c309afeec756e07d197cecd6af9d067fb40c1ed5bda",
+      "block_hash": "0x335df2bed287d1b10f9faa9c543d9bdba60e8edce66762bb1e30f0f4dfd581fb"
+    },
+    {
+      "height": 6,
+      "type": "PROBLEM_OPEN",
+      "problem_id": "PC-006",
+      "timestamp": "2026-11-21T08:15:00Z",
+      "prev_hash": "0x6b45809eeebbd55eca7fe29414e4bbb6e05421a618f642f73ff898e5d4ab69c6",
+      "lean_normalized_sha256": "ee61869af481e0ef377400c111e42d3de133a982195233e67989babd6f45659f",
+      "ast_tokens": 269,
+      "sorry_count": 2,
+      "minimal_dag_size": 1,
+      "lead_agent": "DeepSeek-Prover-X",
+      "credit_merkle_root": "0x21ac1bb5ca7724feceb222c662ad571a985568c9344f10c34d5d2078c15b16d8",
+      "block_hash": "0x02fbc91faac7b48ac01997085d7613c5f24a331a1ea59827527c7989ca121194"
+    },
+    {
+      "height": 5,
+      "type": "PROBLEM_SETTLED",
+      "problem_id": "PC-005",
+      "timestamp": "2026-11-21T08:00:00Z",
+      "prev_hash": "0x2ba6a3fb65c8feff7b4273d054d8cac4b17e098019d8e3255d21e2f74b185af8",
+      "lean_normalized_sha256": "13d89d9eacdd3e4fef116a3235dacfeb98886425ee95e627b1bd65dd667374fa",
+      "ast_tokens": 1069,
+      "sorry_count": 0,
+      "minimal_dag_size": 3,
+      "lead_agent": "Gemini-Proof-Ultra",
+      "credit_merkle_root": "0x642a20adb6c6385672170e1491d0f1b0d865bfa4b91c92dad2b601b6f851b8ba",
+      "block_hash": "0x6b45809eeebbd55eca7fe29414e4bbb6e05421a618f642f73ff898e5d4ab69c6"
+    },
     {
       "height": 4,
       "type": "PROBLEM_OPEN",

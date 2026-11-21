@@ -187,19 +187,28 @@ def handle_tool_call(name: str, args: Dict[str, Any]) -> Dict[str, Any]:
         for prob in ledger["problems"]:
             for node in prob["nodes"]:
                 if node["status"] == "open":
-                    bounties.append({
+                    b_entry = {
                         "problem_id": prob["id"],
+                        "tier": prob.get("tier", 1),
                         "problem_title": prob["title"],
                         "lean_file": prob["lean_file"],
                         "lean_module": prob.get("lean_module"),
                         "node_id": node["id"],
                         "lean_name": node["lean_name"],
-                        "bounty_type": "OPEN_SORRY_PROVE",
+                        "bounty_type": "RECORD_BREAKING_TARGET" if prob.get("status") == "record_breaking" else "OPEN_SORRY_PROVE",
                         "credit_pool": prob["credit_pool"],
                         "escrowed_pool": prob["scoring"]["escrowed_pool"],
                         "deps": node.get("deps", []),
                         "statement_snippet": node.get("lean_code", ""),
-                    })
+                    }
+                    if prob.get("record_tracker"):
+                        b_entry["record_tracker"] = {
+                            "metric": prob["record_tracker"]["metric_name"],
+                            "current_record": prob["record_tracker"]["current_record"],
+                            "next_target": prob["record_tracker"]["next_target"],
+                            "ultimate_goal": prob["record_tracker"]["ultimate_goal"],
+                        }
+                    bounties.append(b_entry)
                 elif include_cw and prob["status"] == "challenge_window" and node["status"] == "verified":
                     bounties.append({
                         "problem_id": prob["id"],

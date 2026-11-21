@@ -285,6 +285,21 @@ def score_problem(blueprint: Dict[str, Any]) -> Dict[str, Any]:
                 "named_title": n.get("named_title", f"{ev['agent']} Counterexample to {n['lean_name']}"),
             })
 
+    # Record-Breaking Bounty tracker (Bitcoin-style raising Difficulty Target)
+    record_tracker = blueprint.get("record_tracker")
+    record_summary = None
+    if record_tracker:
+        base_v = float(record_tracker.get("baseline_value", 0.0))
+        curr_v = float(record_tracker.get("current_record", base_v))
+        next_v = float(record_tracker.get("next_target", curr_v))
+        goal_v = float(record_tracker.get("ultimate_goal", next_v))
+        span = abs(goal_v - base_v) or 1.0
+        progress_pct = round(max(0.0, min(100.0, abs(curr_v - base_v) / span * 100.0)), 2)
+        record_summary = {
+            **record_tracker,
+            "progress_pct": progress_pct,
+        }
+
     return {
         "problem_id": blueprint["id"],
         "root_solved": root_solved,
@@ -292,6 +307,7 @@ def score_problem(blueprint: Dict[str, Any]) -> Dict[str, Any]:
         "unlocked_pool": unlocked_pool,
         "escrowed_pool": escrowed_pool,
         "minimal_dag_nodes": sorted(active_ids),
+        "record_tracker": record_summary,
         "params": {
             "royalty_gamma": ROYALTY_GAMMA,
             "novelty_alpha": NOVELTY_ALPHA,

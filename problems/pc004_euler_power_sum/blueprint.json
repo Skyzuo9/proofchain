@@ -1,6 +1,7 @@
 {
   "id": "PC-004",
   "slug": "pc004_euler_power_sum",
+  "tier": 4,
   "lean_module": "ProofChain.PC004",
   "lean_file": "ProofChain/PC004.lean",
   "title": "Generalized Euler Power-Sum Obstructions (with Formal Refutation)",

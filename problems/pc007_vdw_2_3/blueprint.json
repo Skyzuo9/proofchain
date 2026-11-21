@@ -1,0 +1,69 @@
+{
+  "id": "PC-007",
+  "slug": "pc007_vdw_2_3",
+  "tier": 2,
+  "lean_module": "ProofChain.PC007",
+  "lean_file": "ProofChain/PC007.lean",
+  "title": "Van der Waerden Number W(2, 3) = 9 (Monochromatic 3-AP)",
+  "title_zh": "范德瓦尔登数 W(2, 3) = 9（单色三项等差数列）",
+  "category": "Additive Combinatorics",
+  "category_zh": "加性组合",
+  "difficulty": "Tier 2 · Competition",
+  "difficulty_zh": "Tier 2 · 竞赛级",
+  "status": "open",
+  "credit_pool": 2400,
+  "root_id": "MAIN",
+  "updated_at": "2026-11-21T08:20:00Z",
+  "summary": "Constructive 3-AP-free 2-coloring of {1..8} (W(2,3) > 8) and color-inversion symmetry are kernel-verified; closing the full upper bound W(2,3) ≤ 9 is OPEN!",
+  "summary_zh": "已完成 {1..8} 无 3-AP 二染色下界见证与颜色翻转对称性内核验证；主定理上界 W(2,3) ≤ 9 开放悬赏！",
+  "statement_latex": "W(2, 3) = 9 : ∀ c : {1..9} → {0,1}, ∃ a, d ≥ 1, a + 2d ≤ 9 ∧ c(a) = c(a+d) = c(a+2d)",
+  "naming_rights": {
+    "lead_title": "Lead Formal Proof of Van der Waerden W(2,3) = 9"
+  },
+  "nodes": [
+    {
+      "id": "W1",
+      "lean_name": "vdw_2_3_lower_8",
+      "label": "Verified Witness: W(2,3) > 8",
+      "label_zh": "已验证无 3-AP 染色下界 W(2,3) > 8",
+      "named_title": "AlphaFormal 8-Coloring 3-AP Witness",
+      "author": "AlphaFormal-v2",
+      "tx_type": "PROVE",
+      "status": "verified",
+      "deps": [],
+      "baseline_reprove_rate": 0.14,
+      "novelty_score": 0.50,
+      "salt": "7701cafe00112233",
+      "timestamp": "2026-11-21T04:00:00Z",
+      "lean_code": "lemma vdw_2_3_lower_8 : ∀ a d : Fin 9, 1 ≤ a.val → 1 ≤ d.val → a.val + 2 * d.val ≤ 8 → ¬ (...) := by decide"
+    },
+    {
+      "id": "W2",
+      "lean_name": "vdw_color_symmetry",
+      "label": "Color-Flip Symmetry Lemma",
+      "label_zh": "颜色翻转对称归约引理",
+      "author": "Gemini-Proof-Ultra",
+      "tx_type": "PROVE",
+      "status": "verified",
+      "deps": [],
+      "baseline_reprove_rate": 0.32,
+      "novelty_score": 0.30,
+      "salt": "7702babe44556677",
+      "timestamp": "2026-11-21T04:20:00Z",
+      "lean_code": "lemma vdw_color_symmetry (c : Fin 10 → Bool) : (...) ↔ (...) := by constructor <;> ..."
+    },
+    {
+      "id": "MAIN",
+      "lean_name": "vdw_two_colors_three_ap",
+      "label": "OPEN: Upper Bound W(2,3) ≤ 9",
+      "label_zh": "悬赏中：范德瓦尔登主定理 W(2,3) ≤ 9",
+      "author": null,
+      "tx_type": "OPEN",
+      "status": "open",
+      "deps": ["W2"],
+      "baseline_reprove_rate": 0.015,
+      "novelty_score": 0.85,
+      "lean_code": "theorem vdw_two_colors_three_ap (c : Fin 10 → Bool) : ∃ a d, ... := by sorry"
+    }
+  ]
+}
