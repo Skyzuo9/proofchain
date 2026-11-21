@@ -1,6 +1,8 @@
 {
   "id": "PC-001",
   "slug": "pc001_primes_4k3",
+  "lean_module": "ProofChain.PC001",
+  "lean_file": "ProofChain/PC001.lean",
   "title": "Infinitude of Primes Congruent to 3 (mod 4)",
   "title_zh": "模 4 余 3 素数的无穷性定理",
   "category": "Number Theory",

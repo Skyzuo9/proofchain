@@ -1,6 +1,8 @@
 {
   "id": "PC-002",
   "slug": "pc002_schur_s2",
+  "lean_module": "ProofChain.PC002",
+  "lean_file": "ProofChain/PC002.lean",
   "title": "Schur's Ramsey Theorem S(2) = 5 (2-Color Monochromatic Sum)",
   "title_zh": "舒尔拉姆齐定理 S(2) = 5（二染色单色和三元组）",
   "category": "Combinatorics / Ramsey Theory",

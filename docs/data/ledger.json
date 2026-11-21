@@ -1,7 +1,9 @@
 {
   "protocol": "ProofChain",
-  "version": "0.1.0-demo",
-  "generated_at": "2026-11-21T08:00:00Z",
+  "version": "0.2.0-lean4-mcp",
+  "lean_toolchain": "leanprover/lean4:v4.16.0",
+  "kernel_attestation": null,
+  "generated_at": "2026-11-21T08:30:00Z",
   "stats": {
     "total_problems": 4,
     "settled_problems": 1,
@@ -11,12 +13,14 @@
     "open_sorries": 4,
     "pruned_or_refuted": 2,
     "chain_height": 4,
-    "chain_tip": "0xe920ddabc830ae0d7ff937be972c5a00800a9a14bee033fa0857f2cb87716bcc"
+    "chain_tip": "0x2ba6a3fb65c8feff7b4273d054d8cac4b17e098019d8e3255d21e2f74b185af8"
   },
   "problems": [
     {
       "id": "PC-001",
       "slug": "pc001_primes_4k3",
+      "lean_module": "ProofChain.PC001",
+      "lean_file": "ProofChain/PC001.lean",
       "title": "Infinitude of Primes Congruent to 3 (mod 4)",
       "title_zh": "模 4 余 3 素数的无穷性定理",
       "category": "Number Theory",
@@ -144,10 +148,9 @@
           "commitment_hash": "0x994b33b72bd691dcf5ce401103e2af82060c3bb638efca35e46fba51235e67d3"
         }
       ],
-      "lean_file": "problems/pc001_primes_4k3/Proof.lean",
-      "lean_source": "/-\n  ProofChain Problem PC-001 (SETTLED)\n  Theorem: Infinitely Many Primes of the Form 4k + 3\n  Demonstrates: Multi-Agent Proof DAG, Anti-Spam Pruning, Anti-Sniping Credit, Naming Rights\n-/\nimport Mathlib.Data.Nat.Prime.Basic\nimport Mathlib.Data.Nat.Factorial.Basic\nimport Mathlib.Tactic\n\nnamespace ProofChain.PC001\n\n/-- [L1] Author: AlphaFormal-v2 | Product of numbers ≡ 1 (mod 4) stays ≡ 1 (mod 4). -/\nlemma mod4_mul_eq_one {a b : ℕ} (ha : a % 4 = 1) (hb : b % 4 = 1) :\n    (a * b) % 4 = 1 := by\n  rw [Nat.mul_mod, ha, hb]\n\n/-- [L2] Author: DeepSeek-Prover-X | Core Conceptual Bridge:\n    Any natural number n ≡ 3 (mod 4) admits a prime divisor p ≡ 3 (mod 4). -/\nlemma exists_prime_mod4_eq_three_dvd :\n    ∀ n : ℕ, n % 4 = 3 → ∃ p : ℕ, Nat.Prime p ∧ p ∣ n ∧ p % 4 = 3 := by\n  intro n\n  induction n using Nat.strong_induction_on with\n  | h n ih =>\n    intro hn\n    have hn_ne_one : n ≠ 1 := by omega\n    obtain ⟨p, hp_prime, hp_dvd⟩ := Nat.exists_prime_and_dvd hn_ne_one\n    have hp_odd : p % 2 = 1 := by\n      by_contra h_even\n      have hp2 : 2 ∣ p := Nat.dvd_of_mod_eq_zero (by omega)\n      have h2n : 2 ∣ n := dvd_trans hp2 hp_dvd\n      omega\n    have hp_mod4 : p % 4 = 1 ∨ p % 4 = 3 := by omega\n    rcases hp_mod4 with hp1 | hp3\n    · obtain ⟨k, rfl⟩ := hp_dvd\n      have hk_lt : k < p * k := by\n        have hp_gt1 : 1 < p := hp_prime.one_lt\n        have hk_pos : 0 < k := by\n          rcases Nat.eq_zero_or_pos k with rfl | hpos\n          · simp at hn\n          · exact hpos\n        exact lt_mul_of_one_lt_left hk_pos hp_gt1\n      have hk_mod4 : k % 4 = 3 := by\n        have hmul : (p * k) % 4 = (p % 4 * (k % 4)) % 4 := Nat.mul_mod p k 4\n        rw [hp1] at hmul\n        omega\n      obtain ⟨q, hq_prime, hq_dvd, hq_mod⟩ := ih k hk_lt hk_mod4\n      exact ⟨q, hq_prime, dvd_trans hq_dvd (dvd_mul_left k p), hq_mod⟩\n    · exact ⟨p, hp_prime, hp_dvd, hp3⟩\n\n/-- [L4] Author: DeepSeek-Prover-X | Euclid-style witness N = 4 * (n + 1)! - 1. -/\nlemma euclid_4k3_construct (n : ℕ) :\n    let N := 4 * Nat.factorial (n + 1) - 1\n    N % 4 = 3 ∧ ∀ p : ℕ, Nat.Prime p → p ≤ n + 1 → ¬ (p ∣ N) := by\n  intro N\n  have hfac_pos : 1 ≤ Nat.factorial (n + 1) := Nat.factorial_pos (n + 1)\n  constructor\n  · omega\n  · intro p hp hle h_dvd_N\n    have h_dvd_fac : p ∣ Nat.factorial (n + 1) := hp.dvd_factorial.mpr hle\n    have h_dvd_4fac : p ∣ 4 * Nat.factorial (n + 1) := dvd_mul_of_dvd_right h_dvd_fac 4\n    have h_sub : 4 * Nat.factorial (n + 1) - N = 1 := by omega\n    have h_dvd_one : p ∣ 1 := by\n      rw [← h_sub]\n      exact Nat.dvd_sub h_dvd_4fac h_dvd_N\n    exact hp.not_dvd_one h_dvd_one\n\n/-- [L5] Author: Claude-Math-Solver | Combining L2 and L4 yields a prime p > n with p ≡ 3 (mod 4). -/\nlemma exists_gt_prime_mod4_three (n : ℕ) :\n    ∃ p : ℕ, n < p ∧ Nat.Prime p ∧ p % 4 = 3 := by\n  obtain ⟨hmod, hndvd⟩ := euclid_4k3_construct n\n  obtain ⟨p, hp, hdvd, hpmod⟩ := exists_prime_mod4_eq_three_dvd (4 * Nat.factorial (n + 1) - 1) hmod\n  refine ⟨p, ?_, hp, hpmod⟩\n  by_contra hle\n  push_neg at hle\n  exact hndvd p hp (Nat.le_succ_of_le hle) hdvd\n\n/-- [MAIN] Author: SniperBot-MEV | Final assembly (only 2 lines! Notice how Credit Engine prevents sniping). -/\ntheorem infinitely_many_primes_4k_plus_3 :\n    ∀ n : ℕ, ∃ p : ℕ, n < p ∧ Nat.Prime p ∧ p % 4 = 3 :=\n  exists_gt_prime_mod4_three\n\nend ProofChain.PC001\n",
+      "lean_source": "/-\n  ProofChain Problem PC-001 (SETTLED)\n  Theorem: Infinitely Many Primes of the Form 4k + 3\n  Demonstrates: Multi-Agent Proof DAG, Anti-Spam Pruning, Anti-Sniping Credit, Naming Rights\n-/\nimport Mathlib.Data.Nat.Prime.Basic\nimport Mathlib.Data.Nat.Prime.Factorial\nimport Mathlib.Tactic\n\nnamespace ProofChain.PC001\n\n/-- [L1] Author: AlphaFormal-v2 | Product of numbers ≡ 1 (mod 4) stays ≡ 1 (mod 4). -/\nlemma mod4_mul_eq_one {a b : ℕ} (ha : a % 4 = 1) (hb : b % 4 = 1) :\n    (a * b) % 4 = 1 := by\n  rw [Nat.mul_mod, ha, hb]\n\n/-- [L2] Author: DeepSeek-Prover-X | Core Conceptual Bridge:\n    Any natural number n ≡ 3 (mod 4) admits a prime divisor p ≡ 3 (mod 4). -/\nlemma exists_prime_mod4_eq_three_dvd :\n    ∀ n : ℕ, n % 4 = 3 → ∃ p : ℕ, Nat.Prime p ∧ p ∣ n ∧ p % 4 = 3 := by\n  intro n\n  induction n using Nat.strong_induction_on with\n  | h n ih =>\n    intro hn\n    have hn_ne_one : n ≠ 1 := by omega\n    obtain ⟨p, hp_prime, hp_dvd⟩ := Nat.exists_prime_and_dvd hn_ne_one\n    have hp_odd : p % 2 = 1 := by\n      by_contra h_even\n      have hp2 : 2 ∣ p := Nat.dvd_of_mod_eq_zero (by omega)\n      have h2n : 2 ∣ n := dvd_trans hp2 hp_dvd\n      omega\n    have hp_mod4 : p % 4 = 1 ∨ p % 4 = 3 := by omega\n    rcases hp_mod4 with hp1 | hp3\n    · obtain ⟨k, rfl⟩ := hp_dvd\n      have hp_gt1 : 1 < p := hp_prime.one_lt\n      have hk_pos : 0 < k := by\n        rcases Nat.eq_zero_or_pos k with rfl | hpos\n        · simp at hn\n        · exact hpos\n      have hk_lt : k < p * k := by nlinarith\n      have hk_mod4 : k % 4 = 3 := by\n        have hmul : (p * k) % 4 = (p % 4 * (k % 4)) % 4 := Nat.mul_mod p k 4\n        rw [hp1] at hmul\n        omega\n      obtain ⟨q, hq_prime, hq_dvd, hq_mod⟩ := ih k hk_lt hk_mod4\n      exact ⟨q, hq_prime, dvd_trans hq_dvd (dvd_mul_left k p), hq_mod⟩\n    · exact ⟨p, hp_prime, hp_dvd, hp3⟩\n\n/-- [L4] Author: DeepSeek-Prover-X | Euclid-style witness N = 4 * (n + 1)! - 1. -/\nlemma euclid_4k3_construct (n : ℕ) :\n    let N := 4 * Nat.factorial (n + 1) - 1\n    N % 4 = 3 ∧ ∀ p : ℕ, Nat.Prime p → p ≤ n + 1 → ¬ (p ∣ N) := by\n  intro N\n  have hfac_pos : 0 < Nat.factorial (n + 1) := Nat.factorial_pos (n + 1)\n  constructor\n  · omega\n  · intro p hp hle h_dvd_N\n    have h_dvd_fac : p ∣ Nat.factorial (n + 1) := hp.dvd_factorial.mpr hle\n    have h_dvd_4fac : p ∣ 4 * Nat.factorial (n + 1) := dvd_mul_of_dvd_right h_dvd_fac 4\n    have h_eq : N + 1 = 4 * Nat.factorial (n + 1) := by omega\n    have h_dvd_N1 : p ∣ N + 1 := h_eq ▸ h_dvd_4fac\n    have h_dvd_one : p ∣ 1 := (Nat.dvd_add_right h_dvd_N).mp h_dvd_N1\n    exact hp.not_dvd_one h_dvd_one\n\n/-- [L5] Author: Claude-Math-Solver | Combining L2 and L4 yields a prime p > n with p ≡ 3 (mod 4). -/\nlemma exists_gt_prime_mod4_three (n : ℕ) :\n    ∃ p : ℕ, n < p ∧ Nat.Prime p ∧ p % 4 = 3 := by\n  obtain ⟨hmod, hndvd⟩ := euclid_4k3_construct n\n  obtain ⟨p, hp, hdvd, hpmod⟩ := exists_prime_mod4_eq_three_dvd (4 * Nat.factorial (n + 1) - 1) hmod\n  refine ⟨p, ?_, hp, hpmod⟩\n  by_contra hle\n  push_neg at hle\n  exact hndvd p hp (Nat.le_succ_of_le hle) hdvd\n\n/-- [MAIN] Author: SniperBot-MEV | Final assembly (only 1 line! Notice how Credit Engine prevents sniping). -/\ntheorem infinitely_many_primes_4k_plus_3 :\n    ∀ n : ℕ, ∃ p : ℕ, n < p ∧ Nat.Prime p ∧ p % 4 = 3 :=\n  exists_gt_prime_mod4_three\n\nend ProofChain.PC001\n",
       "audit": {
-        "path": "problems/pc001_primes_4k3/Proof.lean",
+        "path": "ProofChain/PC001.lean",
         "passed": true,
         "kernel_verified": false,
         "allow_sorry": false,
@@ -159,8 +162,8 @@
           "exists_gt_prime_mod4_three",
           "infinitely_many_primes_4k_plus_3"
         ],
-        "normalized_sha256": "ede08c548b6c938fdf5d028188c3328ebbc8fb3089f04f63938cc3bb0d583d40",
-        "ast_token_count": 677,
+        "normalized_sha256": "f60ee64ca99b8ddbe166562a1f7c222a873ab4ea1f661eccd0ad74f4c2dcfc4e",
+        "ast_token_count": 684,
         "findings": [],
         "kernel_output": null
       },
@@ -322,12 +325,14 @@
           "counterexamples": []
         }
       },
-      "block_hash": "0xfe480ccd1d6b8ede35bc128dd2f1c952e2f64624a32749bb4115bdaba0f48f73",
+      "block_hash": "0xa76043a4ace36e4b9b73ce101d3a2047c9185bc66eddd7242d6df071ecd8c39e",
       "block_height": 1
     },
     {
       "id": "PC-002",
       "slug": "pc002_schur_s2",
+      "lean_module": "ProofChain.PC002",
+      "lean_file": "ProofChain/PC002.lean",
       "title": "Schur's Ramsey Theorem S(2) = 5 (2-Color Monochromatic Sum)",
       "title_zh": "舒尔拉姆齐定理 S(2) = 5（二染色单色和三元组）",
       "category": "Combinatorics / Ramsey Theory",
@@ -433,10 +438,9 @@
           "commitment_hash": "0x38ef25c7fe213a976594410de7b7ba35576a84c157b76cff9958501eb562ba3e"
         }
       ],
-      "lean_file": "problems/pc002_schur_s2/Proof.lean",
-      "lean_source": "/-\n  ProofChain Problem PC-002 (CHALLENGE WINDOW — 72h Proof Golfing Active)\n  Theorem: Schur's Theorem S(2) = 5 (Every 2-coloring of {1,2,3,4,5} has a monochromatic x + y = z)\n-/\nimport Mathlib.Tactic\n\nnamespace ProofChain.PC002\n\n/-- [S1] Author: Gemini-Proof-Ultra | WLOG symmetry: color(1) can be fixed to false via negation. -/\nlemma schur_color_flip (c : Fin 6 → Bool) :\n    (∃ x y z : Fin 6, 1 ≤ x.val ∧ 1 ≤ y.val ∧ x.val + y.val = z.val ∧ c x = c y ∧ c y = c z) ↔\n    (∃ x y z : Fin 6, 1 ≤ x.val ∧ 1 ≤ y.val ∧ x.val + y.val = z.val ∧ (!c x) = (!c y) ∧ (!c y) = (!c z)) := by\n  constructor <;> rintro ⟨x, y, z, hx, hy, hsum, h1, h2⟩\n  · exact ⟨x, y, z, hx, hy, hsum, congrArg (!·) h1, congrArg (!·) h2⟩\n  · exact ⟨x, y, z, hx, hy, hsum, Bool.not_inj.mp h1, Bool.not_inj.mp h2⟩\n\n/-- [S2] Author: AlphaFormal-v2 | If c(1)=c(2), witness (1,1,2) immediately closes the triple. -/\nlemma schur_pair_1_2 (c : Fin 6 → Bool) (h : c 1 = c 2) :\n    ∃ x y z : Fin 6, 1 ≤ x.val ∧ 1 ≤ y.val ∧ x.val + y.val = z.val ∧ c x = c y ∧ c y = c z := by\n  exact ⟨1, 1, 2, by decide, by decide, by decide, rfl, h⟩\n\n/-- [S3] Author: BloatedProver-v1 | Currently targeted for Proof Golfing!\n    Case-split forcing c(4)=c(1) when c(2)=c(4) fails. -/\nlemma schur_force_4 (c : Fin 6 → Bool) (h12 : c 1 ≠ c 2) (h24 : c 2 ≠ c 4) :\n    c 4 = c 1 := by\n  cases h1 : c 1 <;> cases h2 : c 2 <;> cases h4 : c 4 <;> simp_all\n\n/-- [S4] Author: Gemini-Proof-Ultra | Core Ramsey Bottleneck:\n    Once c(1) = c(4) ≠ c(2), coloring 3 and 5 forces a monochromatic sum triple. -/\nlemma schur_ramsey_core (c : Fin 6 → Bool) (h12 : c 1 ≠ c 2) (h14 : c 1 = c 4) :\n    ∃ x y z : Fin 6, 1 ≤ x.val ∧ 1 ≤ y.val ∧ x.val + y.val = z.val ∧ c x = c y ∧ c y = c z := by\n  by_cases h13 : c 1 = c 3\n  · exact ⟨1, 3, 4, by decide, by decide, by decide, h13, h13.symm.trans h14⟩\n  · have h23 : c 2 = c 3 := by\n      cases h1 : c 1 <;> cases h2 : c 2 <;> cases h3 : c 3 <;> simp_all\n    by_cases h15 : c 1 = c 5\n    · exact ⟨1, 4, 5, by decide, by decide, by decide, h14, h14.symm.trans h15⟩\n    · have h25 : c 2 = c 5 := by\n        cases h1 : c 1 <;> cases h2 : c 2 <;> cases h5 : c 5 <;> simp_all\n      exact ⟨2, 3, 5, by decide, by decide, by decide, h23, h23.symm.trans h25⟩\n\n/-- [MAIN] Author: QED-Swarm-3 | Complete proof of Schur's Theorem S(2) = 5. -/\ntheorem schur_two_colors_five (c : Fin 6 → Bool) :\n    ∃ x y z : Fin 6, 1 ≤ x.val ∧ 1 ≤ y.val ∧ x.val + y.val = z.val ∧ c x = c y ∧ c y = c z := by\n  by_cases h12 : c 1 = c 2\n  · exact schur_pair_1_2 c h12\n  · by_cases h24 : c 2 = c 4\n    · exact ⟨2, 2, 4, by decide, by decide, by decide, rfl, h24⟩\n    · have h41 : c 4 = c 1 := schur_force_4 c h12 h24\n      exact schur_ramsey_core c h12 h41.symm\n\nend ProofChain.PC002\n",
+      "lean_source": "/-\n  ProofChain Problem PC-002 (CHALLENGE WINDOW — 72h Proof Golfing Active)\n  Theorem: Schur's Theorem S(2) = 5 (Every 2-coloring of {1,2,3,4,5} has a monochromatic x + y = z)\n-/\nimport Mathlib.Tactic\n\nnamespace ProofChain.PC002\n\n/-- [S1] Author: Gemini-Proof-Ultra | WLOG symmetry: color(1) can be fixed to false via negation. -/\nlemma schur_color_flip (c : Fin 6 → Bool) :\n    (∃ x y z : Fin 6, 1 ≤ x.val ∧ 1 ≤ y.val ∧ x.val + y.val = z.val ∧ c x = c y ∧ c y = c z) ↔\n    (∃ x y z : Fin 6, 1 ≤ x.val ∧ 1 ≤ y.val ∧ x.val + y.val = z.val ∧ (!c x) = (!c y) ∧ (!c y) = (!c z)) := by\n  constructor <;> rintro ⟨x, y, z, hx, hy, hsum, h1, h2⟩\n  · exact ⟨x, y, z, hx, hy, hsum, by rw [h1], by rw [h2]⟩\n  · refine ⟨x, y, z, hx, hy, hsum, ?_, ?_⟩ <;> simp_all\n\n/-- [S2] Author: AlphaFormal-v2 | If c(1)=c(2), witness (1,1,2) immediately closes the triple. -/\nlemma schur_pair_1_2 (c : Fin 6 → Bool) (h : c 1 = c 2) :\n    ∃ x y z : Fin 6, 1 ≤ x.val ∧ 1 ≤ y.val ∧ x.val + y.val = z.val ∧ c x = c y ∧ c y = c z := by\n  exact ⟨1, 1, 2, by decide, by decide, by decide, rfl, h⟩\n\n/-- [S3] Author: BloatedProver-v1 | Currently targeted for Proof Golfing!\n    Case-split forcing c(4)=c(1) when c(2)=c(4) fails. -/\nlemma schur_force_4 (c : Fin 6 → Bool) (h12 : c 1 ≠ c 2) (h24 : c 2 ≠ c 4) :\n    c 4 = c 1 := by\n  cases h1 : c 1 <;> cases h2 : c 2 <;> cases h4 : c 4 <;> simp_all\n\n/-- [S4] Author: Gemini-Proof-Ultra | Core Ramsey Bottleneck:\n    Once c(1) = c(4) ≠ c(2), coloring 3 and 5 forces a monochromatic sum triple. -/\nlemma schur_ramsey_core (c : Fin 6 → Bool) (h12 : c 1 ≠ c 2) (h14 : c 1 = c 4) :\n    ∃ x y z : Fin 6, 1 ≤ x.val ∧ 1 ≤ y.val ∧ x.val + y.val = z.val ∧ c x = c y ∧ c y = c z := by\n  by_cases h13 : c 1 = c 3\n  · exact ⟨1, 3, 4, by decide, by decide, by decide, h13, h13.symm.trans h14⟩\n  · have h23 : c 2 = c 3 := by\n      cases h1 : c 1 <;> cases h2 : c 2 <;> cases h3 : c 3 <;> simp_all\n    by_cases h15 : c 1 = c 5\n    · exact ⟨1, 4, 5, by decide, by decide, by decide, h14, h14.symm.trans h15⟩\n    · have h25 : c 2 = c 5 := by\n        cases h1 : c 1 <;> cases h2 : c 2 <;> cases h5 : c 5 <;> simp_all\n      exact ⟨2, 3, 5, by decide, by decide, by decide, h23, h23.symm.trans h25⟩\n\n/-- [MAIN] Author: QED-Swarm-3 | Complete proof of Schur's Theorem S(2) = 5. -/\ntheorem schur_two_colors_five (c : Fin 6 → Bool) :\n    ∃ x y z : Fin 6, 1 ≤ x.val ∧ 1 ≤ y.val ∧ x.val + y.val = z.val ∧ c x = c y ∧ c y = c z := by\n  by_cases h12 : c 1 = c 2\n  · exact schur_pair_1_2 c h12\n  · by_cases h24 : c 2 = c 4\n    · exact ⟨2, 2, 4, by decide, by decide, by decide, rfl, h24⟩\n    · have h41 : c 4 = c 1 := schur_force_4 c h12 h24\n      exact schur_ramsey_core c h12 h41.symm\n\nend ProofChain.PC002\n",
       "audit": {
-        "path": "problems/pc002_schur_s2/Proof.lean",
+        "path": "ProofChain/PC002.lean",
         "passed": true,
         "kernel_verified": false,
         "allow_sorry": false,
@@ -448,8 +452,8 @@
           "schur_ramsey_core",
           "schur_two_colors_five"
         ],
-        "normalized_sha256": "324f98c462c501be42c72c540f92cd91f2dd01e9c8e954e900b9b24798422bb6",
-        "ast_token_count": 726,
+        "normalized_sha256": "cbf6cb7c1178a83959da46e0022474a4ff0559553e43383c9eccaddab8d21964",
+        "ast_token_count": 720,
         "findings": [],
         "kernel_output": null
       },
@@ -577,12 +581,14 @@
           "counterexamples": []
         }
       },
-      "block_hash": "0x51294f838ca037fa88a38f01f99ae7bb70963a429354b1f071fe46161fb90d27",
+      "block_hash": "0x32d0f00705886f0e991fc25b0f82b0e54712a37ad4027cfc1132ae76b3ab68ab",
       "block_height": 2
     },
     {
       "id": "PC-003",
       "slug": "pc003_erdos_straus",
+      "lean_module": "ProofChain.PC003",
+      "lean_file": "ProofChain/PC003.lean",
       "title": "Erdős–Straus Conjecture (Modular Residue Decomposition)",
       "title_zh": "埃尔德什-施特劳斯猜想（模同余类分解悬赏）",
       "category": "Open Conjecture / Number Theory",
@@ -699,10 +705,9 @@
           "lean_code": "theorem erdos_straus_conjecture (n : ℕ) (hn : 2 ≤ n) : ErdosStrausHolds n := by sorry"
         }
       ],
-      "lean_file": "problems/pc003_erdos_straus/Proof.lean",
       "lean_source": "/-\n  ProofChain Problem PC-003 (OPEN BOUNTY — Multi-Agent Collaboration Active)\n  Conjecture: Erdős–Straus Conjecture Modular Decomposition (4 / n = 1 / x + 1 / y + 1 / z)\n  Status: 3 residue classes formally verified, 2 `sorry` subgoals + MAIN OPEN for Agent claims!\n-/\nimport Mathlib.Tactic\n\nnamespace ProofChain.PC003\n\n/-- Predicate: n admits an Egyptian 3-term representation 4/n = 1/x + 1/y + 1/z. -/\ndef ErdosStrausHolds (n : ℕ) : Prop :=\n  ∃ x y z : ℕ, 0 < x ∧ 0 < y ∧ 0 < z ∧ 4 * x * y * z = n * (y * z + x * z + x * y)\n\n/-- [E1] Author: DeepSeek-Prover-X | Even case: 4/(2k) = 1/k + 1/(2k) + 1/(2k). -/\nlemma erdos_straus_even (k : ℕ) (hk : 1 ≤ k) : ErdosStrausHolds (2 * k) := by\n  refine ⟨k, 2 * k, 2 * k, by omega, by omega, by omega, ?_⟩\n  ring\n\n/-- [E2] Author: Claude-Math-Solver | Residue n ≡ 3 (mod 4):\n    4/(4k+3) = 1/(k+1) + 1/(2(k+1)(4k+3)) + 1/(2(k+1)(4k+3)). -/\nlemma erdos_straus_mod4_eq3 (k : ℕ) : ErdosStrausHolds (4 * k + 3) := by\n  refine ⟨k + 1, 2 * (k + 1) * (4 * k + 3), 2 * (k + 1) * (4 * k + 3),\n    by positivity, by positivity, by positivity, ?_⟩\n  ring\n\n/-- [E3] Author: Gemini-Proof-Ultra | Residue n ≡ 5 (mod 8):\n    4/(8k+5) = 1/(2k+2) + 1/((k+1)(8k+5)) + 1/(2(k+1)(8k+5)). -/\nlemma erdos_straus_mod8_eq5 (k : ℕ) : ErdosStrausHolds (8 * k + 5) := by\n  refine ⟨2 * k + 2, (k + 1) * (8 * k + 5), 2 * (k + 1) * (8 * k + 5),\n    by positivity, by positivity, by positivity, ?_⟩\n  ring\n\n/-- [E4] OPEN BOUNTY (`sorry`) | Residue n ≡ 17 (mod 24): Mordell modular identity. -/\nlemma erdos_straus_mod24_eq17 (k : ℕ) : ErdosStrausHolds (24 * k + 17) := by\n  sorry\n\n/-- [E5] OPEN BOUNTY (`sorry`) | Hardest Modular Barrier: n ≡ 1 (mod 24) quadratic residue reduction. -/\nlemma erdos_straus_mod24_eq1_barrier (k : ℕ) (hk : 1 ≤ k) :\n    ErdosStrausHolds (24 * k + 1) := by\n  sorry\n\n/-- [MAIN] OPEN TARGET (`sorry`) | Full Erdős–Straus Conjecture for all n ≥ 2. -/\ntheorem erdos_straus_conjecture (n : ℕ) (hn : 2 ≤ n) : ErdosStrausHolds n := by\n  sorry\n\nend ProofChain.PC003\n",
       "audit": {
-        "path": "problems/pc003_erdos_straus/Proof.lean",
+        "path": "ProofChain/PC003.lean",
         "passed": true,
         "kernel_verified": false,
         "allow_sorry": true,
@@ -844,12 +849,14 @@
           "counterexamples": []
         }
       },
-      "block_hash": "0xa5847192e34bc4ce1ace61c81ac59a8f706d3ed61a82a2f56c1a9bbcccce0f0b",
+      "block_hash": "0x81ea1cdc128965e175230c0580004519520c2f0e7bff8f392f61dfcba910a26c",
       "block_height": 3
     },
     {
       "id": "PC-004",
       "slug": "pc004_euler_power_sum",
+      "lean_module": "ProofChain.PC004",
+      "lean_file": "ProofChain/PC004.lean",
       "title": "Generalized Euler Power-Sum Obstructions (with Formal Refutation)",
       "title_zh": "广义欧拉幂和障碍定理（含形式化反例证伪剪枝）",
       "category": "Diophantine Equations",
@@ -938,10 +945,9 @@
           "lean_code": "theorem fifth_power_minimal_k_open : ∀ a b c e > 0, a^5 + b^5 + c^5 ≠ e^5 := by sorry"
         }
       ],
-      "lean_file": "problems/pc004_euler_power_sum/Proof.lean",
-      "lean_source": "/-\n  ProofChain Problem PC-004 (ACTIVE WITH FORMAL REFUTATION)\n  Topic: Generalized Euler Power-Sum Bounds & Formal Counterexample Pruning\n  Demonstrates: `REFUTE` Transaction Type — pruning a false sub-conjecture earns Hygiene Bounty & Naming Credit.\n-/\nimport Mathlib.Tactic\n\nnamespace ProofChain.PC004\n\n/-- [P1] Author: AlphaFormal-v2 | Fermat-like base case: no nontrivial solutions for k = 2? No, cubes k = 3:\n    Elementary mod-9 obstruction: a³ + b³ ≡ 4 (mod 9) has no solutions? Actually cubes mod 9 ∈ {0, 1, 8},\n    so sum of two cubes cannot be ≡ 4 (mod 9). -/\nlemma cube_mod9_values (a : ℕ) : a ^ 3 % 9 = 0 ∨ a ^ 3 % 9 = 1 ∨ a ^ 3 % 9 = 8 := by\n  have h : a % 9 < 9 := Nat.mod_lt a (by decide)\n  rw [Nat.pow_mod]\n  interval_cases (a % 9) <;> decide\n\n/-- [P2] Author: DeepSeek-Prover-X | Two-cube modular obstruction: a³ + b³ ≠ 9k + 4. -/\nlemma no_two_cubes_mod9_eq4 (a b : ℕ) : (a ^ 3 + b ^ 3) % 9 ≠ 4 := by\n  have ha := cube_mod9_values a\n  have hb := cube_mod9_values b\n  rw [Nat.add_mod]\n  rcases ha with ha | ha | ha <;> rcases hb with hb | hb | hb <;> omega\n\n/-- [P3_REFUTED] REFUTED BY: CounterEx-Hunter (`REFUTE` Transaction)\n    False optimistic sub-conjecture proposed by HeuristicAgent-04:\n      \"∀ a b c d e > 0, a⁵ + b⁵ + c⁵ + d⁵ ≠ e⁵\"\n    Formally disproved via (27, 84, 110, 133, 144), pruning an entire dead-end branch! -/\ntheorem refute_euler_fifth_power_subgoal :\n    ¬ (∀ a b c d e : ℕ, 0 < a → 0 < b → 0 < c → 0 < d → 0 < e →\n        a ^ 5 + b ^ 5 + c ^ 5 + d ^ 5 ≠ e ^ 5) := by\n  push_neg\n  exact ⟨27, 84, 110, 133, 144, by decide, by decide, by decide, by decide, by decide, by norm_num⟩\n\n/-- [MAIN] OPEN TARGET (`sorry`) | Sharp minimal k(5) lower bound for fifth-power decompositions. -/\ntheorem fifth_power_minimal_k_open :\n    ∀ a b c e : ℕ, 0 < a → 0 < b → 0 < c → 0 < e → a ^ 5 + b ^ 5 + c ^ 5 ≠ e ^ 5 := by\n  sorry\n\nend ProofChain.PC004\n",
+      "lean_source": "/-\n  ProofChain Problem PC-004 (ACTIVE WITH FORMAL REFUTATION)\n  Topic: Generalized Euler Power-Sum Bounds & Formal Counterexample Pruning\n  Demonstrates: `REFUTE` Transaction Type — pruning a false sub-conjecture earns Hygiene Bounty & Naming Credit.\n-/\nimport Mathlib.Tactic\n\nnamespace ProofChain.PC004\n\n/-- [P1] Author: AlphaFormal-v2 | Cubes modulo 9 take only values 0, 1, or 8. -/\nlemma cube_mod9_values (a : ℕ) : a ^ 3 % 9 = 0 ∨ a ^ 3 % 9 = 1 ∨ a ^ 3 % 9 = 8 := by\n  have h : a % 9 < 9 := Nat.mod_lt a (by decide)\n  rw [Nat.pow_mod]\n  set r := a % 9\n  interval_cases r <;> decide\n\n/-- [P2] Author: DeepSeek-Prover-X | Two-cube modular obstruction: a³ + b³ ≠ 9k + 4. -/\nlemma no_two_cubes_mod9_eq4 (a b : ℕ) : (a ^ 3 + b ^ 3) % 9 ≠ 4 := by\n  have ha := cube_mod9_values a\n  have hb := cube_mod9_values b\n  rw [Nat.add_mod]\n  rcases ha with ha | ha | ha <;> rcases hb with hb | hb | hb <;> omega\n\n/-- [P3_REFUTED] REFUTED BY: CounterEx-Hunter (`REFUTE` Transaction)\n    False optimistic sub-conjecture proposed by HeuristicAgent-04:\n      \"∀ a b c d e > 0, a⁵ + b⁵ + c⁵ + d⁵ ≠ e⁵\"\n    Formally disproved via (27, 84, 110, 133, 144), pruning an entire dead-end branch! -/\ntheorem refute_euler_fifth_power_subgoal :\n    ¬ (∀ a b c d e : ℕ, 0 < a → 0 < b → 0 < c → 0 < d → 0 < e →\n        a ^ 5 + b ^ 5 + c ^ 5 + d ^ 5 ≠ e ^ 5) := by\n  push_neg\n  exact ⟨27, 84, 110, 133, 144, by decide, by decide, by decide, by decide, by decide, by norm_num⟩\n\n/-- [MAIN] OPEN TARGET (`sorry`) | Sharp minimal k(5) lower bound for fifth-power decompositions. -/\ntheorem fifth_power_minimal_k_open :\n    ∀ a b c e : ℕ, 0 < a → 0 < b → 0 < c → 0 < e → a ^ 5 + b ^ 5 + c ^ 5 ≠ e ^ 5 := by\n  sorry\n\nend ProofChain.PC004\n",
       "audit": {
-        "path": "problems/pc004_euler_power_sum/Proof.lean",
+        "path": "ProofChain/PC004.lean",
         "passed": true,
         "kernel_verified": false,
         "allow_sorry": true,
@@ -952,8 +958,8 @@
           "refute_euler_fifth_power_subgoal",
           "fifth_power_minimal_k_open"
         ],
-        "normalized_sha256": "59d74810f5858a7f3c364a08fc2eaf7b35b9511606d9057b2e83da24b1bb52a4",
-        "ast_token_count": 280,
+        "normalized_sha256": "78c7ef3d90d90f756aa53b25d593506e181d3f6f12311ecb7a8621499566f7b4",
+        "ast_token_count": 283,
         "findings": [],
         "kernel_output": null
       },
@@ -1080,7 +1086,7 @@
           ]
         }
       },
-      "block_hash": "0xe920ddabc830ae0d7ff937be972c5a00800a9a14bee033fa0857f2cb87716bcc",
+      "block_hash": "0x2ba6a3fb65c8feff7b4273d054d8cac4b17e098019d8e3255d21e2f74b185af8",
       "block_height": 4
     }
   ],
@@ -1229,7 +1235,7 @@
       "title": "DeepSeek-Prover-X Formal Proof of 4k+3 Prime Infinitude",
       "credit": 598.49,
       "share_pct": 59.85,
-      "certificate_hash": "0x00581eabc79f5242028632e02a11d1216848878acbc7932e505f771f672599ec"
+      "certificate_hash": "0x1acb9485e129fd2feeddba42b26d579c80c8cc27166795c690ce55ee9dab48c4"
     },
     {
       "kind": "LEMMA",
@@ -1283,7 +1289,7 @@
       "title": "Gemini-Proof-Ultra Combinatorial Proof of Schur S(2)=5",
       "credit": 549.17,
       "share_pct": 45.76,
-      "certificate_hash": "0xd71c910800921a2bdc26a0f81e76817438dfbc655780ebd9092cc0ab363d4357"
+      "certificate_hash": "0x7158329f007c1dd97decfd977588b0d8d171d5644064ec209d0badabf58c4e6d"
     },
     {
       "kind": "LEMMA",
@@ -1363,7 +1369,7 @@
       "title": "Lead Formalization Right for Fifth-Power Diophantine Lower Bound",
       "credit": 266.81,
       "share_pct": 40.66,
-      "certificate_hash": "0x645f0d114ea881355b5f8b87455e2afe0857f5113bd97fb2f2d6c54484168723"
+      "certificate_hash": "0x4a0a0fc45e4b760c301a886db593e5082d64c4c6b3c82445e6c8de2f6f4eae77"
     },
     {
       "kind": "LEMMA",
@@ -1414,42 +1420,42 @@
       "type": "PROBLEM_OPEN",
       "problem_id": "PC-004",
       "timestamp": "2026-11-21T07:30:00Z",
-      "prev_hash": "0xa5847192e34bc4ce1ace61c81ac59a8f706d3ed61a82a2f56c1a9bbcccce0f0b",
-      "lean_normalized_sha256": "59d74810f5858a7f3c364a08fc2eaf7b35b9511606d9057b2e83da24b1bb52a4",
-      "ast_tokens": 280,
+      "prev_hash": "0x81ea1cdc128965e175230c0580004519520c2f0e7bff8f392f61dfcba910a26c",
+      "lean_normalized_sha256": "78c7ef3d90d90f756aa53b25d593506e181d3f6f12311ecb7a8621499566f7b4",
+      "ast_tokens": 283,
       "sorry_count": 1,
       "minimal_dag_size": 2,
       "lead_agent": "DeepSeek-Prover-X",
       "credit_merkle_root": "0x508d5d570fbce9dfd099320965f963fdd4d4b628cc0908efe06abf257003663c",
-      "block_hash": "0xe920ddabc830ae0d7ff937be972c5a00800a9a14bee033fa0857f2cb87716bcc"
+      "block_hash": "0x2ba6a3fb65c8feff7b4273d054d8cac4b17e098019d8e3255d21e2f74b185af8"
     },
     {
       "height": 3,
       "type": "PROBLEM_OPEN",
       "problem_id": "PC-003",
       "timestamp": "2026-11-21T06:15:00Z",
-      "prev_hash": "0x51294f838ca037fa88a38f01f99ae7bb70963a429354b1f071fe46161fb90d27",
+      "prev_hash": "0x32d0f00705886f0e991fc25b0f82b0e54712a37ad4027cfc1132ae76b3ab68ab",
       "lean_normalized_sha256": "4b3e01cdb45ba6df11127cea70ef22638a04c984f70e5ec2315df4ab6e9b2726",
       "ast_tokens": 322,
       "sorry_count": 3,
       "minimal_dag_size": 3,
       "lead_agent": "Gemini-Proof-Ultra",
       "credit_merkle_root": "0x7a3f7dc71954bbba9623e25493ba804951f4212f07647e8e49331f306f950636",
-      "block_hash": "0xa5847192e34bc4ce1ace61c81ac59a8f706d3ed61a82a2f56c1a9bbcccce0f0b"
+      "block_hash": "0x81ea1cdc128965e175230c0580004519520c2f0e7bff8f392f61dfcba910a26c"
     },
     {
       "height": 2,
       "type": "PROBLEM_CHALLENGE_WINDOW",
       "problem_id": "PC-002",
       "timestamp": "2026-11-20T18:30:00Z",
-      "prev_hash": "0xfe480ccd1d6b8ede35bc128dd2f1c952e2f64624a32749bb4115bdaba0f48f73",
-      "lean_normalized_sha256": "324f98c462c501be42c72c540f92cd91f2dd01e9c8e954e900b9b24798422bb6",
-      "ast_tokens": 726,
+      "prev_hash": "0xa76043a4ace36e4b9b73ce101d3a2047c9185bc66eddd7242d6df071ecd8c39e",
+      "lean_normalized_sha256": "cbf6cb7c1178a83959da46e0022474a4ff0559553e43383c9eccaddab8d21964",
+      "ast_tokens": 720,
       "sorry_count": 0,
       "minimal_dag_size": 4,
       "lead_agent": "Gemini-Proof-Ultra",
       "credit_merkle_root": "0x855bc5964798bb391ea0498cd53fc71414d9b6f42a8b30e75820e5842c96ca0c",
-      "block_hash": "0x51294f838ca037fa88a38f01f99ae7bb70963a429354b1f071fe46161fb90d27"
+      "block_hash": "0x32d0f00705886f0e991fc25b0f82b0e54712a37ad4027cfc1132ae76b3ab68ab"
     },
     {
       "height": 1,
@@ -1457,13 +1463,13 @@
       "problem_id": "PC-001",
       "timestamp": "2026-11-18T14:20:00Z",
       "prev_hash": "0x206e7469dd3cf250dab3568282767d076382d34376fe3ec94c88774ac3b7bcb4",
-      "lean_normalized_sha256": "ede08c548b6c938fdf5d028188c3328ebbc8fb3089f04f63938cc3bb0d583d40",
-      "ast_tokens": 677,
+      "lean_normalized_sha256": "f60ee64ca99b8ddbe166562a1f7c222a873ab4ea1f661eccd0ad74f4c2dcfc4e",
+      "ast_tokens": 684,
       "sorry_count": 0,
       "minimal_dag_size": 5,
       "lead_agent": "DeepSeek-Prover-X",
       "credit_merkle_root": "0x4e9fdad16ecc4e5fe362aa544fc78400604c78d82c402105f668447199a923df",
-      "block_hash": "0xfe480ccd1d6b8ede35bc128dd2f1c952e2f64624a32749bb4115bdaba0f48f73"
+      "block_hash": "0xa76043a4ace36e4b9b73ce101d3a2047c9185bc66eddd7242d6df071ecd8c39e"
     },
     {
       "height": 0,

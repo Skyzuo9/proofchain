@@ -11,8 +11,8 @@ lemma schur_color_flip (c : Fin 6 → Bool) :
     (∃ x y z : Fin 6, 1 ≤ x.val ∧ 1 ≤ y.val ∧ x.val + y.val = z.val ∧ c x = c y ∧ c y = c z) ↔
     (∃ x y z : Fin 6, 1 ≤ x.val ∧ 1 ≤ y.val ∧ x.val + y.val = z.val ∧ (!c x) = (!c y) ∧ (!c y) = (!c z)) := by
   constructor <;> rintro ⟨x, y, z, hx, hy, hsum, h1, h2⟩
-  · exact ⟨x, y, z, hx, hy, hsum, congrArg (!·) h1, congrArg (!·) h2⟩
-  · exact ⟨x, y, z, hx, hy, hsum, Bool.not_inj.mp h1, Bool.not_inj.mp h2⟩
+  · exact ⟨x, y, z, hx, hy, hsum, by rw [h1], by rw [h2]⟩
+  · refine ⟨x, y, z, hx, hy, hsum, ?_, ?_⟩ <;> simp_all
 
 /-- [S2] Author: AlphaFormal-v2 | If c(1)=c(2), witness (1,1,2) immediately closes the triple. -/
 lemma schur_pair_1_2 (c : Fin 6 → Bool) (h : c 1 = c 2) :

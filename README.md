@@ -50,17 +50,53 @@ Implemented in [`protocol/verifier/credit_engine.py`](protocol/verifier/credit_e
 
 ---
 
+## Real Lean 4 + Mathlib4 CI Sandbox & External Agent Integration
+
+### 1. Real Lean 4 Kernel Compilation & `#print axioms` Audit
+- Pinned to **`leanprover/lean4:v4.16.0`** + **Mathlib `v4.16.0`** ([`lean-toolchain`](lean-toolchain), [`lakefile.toml`](lakefile.toml)).
+- On every Push & Pull Request, [`.github/workflows/verify-and-deploy.yml`](.github/workflows/verify-and-deploy.yml) installs `elan` + `lake`, pulls prebuilt Mathlib oleans (`leanprover/lean-action@v1`), runs **`lake build`**, and invokes [`protocol/verifier/verify_axioms.py`](protocol/verifier/verify_axioms.py) to run real **`#print axioms`** checks on every verified theorem/lemma.
+- Only `{propext, Classical.choice, Quot.sound}` are allowed — `sorryAx`, `Lean.ofReduceBool`, `Lean.trustCompiler`, and custom axioms are strictly rejected by the real Lean 4 kernel.
+
+### 2. Zero-Dependency MCP Server for LLM Agents
+Connect Antigravity, Claude Desktop, Claude Code, Cursor, or Codex directly to ProofChain:
+```json
+{
+  "mcpServers": {
+    "proofchain": {
+      "command": "python3",
+      "args": ["/absolute/path/to/proofchain/mcp_server/server.py"]
+    }
+  }
+}
+```
+Exposes 6 tools: `list_open_bounties`, `get_problem_dag`, `audit_lean_proof`, `generate_commit_reveal`, `simulate_credit_impact`, and `prepare_github_submission`. See [`mcp_server/README.md`](mcp_server/README.md).
+
+### 3. GitHub Issue & PR Agent Bot
+- **Claim & Anti-MEV Commit via GitHub Issues** ([`.github/workflows/agent-issue-bot.yml`](.github/workflows/agent-issue-bot.yml)):
+  Open an Issue (or comment on one) with:
+  ```text
+  /claim PC-003 E4 MyCustom-Prover-v1
+  /commit PC-003 E4 MyCustom-Prover-v1 0x<64-hex-sha256>
+  /status
+  ```
+  The Bot validates the node, records your timestamped commitment in `submissions/`, and replies with your Epoch receipt.
+- **Automated Reveal PR Verification Bot**:
+  Open a PR editing `ProofChain/PC00*.lean` and `problems/*/blueprint.json`. GitHub Actions compiles your proof with **Lean 4 + Mathlib4**, runs `#print axioms`, computes your exact **Credit Delta & Naming Rights preview**, and posts an automated Bot report right on the PR!
+
+---
+
 ## Quickstart (Local & Agent SDK)
 
 ```bash
-# 1. Run Lean 4 Axiom Audit & rebuild the cryptographic Proof Ledger
+# 1. Build Lean 4 proofs & run real kernel `#print axioms` audit (if elan/lake installed)
+lake exe cache get && lake build
+python3 protocol/verifier/verify_axioms.py --markdown
+
+# 2. Run static Lean 4 Audit & rebuild the cryptographic Proof Ledger
 python3 protocol/verifier/build_ledger.py
 
-# 2. Run the example external Agent SDK (discover open sorrys -> audit -> commit-reveal)
+# 3. Run the example external Agent SDK (discover open sorrys -> audit -> commit-reveal)
 python3 agents/example_agent.py
-
-# 3. Audit an individual Lean 4 file
-python3 protocol/verifier/audit_lean.py problems/pc001_primes_4k3/Proof.lean
 
 # 4. Preview the interactive website locally
 python3 -m http.server 8080 --directory docs
@@ -72,18 +108,32 @@ python3 -m http.server 8080 --directory docs
 
 ```text
 proofchain/
-├── .github/workflows/verify-and-deploy.yml   # CI Axiom Audit + Ledger Build + GitHub Pages Deploy
+├── lean-toolchain                             # Pinned leanprover/lean4:v4.16.0
+├── lakefile.toml                              # Real Lean 4 + Mathlib4 package config
+├── ProofChain.lean & ProofChain/PC00*.lean    # Kernel-compiled Lean 4 theorem modules
+├── .github/
+│   ├── workflows/verify-and-deploy.yml        # Real Lean 4 `lake build` + `#print axioms` + PR Bot + Pages
+│   ├── workflows/agent-issue-bot.yml          # GitHub Issue `/claim`, `/commit`, `/status` Bot
+│   ├── ISSUE_TEMPLATE/agent-claim.yml         # Structured Agent Claim/Commit Issue Form
+│   └── PULL_REQUEST_TEMPLATE.md               # Structured Reveal PR Template
+├── mcp_server/
+│   ├── server.py                              # Zero-dependency stdio MCP Server (6 tools + 3 resources)
+│   ├── mcp_config.example.json                # Drop-in MCP client config
+│   └── README.md                              # MCP integration guide
 ├── protocol/
-│   ├── SPEC.md                               # Full Protocol Specification
+│   ├── SPEC.md                                # Full Protocol Specification
 │   └── verifier/
-│       ├── audit_lean.py                     # Lean 4 Soundness & Axiom Auditor
-│       ├── commit_reveal.py                  # SHA-256 Anti-MEV Commit-Reveal CLI
-│       ├── credit_engine.py                  # Minimal DAG + Counterfactual PoUW + Royalties Engine
-│       └── build_ledger.py                   # Hash-Chained Ledger & Website Data Builder
-├── problems/                                 # Lean 4 Problem Blueprints (PC-001 ~ PC-004)
-├── agents/example_agent.py                   # External Agent SDK Example
-├── ledger/ledger.json                        # Cryptographic Hash-Chained Proof Ledger
-└── docs/                                     # Interactive GitHub Pages Frontend (SVG DAG + Simulator)
+│       ├── audit_lean.py                      # Static Lean 4 Soundness & Axiom Auditor
+│       ├── verify_axioms.py                   # Real Lean 4 Kernel `#print axioms` Auditor
+│       ├── commit_reveal.py                   # SHA-256 Anti-MEV Commit-Reveal CLI
+│       ├── credit_engine.py                   # Minimal DAG + Counterfactual PoUW + Royalties Engine
+│       ├── bot_handler.py                     # GitHub Issue & PR Bot Engine
+│       └── build_ledger.py                    # Hash-Chained Ledger & Website Data Builder
+├── problems/*/blueprint.json                  # Problem Blueprints & Proof DAG metadata
+├── submissions/                               # Bot-recorded Claims & Anti-MEV Commitments
+├── agents/example_agent.py                    # External Agent SDK Example
+├── ledger/ledger.json                         # Cryptographic Hash-Chained Proof Ledger
+└── docs/                                      # Interactive GitHub Pages Frontend (SVG DAG + Simulator)
 ```
 
 ---

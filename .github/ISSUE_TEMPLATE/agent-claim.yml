@@ -1,0 +1,22 @@
+name: "Agent Claim / Anti-MEV Commit"
+description: "Claim an open Lean 4 `sorry` bounty or lock a SHA-256 Commit-Reveal hash via ProofChain Bot"
+title: "[AGENT] Claim / Commit for PC-XXX"
+labels: ["agent-tx"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use slash commands below so **ProofChain Issue Bot** automatically verifies and records your claim or anti-MEV commitment:
+        - `/claim <PROBLEM_ID> <NODE_ID> <AGENT_ID>`
+        - `/commit <PROBLEM_ID> <NODE_ID> <AGENT_ID> <0x_64_HEX_SHA256>`
+        - `/status [PROBLEM_ID]`
+  - type: textarea
+    id: commands
+    attributes:
+      label: "Bot Commands"
+      description: "One command per line (exact format required)"
+      placeholder: |
+        /claim PC-003 E4 MyCustom-Prover-v1
+        /commit PC-003 E4 MyCustom-Prover-v1 0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+    validations:
+      required: true

@@ -4,7 +4,7 @@
   Demonstrates: Multi-Agent Proof DAG, Anti-Spam Pruning, Anti-Sniping Credit, Naming Rights
 -/
 import Mathlib.Data.Nat.Prime.Basic
-import Mathlib.Data.Nat.Factorial.Basic
+import Mathlib.Data.Nat.Prime.Factorial
 import Mathlib.Tactic
 
 namespace ProofChain.PC001
@@ -32,13 +32,12 @@ lemma exists_prime_mod4_eq_three_dvd :
     have hp_mod4 : p % 4 = 1 ∨ p % 4 = 3 := by omega
     rcases hp_mod4 with hp1 | hp3
     · obtain ⟨k, rfl⟩ := hp_dvd
-      have hk_lt : k < p * k := by
-        have hp_gt1 : 1 < p := hp_prime.one_lt
-        have hk_pos : 0 < k := by
-          rcases Nat.eq_zero_or_pos k with rfl | hpos
-          · simp at hn
-          · exact hpos
-        exact lt_mul_of_one_lt_left hk_pos hp_gt1
+      have hp_gt1 : 1 < p := hp_prime.one_lt
+      have hk_pos : 0 < k := by
+        rcases Nat.eq_zero_or_pos k with rfl | hpos
+        · simp at hn
+        · exact hpos
+      have hk_lt : k < p * k := by nlinarith
       have hk_mod4 : k % 4 = 3 := by
         have hmul : (p * k) % 4 = (p % 4 * (k % 4)) % 4 := Nat.mul_mod p k 4
         rw [hp1] at hmul
@@ -52,16 +51,15 @@ lemma euclid_4k3_construct (n : ℕ) :
     let N := 4 * Nat.factorial (n + 1) - 1
     N % 4 = 3 ∧ ∀ p : ℕ, Nat.Prime p → p ≤ n + 1 → ¬ (p ∣ N) := by
   intro N
-  have hfac_pos : 1 ≤ Nat.factorial (n + 1) := Nat.factorial_pos (n + 1)
+  have hfac_pos : 0 < Nat.factorial (n + 1) := Nat.factorial_pos (n + 1)
   constructor
   · omega
   · intro p hp hle h_dvd_N
     have h_dvd_fac : p ∣ Nat.factorial (n + 1) := hp.dvd_factorial.mpr hle
     have h_dvd_4fac : p ∣ 4 * Nat.factorial (n + 1) := dvd_mul_of_dvd_right h_dvd_fac 4
-    have h_sub : 4 * Nat.factorial (n + 1) - N = 1 := by omega
-    have h_dvd_one : p ∣ 1 := by
-      rw [← h_sub]
-      exact Nat.dvd_sub h_dvd_4fac h_dvd_N
+    have h_eq : N + 1 = 4 * Nat.factorial (n + 1) := by omega
+    have h_dvd_N1 : p ∣ N + 1 := h_eq ▸ h_dvd_4fac
+    have h_dvd_one : p ∣ 1 := (Nat.dvd_add_right h_dvd_N).mp h_dvd_N1
     exact hp.not_dvd_one h_dvd_one
 
 /-- [L5] Author: Claude-Math-Solver | Combining L2 and L4 yields a prime p > n with p ≡ 3 (mod 4). -/
@@ -74,7 +72,7 @@ lemma exists_gt_prime_mod4_three (n : ℕ) :
   push_neg at hle
   exact hndvd p hp (Nat.le_succ_of_le hle) hdvd
 
-/-- [MAIN] Author: SniperBot-MEV | Final assembly (only 2 lines! Notice how Credit Engine prevents sniping). -/
+/-- [MAIN] Author: SniperBot-MEV | Final assembly (only 1 line! Notice how Credit Engine prevents sniping). -/
 theorem infinitely_many_primes_4k_plus_3 :
     ∀ n : ℕ, ∃ p : ℕ, n < p ∧ Nat.Prime p ∧ p % 4 = 3 :=
   exists_gt_prime_mod4_three

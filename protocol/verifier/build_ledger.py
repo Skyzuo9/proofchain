@@ -26,6 +26,7 @@ from credit_engine import score_problem
 ROOT = Path(__file__).resolve().parents[2]
 PROBLEMS_DIR = ROOT / "problems"
 LEDGER_OUT = ROOT / "ledger" / "ledger.json"
+ATTESTATION_IN = ROOT / "ledger" / "kernel_attestation.json"
 DOCS_DATA_OUT = ROOT / "docs" / "data" / "ledger.json"
 
 
@@ -72,9 +73,17 @@ def build_all() -> Dict[str, Any]:
     blocks.append({**genesis_payload, "block_hash": genesis_hash})
     prev_hash = genesis_hash
 
+    kernel_attestation = None
+    kernel_by_prob: Dict[str, Dict[str, Any]] = {}
+    if ATTESTATION_IN.exists():
+        kernel_attestation = json.loads(ATTESTATION_IN.read_text(encoding="utf-8"))
+        for kp in kernel_attestation.get("problems", []):
+            kernel_by_prob[kp["problem_id"]] = kp
+
     for pdir in problem_dirs:
         bp = json.loads((pdir / "blueprint.json").read_text(encoding="utf-8"))
-        lean_path = pdir / "Proof.lean"
+        lean_rel = bp.get("lean_file")
+        lean_path = (ROOT / lean_rel) if lean_rel else (pdir / "Proof.lean")
         lean_source = lean_path.read_text(encoding="utf-8") if lean_path.exists() else ""
         allow_sorry = bp.get("status") != "settled" and bp.get("status") != "challenge_window"
 
@@ -83,6 +92,15 @@ def build_all() -> Dict[str, Any]:
             raise RuntimeError(
                 f"Audit FAILED for {bp['id']} ({lean_path}): {[asdict(f) for f in audit_report.findings]}"
             )
+
+        k_prob = kernel_by_prob.get(bp["id"])
+        if k_prob and k_prob.get("kernel_verified"):
+            audit_report.kernel_verified = True
+            decl_by_node = {d["node_id"]: d for d in k_prob.get("declarations", [])}
+            for node in bp.get("nodes", []):
+                if node["id"] in decl_by_node:
+                    node["kernel_axioms"] = decl_by_node[node["id"]]["axioms"]
+                    node["kernel_verified"] = decl_by_node[node["id"]]["passed"]
 
         # Compute deterministic commit-reveal hashes for every node with lean_code
         for node in bp.get("nodes", []):
@@ -227,8 +245,10 @@ def build_all() -> Dict[str, Any]:
 
     ledger = {
         "protocol": "ProofChain",
-        "version": "0.1.0-demo",
-        "generated_at": "2026-11-21T08:00:00Z",
+        "version": "0.2.0-lean4-mcp",
+        "lean_toolchain": (ROOT / "lean-toolchain").read_text(encoding="utf-8").strip() if (ROOT / "lean-toolchain").exists() else None,
+        "kernel_attestation": kernel_attestation,
+        "generated_at": "2026-11-21T08:30:00Z",
         "stats": {
             "total_problems": len(compiled_problems),
             "settled_problems": sum(1 for p in compiled_problems if p["status"] == "settled"),

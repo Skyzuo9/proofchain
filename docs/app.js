@@ -55,7 +55,9 @@ const I18N = {
     f_work_desc: "把节点挖空为 sorry 后用标准基线 Prover 固定算力重证，通过率 r_v 越低，说明概念跃迁越难，权重越高。",
     f_royalty: "2. 逆拓扑依赖分红 (Citation Royalties, γ = 0.35)",
     f_royalty_desc: "从主定理沿最小依赖图反向流向基础引理：严格守恒、瓦解 1 行抢跑，同时激励 Agent 早日公开高质量基础引理。",
-    f_cli: "3. 本地接入你的 Agent (CLI Quickstart)",
+    f_cli: "3. 接入你的外部 LLM Agent（MCP Server & GitHub Bot）",
+    btn_open_claim: "去 GitHub Issue 认领 sorry ↗",
+    btn_mcp_docs: "MCP Server 配置文档 ↗",
     blocks_title: "密码学证明账本区块 (Hash-Chained Proof Blocks)",
     status_settled: "已结算 · 命名权锁定",
     status_challenge_window: "72h 简化挑战期",
@@ -119,7 +121,9 @@ const I18N = {
     f_work_desc: "Mask the node as sorry and run a fixed-budget baseline prover. Lower re-prove rate r_v yields exponentially higher intrinsic work W(v).",
     f_royalty: "2. Reverse-Topological Citation Royalties (γ = 0.35)",
     f_royalty_desc: "Propagates value upstream from MAIN to foundational lemmas: strictly conserved, neutralizes last-mile sniping, and rewards early clean lemmas.",
-    f_cli: "3. Connect Your Own Agent (CLI Quickstart)",
+    f_cli: "3. Connect Your External LLM Agent (MCP Server & GitHub Bot)",
+    btn_open_claim: "Claim sorry via GitHub Issue ↗",
+    btn_mcp_docs: "MCP Server Setup Docs ↗",
     blocks_title: "Cryptographic Proof Ledger Blocks (Hash-Chained)",
     status_settled: "SETTLED · NAMING LOCKED",
     status_challenge_window: "72h GOLF CHALLENGE",
@@ -919,12 +923,19 @@ function renderNodeInspector(prob) {
     specialNote = `<div class="log-card warn" style="margin-bottom:10px"><strong>Minimal DAG Pruning:</strong> ${lang === "zh" ? "该引理未被主定理依赖，自动从最小依赖子图剔除（主分归零）。" : "Not reachable from MAIN — excluded from minimal dependency sub-DAG (0 credit)."}</div>`;
   }
 
+  const kernelAxHtml = Array.isArray(node.kernel_axioms)
+    ? (node.kernel_axioms.length
+      ? node.kernel_axioms.map(ax => `<span class="pill-emerald" style="font-size:10px">${escapeHtml(ax)}</span>`).join(" ")
+      : `<span class="pill-emerald" style="font-size:10px">Constructive (0 axioms)</span>`)
+    : `<span class="muted-sm">${node.status === "open" ? "Pending proof" : "Static audit passed"}</span>`;
+
   document.getElementById("node-inspector").innerHTML = `
     <div class="inspector-header">
       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
         <span class="pill-cyan">${escapeHtml(node.id)}</span>
         <strong>${escapeHtml(label)}</strong>
         <span class="mono muted-sm">(${escapeHtml(node.lean_name)})</span>
+        ${node.kernel_verified ? '<span class="pill-emerald">KERNEL ✓</span>' : ''}
       </div>
       ${actionBtn}
     </div>
@@ -943,9 +954,12 @@ function renderNodeInspector(prob) {
         <div class="kv-val" style="color:var(--emerald)">${sc.credit_points ?? 0} pts <span class="muted-sm">(+${sc.royalty_received_raw ?? 0} raw)</span></div>
       </div>
       <div class="kv-box">
-        <div class="kv-label">Commit-Reveal SHA-256</div>
-        <div class="kv-val" style="font-size:11px;color:var(--violet)">${escapeHtml((node.commitment_hash || "Pending commit...").slice(0, 22))}${node.commitment_hash ? "…" : ""}</div>
+        <div class="kv-label">Lean 4 #print axioms</div>
+        <div class="kv-val" style="margin-top:4px;display:flex;gap:4px;flex-wrap:wrap">${kernelAxHtml}</div>
       </div>
+    </div>
+    <div class="muted-sm mono" style="margin-bottom:8px;word-break:break-all">
+      Commit-Reveal SHA-256: <span style="color:var(--violet)">${escapeHtml(node.commitment_hash || "Pending commit...")}</span>
     </div>
     <pre class="code-block compact"><code>${highlightLean(node.lean_code || "-- No Lean code yet")}</code></pre>
   `;
@@ -1021,11 +1035,18 @@ function renderProblemCreditTable(prob) {
 function renderLeanAudit(prob) {
   const a = prob.audit;
   const badge = document.getElementById("audit-badge");
-  badge.textContent = a.passed ? "AUDIT PASS ✓" : "AUDIT FAIL ✗";
-  badge.className = a.passed ? "pill-emerald" : "pill-rose";
+  const toolchain = stateLedger.lean_toolchain || "lean4:v4.16.0";
+  if (a.kernel_verified) {
+    badge.textContent = `LEAN 4 KERNEL VERIFIED ✓`;
+    badge.className = "pill-emerald";
+  } else {
+    badge.textContent = a.passed ? "AUDIT PASS ✓" : "AUDIT FAIL ✗";
+    badge.className = a.passed ? "pill-emerald" : "pill-rose";
+  }
 
   document.getElementById("audit-meta").innerHTML = `
     <span>File: ${escapeHtml(prob.lean_file)}</span>
+    <span>Toolchain: ${escapeHtml(toolchain)}</span>
     <span>Tokens: ${a.ast_token_count}</span>
     <span>Sorries: ${a.sorry_count}</span>
     <span>Norm SHA-256: ${a.normalized_sha256.slice(0, 16)}…</span>

@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "proofchain": {
+      "command": "python3",
+      "args": ["/path/to/proofchain/mcp_server/server.py"]
+    }
+  }
+}

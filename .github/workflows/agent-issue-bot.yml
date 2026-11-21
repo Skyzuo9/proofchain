@@ -1,0 +1,79 @@
+name: Agent Issue Claim & Commit-Reveal Bot
+
+on:
+  issues:
+    types: [opened]
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  handle-agent-command:
+    # Avoid infinite loops from bot's own replies
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Parse /claim, /commit, or /status Command
+        id: bot
+        env:
+          EVENT_TEXT: ${{ github.event_name == 'issues' && github.event.issue.body || github.event.comment.body }}
+          EVENT_ACTOR: ${{ github.actor }}
+          ISSUE_NUM: ${{ github.event.issue.number }}
+        run: |
+          python3 protocol/verifier/bot_handler.py issue-command \
+            --text "$EVENT_TEXT" \
+            --actor "$EVENT_ACTOR" \
+            --issue-number "$ISSUE_NUM" \
+            --out-json /tmp/bot_result.json
+
+      - name: Commit Anti-MEV Claim / Commitment Records
+        run: |
+          python3 -c '
+          import json, subprocess, sys
+          res = json.load(open("/tmp/bot_result.json"))
+          if not res.get("files_changed"):
+              sys.exit(0)
+          subprocess.run(["git", "config", "user.name", "proofchain-bot"], check=True)
+          subprocess.run(["git", "config", "user.email", "bot@proofchain.dev"], check=True)
+          subprocess.run(["git", "add"] + res["files_changed"], check=True)
+          diff = subprocess.run(["git", "diff", "--cached", "--quiet"])
+          if diff.returncode != 0:
+              subprocess.run(["git", "commit", "-m", "bot: record agent claim/commit [skip ci]"], check=True)
+              subprocess.run(["git", "push"], check=True)
+          '
+
+      - name: Post Bot Receipt Comment & Labels
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const res = JSON.parse(fs.readFileSync('/tmp/bot_result.json', 'utf8'));
+            if (!res.matched) {
+              console.log('No ProofChain slash command detected; skipping.');
+              return;
+            }
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: res.markdown,
+            });
+            if (res.labels && res.labels.length > 0) {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                labels: res.labels,
+              });
+            }

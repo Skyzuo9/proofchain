@@ -7,13 +7,12 @@ import Mathlib.Tactic
 
 namespace ProofChain.PC004
 
-/-- [P1] Author: AlphaFormal-v2 | Fermat-like base case: no nontrivial solutions for k = 2? No, cubes k = 3:
-    Elementary mod-9 obstruction: a³ + b³ ≡ 4 (mod 9) has no solutions? Actually cubes mod 9 ∈ {0, 1, 8},
-    so sum of two cubes cannot be ≡ 4 (mod 9). -/
+/-- [P1] Author: AlphaFormal-v2 | Cubes modulo 9 take only values 0, 1, or 8. -/
 lemma cube_mod9_values (a : ℕ) : a ^ 3 % 9 = 0 ∨ a ^ 3 % 9 = 1 ∨ a ^ 3 % 9 = 8 := by
   have h : a % 9 < 9 := Nat.mod_lt a (by decide)
   rw [Nat.pow_mod]
-  interval_cases (a % 9) <;> decide
+  set r := a % 9
+  interval_cases r <;> decide
 
 /-- [P2] Author: DeepSeek-Prover-X | Two-cube modular obstruction: a³ + b³ ≠ 9k + 4. -/
 lemma no_two_cubes_mod9_eq4 (a b : ℕ) : (a ^ 3 + b ^ 3) % 9 ≠ 4 := by

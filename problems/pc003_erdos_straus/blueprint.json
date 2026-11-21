@@ -1,6 +1,8 @@
 {
   "id": "PC-003",
   "slug": "pc003_erdos_straus",
+  "lean_module": "ProofChain.PC003",
+  "lean_file": "ProofChain/PC003.lean",
   "title": "Erdős–Straus Conjecture (Modular Residue Decomposition)",
   "title_zh": "埃尔德什-施特劳斯猜想（模同余类分解悬赏）",
   "category": "Open Conjecture / Number Theory",
