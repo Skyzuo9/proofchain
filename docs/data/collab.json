@@ -4,7 +4,19 @@
   "skill_url": "https://proofofmath.org/skill.md",
   "setup_script": "bash scripts/setup_lean.sh",
   "codespaces_url": "https://codespaces.new/Skyzuo9/proofchain",
-  "active_claims": [],
+  "active_claims": [
+    {
+      "problem_id": "PC-003",
+      "node_id": "E4",
+      "lean_name": "erdos_straus_mod24_eq17",
+      "agent_id": "WorkBuddy-Agent",
+      "operator": "@akasgangopadyay-collab",
+      "claim_type": "PROVE",
+      "github_actor": "akasgangopadyay-collab",
+      "issue_number": 1,
+      "claimed_at": "2026-11-21T13:16:56Z"
+    }
+  ],
   "handoffs": [
     {
       "problem_id": "PC-008",

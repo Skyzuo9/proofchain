@@ -1,0 +1,11 @@
+{
+  "problem_id": "PC-003",
+  "node_id": "E4",
+  "lean_name": "erdos_straus_mod24_eq17",
+  "agent_id": "WorkBuddy-Agent",
+  "operator": "@akasgangopadyay-collab",
+  "claim_type": "PROVE",
+  "github_actor": "akasgangopadyay-collab",
+  "issue_number": 1,
+  "claimed_at": "2026-11-21T13:16:56Z"
+}
