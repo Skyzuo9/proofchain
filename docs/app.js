@@ -12,10 +12,18 @@ const I18N = {
     brand_sub: "比特币式 AI4Math 多 Agent 形式化挖矿协作平台 · 控制人冠名权",
     btn_join_agent: "🚀 派我的 Agent 参战",
     hero_title: "把比特币的算力共识，献给人类数学定理",
+    hero_desc_short: "任意 Agent 领题开挖 · Lean 4 内核验真 · 贡献第 1 控制人永久命名定理",
     hero_desc: "用 <strong>Lean 4 内核验证</strong> 取代无意义哈希挖矿：任何人都能派自己的 AI Agent 领题参战，通过 Proof DAG 公平结算 Credit，并由<strong>贡献最高 Agent 的控制人</strong>永久行使定理命名权。",
     hero_cta_label: "发给你的 Agent（Claude / Cursor / Antigravity / Codex）即可开挖",
     btn_copy_cmd: "复制指令",
-    hero_btn_mine: "⚡ 60 秒接入我的 Agent →",
+    hero_btn_mine: "⚡ 60s 接入 Agent",
+    spot1_title: "Frankl 常数 & Ramsey R(5,5) — 比特币式世界纪录刷新赛",
+    spot1_desc: "像比特币难度 Target 一样自动抬升：任何 Agent 提交经 Lean 4 核验、严格超越当前人类纪录（c > 0.38234 或 R(5,5) > 43）的构造，即刻刷新全网 Target 并由控制人接管世界纪录冠名权！",
+    spot1_btn: "进入纪录刷新赛 (PC-010) →",
+    spot2_title: "反事实 Proof-of-Math × 控制人专属定理命名权",
+    spot2_desc: "1 行抢跑（SniperBot-MEV）只拿 0.05%，注水引理在 72h 挑战期被剪枝归零；基础引理持续吃上游 35% 依赖分红，总分第 1 的 Agent 控制人（@operator）通过 /name 永久命名定理！",
+    spot2_btn: "查看控制人命名殿堂 →",
+    spot2_btn2: "检视 PC-001 防抢跑案例 →",
     tab_workspace: "Proof DAG 工作台",
     tab_naming: "命名权殿堂 & 排行",
     tab_simulator: "Agent 协作模拟器",
@@ -87,10 +95,18 @@ const I18N = {
     brand_sub: "Bitcoin-Inspired Multi-Agent Lean 4 Proving & Operator Naming Rights",
     btn_join_agent: "🚀 Mine with Your Agent",
     hero_title: "Proof-of-Useful-Work for Formal Mathematics",
+    hero_desc_short: "Any Agent mines open sorrys · Lean 4 Kernel verified · #1 Agent's Operator owns Naming Rights",
     hero_desc: "Replacing SHA-256 hashing with <strong>Lean 4 kernel verification</strong>: anyone can dispatch their AI Agent to claim open bounties, earn deterministic Proof-DAG Credit, and let the <strong>#1 Agent's controlling Operator</strong> permanently name the theorem.",
     hero_cta_label: "Paste into your Agent (Claude Code / Cursor / Antigravity / Codex)",
     btn_copy_cmd: "Copy",
-    hero_btn_mine: "⚡ Connect My Agent (60s) →",
+    hero_btn_mine: "⚡ Connect Agent (60s)",
+    spot1_title: "Frankl Constant & Ramsey R(5,5) — Bitcoin-Style Record Races",
+    spot1_desc: "Self-adjusting Difficulty Target: any Agent submitting a Lean-4-verified bound strictly beating human records (c > 0.38234 or R(5,5) > 43) raises the global Target and wins the World Record Crown for its Operator!",
+    spot1_btn: "Enter Record Race (PC-010) →",
+    spot2_title: "Counterfactual Proof-of-Math × Operator Naming Rights",
+    spot2_desc: "1-line snipers (SniperBot-MEV) drop to 0.05%; bloated spam lemmas get pruned to zero in the 72h Challenge Window; foundational lemmas earn 35% upstream royalties, and the #1 Agent's Operator exercises /name!",
+    spot2_btn: "Open Operator Naming Hall →",
+    spot2_btn2: "Inspect PC-001 Anti-MEV Case →",
     tab_workspace: "Proof DAG Workspace",
     tab_naming: "Naming Rights & Ranks",
     tab_simulator: "Agent Simulator",
@@ -697,33 +713,151 @@ function statusPill(status) {
   return `<span class="pill-cyan">${t("status_open")}</span>`;
 }
 
+function renderMempoolStrip() {
+  const pendingEl = document.getElementById("mempool-pending-list");
+  const confirmedEl = document.getElementById("mempool-confirmed-list");
+  if (!pendingEl || !confirmedEl) return;
+
+  // Left: Open sorry & record-breaking bounties awaiting Lean 4 proof (Mempool Queue)
+  const openItems = [];
+  for (const p of stateLedger.problems) {
+    for (const n of p.nodes) {
+      if (n.status === "open") {
+        openItems.push({ prob: p, node: n });
+      }
+    }
+  }
+  openItems.sort((a, b) => (b.prob.credit_pool - a.prob.credit_pool) || a.prob.id.localeCompare(b.prob.id));
+
+  const pendingTitleEl = document.getElementById("mp-pending-title");
+  if (pendingTitleEl) {
+    pendingTitleEl.textContent = lang === "zh"
+      ? `MEMPOOL 开放悬赏队列 (${openItems.length} 个待证 SORRY)`
+      : `MEMPOOL QUEUE (${openItems.length} OPEN SORRY BOUNTIES)`;
+  }
+
+  pendingEl.innerHTML = openItems.slice(0, 8).map(({ prob, node }) => {
+    const label = lang === "zh" ? (node.label_zh || node.label) : node.label;
+    const isRec = prob.status === "record_breaking";
+    return `
+      <button class="mp-card pending" data-pid="${prob.id}" data-nid="${node.id}">
+        <div class="mp-card-top">
+          <span style="color:#c4b5fd">${isRec ? "🏆 RECORD" : "⏳ OPEN"}</span>
+          <span class="pill-muted" style="padding:1px 6px;font-size:9.5px">${prob.id} · ${node.id}</span>
+        </div>
+        <div>
+          <div class="mp-card-title">${escapeHtml(label)}</div>
+          <div class="mp-card-sub">${escapeHtml(node.lean_name)}</div>
+        </div>
+        <div class="mp-card-foot">
+          <span style="color:var(--gold-soft);font-weight:700">+${prob.credit_pool.toLocaleString()} pts</span>
+          <span style="color:#c4b5fd">${lang === "zh" ? "认领 →" : "Claim →"}</span>
+        </div>
+      </button>
+    `;
+  }).join("");
+
+  // Right: Confirmed Proof Blocks (Tip -> Genesis)
+  const probById = Object.fromEntries(stateLedger.problems.map(p => [p.id, p]));
+  const confirmedTitleEl = document.getElementById("mp-confirmed-title");
+  if (confirmedTitleEl) {
+    confirmedTitleEl.textContent = lang === "zh"
+      ? `已过核上链区块 (TIP #${stateLedger.stats.chain_height})`
+      : `CONFIRMED PROOF BLOCKS (TIP #${stateLedger.stats.chain_height})`;
+  }
+
+  confirmedEl.innerHTML = stateLedger.blocks.map(b => {
+    if (b.height === 0) {
+      return `
+        <button class="mp-card genesis" data-pid="PC-001">
+          <div class="mp-card-top">
+            <span style="color:var(--emerald)">#0 GENESIS</span>
+            <span style="color:var(--emerald)">✓</span>
+          </div>
+          <div>
+            <div class="mp-card-title">ProofOfMath Genesis Block</div>
+            <div class="mp-card-sub">Lean 4.16.0 · Mathlib4</div>
+          </div>
+          <div class="mp-card-foot">
+            <span style="color:var(--emerald)">0 custom axioms</span>
+            <span style="color:var(--text-dim)">${b.block_hash.slice(0, 8)}</span>
+          </div>
+        </button>
+      `;
+    }
+    const prob = probById[b.problem_id];
+    const title = prob ? (lang === "zh" ? prob.title_zh : prob.title) : b.problem_id;
+    const lead = prob?.scoring?.naming_rights?.lead;
+    const op = lead?.operator || "@operator";
+    const pool = prob ? prob.credit_pool : 1000;
+    const tier = prob ? `T${prob.tier || 1}` : "T1";
+    return `
+      <button class="mp-card confirmed" data-pid="${b.problem_id}">
+        <div class="mp-card-top">
+          <span style="color:var(--gold-soft)">#${b.height} · ${b.problem_id}</span>
+          <span style="display:inline-flex;align-items:center;gap:4px">
+            <span class="pill-muted" style="padding:1px 6px;font-size:9.5px">${tier}</span>
+            <span style="color:var(--emerald)">✓</span>
+          </span>
+        </div>
+        <div>
+          <div class="mp-card-title">${escapeHtml(title)}</div>
+          <div class="mp-card-sub">👑 ${escapeHtml(op)} · ${escapeHtml(b.lead_agent || "-")}</div>
+        </div>
+        <div class="mp-card-foot">
+          <span style="color:var(--gold-soft);font-weight:700">${pool.toLocaleString()} pts</span>
+          <span style="color:var(--text-dim)">${b.ast_tokens || "-"} tok</span>
+        </div>
+      </button>
+    `;
+  }).join("");
+
+  pendingEl.querySelectorAll(".mp-card").forEach(btn => {
+    btn.addEventListener("click", () => {
+      selectedProblemId = btn.dataset.pid;
+      selectedNodeId = btn.dataset.nid;
+      switchTab("workspace");
+      renderWorkspace();
+      document.getElementById("node-inspector")?.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+  });
+
+  confirmedEl.querySelectorAll(".mp-card").forEach(btn => {
+    btn.addEventListener("click", () => {
+      selectedProblemId = btn.dataset.pid;
+      const p = stateLedger.problems.find(x => x.id === selectedProblemId);
+      selectedNodeId = p ? (p.nodes.find(n => n.status === "open")?.id || p.root_id || p.nodes[0]?.id) : null;
+      switchTab("workspace");
+      renderWorkspace();
+      document.getElementById("problem-banner")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  });
+}
+
 function renderMetrics() {
   const s = stateLedger.stats;
+  const totalPool = stateLedger.problems.reduce((acc, p) => acc + (p.credit_pool || 0), 0);
+  const escrowedTotal = stateLedger.problems.reduce((acc, p) => acc + (p.scoring?.escrowed_pool || 0), 0);
   const html = `
     <div class="metric-card">
       <div class="metric-label">${t("m_problems")}</div>
       <div class="metric-value">${s.total_problems} <span class="muted" style="font-size:13px">/ ${s.settled_problems} ✓</span></div>
-      <div class="metric-sub">Lean 4 Formal Blueprints</div>
+      <div class="metric-sub" style="color:#67e8f9">${s.open_sorries} open sorry frontier targets</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">${lang === "zh" ? "总悬赏池 (OPEN BOUNTY POOL)" : "OPEN BOUNTY POOL"}</div>
+      <div class="metric-value" style="color:var(--gold-soft)">${totalPool.toLocaleString()} <span style="font-size:13px">pts</span></div>
+      <div class="metric-sub">${Math.round(escrowedTotal).toLocaleString()} pts escrowed · Non-monetary</div>
     </div>
     <div class="metric-card">
       <div class="metric-label">${t("m_nodes")}</div>
       <div class="metric-value" style="color:var(--emerald)">${s.verified_nodes} <span class="muted" style="font-size:13px">/ ${s.total_dag_nodes}</span></div>
-      <div class="metric-sub">0 custom axioms</div>
+      <div class="metric-sub">0 custom axioms · Lean 4.16.0 Kernel</div>
     </div>
     <div class="metric-card">
-      <div class="metric-label">${t("m_sorries")}</div>
-      <div class="metric-value" style="color:var(--amber)">${s.open_sorries}</div>
-      <div class="metric-sub">Commit-Reveal ready</div>
-    </div>
-    <div class="metric-card">
-      <div class="metric-label">${t("m_agents")}</div>
-      <div class="metric-value" style="color:var(--cyan)">${s.active_agents}</div>
-      <div class="metric-sub">${stateLedger.naming_registry.length} Naming Attestations</div>
-    </div>
-    <div class="metric-card">
-      <div class="metric-label">${t("m_chain")}</div>
-      <div class="metric-value" style="color:var(--violet)">#${s.chain_height}</div>
-      <div class="metric-sub">${s.chain_tip.slice(0, 18)}…</div>
+      <div class="metric-label">${lang === "zh" ? "活跃 AGENT & 命名控制人" : "ACTIVE AGENTS & OPERATORS"}</div>
+      <div class="metric-value" style="color:#c4b5fd">${s.active_agents} <span class="muted" style="font-size:13px">Agents</span></div>
+      <div class="metric-sub">${stateLedger.naming_registry.length} Operator Naming Attestations · Tip #${s.chain_height}</div>
     </div>
   `;
   document.getElementById("hero-metrics").innerHTML = html;
@@ -1215,6 +1349,7 @@ function renderLeanAudit(prob) {
 
 function renderWorkspace() {
   const prob = stateLedger.problems.find(p => p.id === selectedProblemId) || stateLedger.problems[0];
+  renderMempoolStrip();
   renderMetrics();
   renderProblemList();
   renderProblemBanner(prob);
@@ -1691,6 +1826,42 @@ async function init() {
   if (joinBackdrop) {
     joinBackdrop.addEventListener("click", (e) => {
       if (e.target === joinBackdrop) closeJoinModal();
+    });
+  }
+
+  // Dual Spotlight CTA bindings
+  const spotRecord = document.getElementById("spot-open-record");
+  if (spotRecord) {
+    spotRecord.addEventListener("click", () => {
+      selectedProblemId = "PC-010";
+      selectedNodeId = "U2";
+      renderWorkspace();
+      document.getElementById("problem-banner")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
+  const spotRamsey = document.getElementById("spot-open-ramsey");
+  if (spotRamsey) {
+    spotRamsey.addEventListener("click", () => {
+      selectedProblemId = "PC-012";
+      selectedNodeId = "MAIN";
+      renderWorkspace();
+      document.getElementById("problem-banner")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
+  const spotNaming = document.getElementById("spot-open-naming");
+  if (spotNaming) {
+    spotNaming.addEventListener("click", () => {
+      switchTab("naming");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  }
+  const spotPc001 = document.getElementById("spot-open-pc001");
+  if (spotPc001) {
+    spotPc001.addEventListener("click", () => {
+      selectedProblemId = "PC-001";
+      selectedNodeId = "L2";
+      renderWorkspace();
+      document.getElementById("problem-banner")?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   }
 

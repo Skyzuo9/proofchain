@@ -371,8 +371,9 @@ html, body {
 
 .metrics-grid {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 14px;
 }
 
 .metric-card {
@@ -1122,4 +1123,361 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--g
 @media (max-width: 680px) {
   .naming-grid, .inspector-grid, .form-row { grid-template-columns: 1fr; }
   .block-item { grid-template-columns: 1fr; }
+}
+
+/* =========================================================================
+   Mempool.space-Inspired Proof Explorer, Command Bar & Dual Spotlights
+   ========================================================================= */
+
+.badge-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(16, 185, 129, 0.13);
+  color: var(--emerald);
+  border: 1px solid rgba(52, 211, 153, 0.32);
+  letter-spacing: 0.03em;
+}
+
+.live-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--emerald);
+  box-shadow: 0 0 8px var(--emerald);
+  animation: pulseDot 2s ease-in-out infinite;
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.86); }
+}
+
+/* Compact Command Bar */
+.command-strip {
+  position: relative;
+  z-index: 2;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(247, 147, 26, 0.045) 0%, rgba(9, 9, 11, 0.2) 100%);
+  padding: 11px 0;
+}
+
+.command-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.command-copy {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.command-headline {
+  font-family: var(--serif);
+  font-size: 18px;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+.command-sep { color: var(--text-dim); }
+.command-sub { font-size: 12.5px; color: var(--text-muted); }
+
+.command-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Explorer / Mempool Strip */
+.explorer-strip {
+  position: relative;
+  z-index: 2;
+  padding: 16px 0 4px;
+}
+
+.mempool-shell {
+  background: rgba(14, 14, 18, 0.92);
+  border: 1px solid var(--border-strong);
+  border-radius: 16px;
+  padding: 14px 16px 16px;
+  box-shadow: var(--shadow-card);
+}
+
+.mempool-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.mempool-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.mp-label-pending { color: #c4b5fd; }
+.mp-pipe { color: var(--text-dim); }
+.mp-label-confirmed { color: var(--gold-soft); }
+.mp-kernel-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #67e8f9;
+  letter-spacing: 0.01em;
+}
+
+.mempool-rail {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 74px minmax(0, 1.35fr);
+  gap: 8px;
+  align-items: stretch;
+}
+
+.mempool-track {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  scroll-snap-type: x proximity;
+}
+
+.mempool-divider {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  user-select: none;
+}
+
+.divider-line {
+  flex: 1;
+  width: 0;
+  border-left: 1.5px dashed rgba(103, 232, 249, 0.45);
+}
+
+.divider-pill {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  font-weight: 700;
+  line-height: 1.25;
+  text-align: center;
+  color: #67e8f9;
+  background: rgba(8, 51, 68, 0.72);
+  border: 1px solid rgba(103, 232, 249, 0.45);
+  border-radius: 8px;
+  padding: 5px 8px;
+  box-shadow: 0 0 18px rgba(34, 211, 238, 0.16);
+}
+
+/* Individual Mempool & Block Cards */
+.mp-card {
+  flex: 0 0 206px;
+  scroll-snap-align: start;
+  border-radius: 11px;
+  padding: 11px 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+  cursor: pointer;
+  transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
+  text-align: left;
+  color: inherit;
+}
+
+.mp-card:hover {
+  transform: translateY(-2px);
+}
+
+.mp-card.pending {
+  background: linear-gradient(160deg, rgba(139, 92, 246, 0.12) 0%, rgba(15, 14, 24, 0.96) 100%);
+  border: 1px solid rgba(167, 139, 250, 0.36);
+}
+.mp-card.pending:hover {
+  border-color: rgba(196, 181, 253, 0.75);
+  box-shadow: 0 8px 24px -10px rgba(139, 92, 246, 0.45);
+}
+
+.mp-card.confirmed {
+  background: linear-gradient(160deg, rgba(247, 147, 26, 0.11) 0%, rgba(19, 17, 15, 0.96) 100%);
+  border: 1px solid rgba(247, 147, 26, 0.42);
+}
+.mp-card.confirmed:hover {
+  border-color: rgba(251, 191, 36, 0.8);
+  box-shadow: 0 8px 24px -10px rgba(247, 147, 26, 0.45);
+}
+
+.mp-card.genesis {
+  background: linear-gradient(160deg, rgba(52, 211, 153, 0.11) 0%, rgba(14, 19, 18, 0.96) 100%);
+  border: 1px solid rgba(52, 211, 153, 0.4);
+}
+
+.mp-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.mp-card-title {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #fafafa;
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 34px;
+}
+
+.mp-card-sub {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--text-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mp-card-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding-top: 7px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  font-family: var(--mono);
+  font-size: 10.5px;
+}
+
+/* Dual Spotlight Cards */
+.spotlight-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.spotlight-card {
+  border-radius: 14px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+  box-shadow: var(--shadow-card);
+}
+
+.spotlight-hot {
+  background: linear-gradient(145deg, rgba(244, 63, 94, 0.09) 0%, rgba(19, 17, 20, 0.96) 65%);
+  border: 1px solid rgba(244, 63, 94, 0.34);
+}
+
+.spotlight-gold {
+  background: linear-gradient(145deg, rgba(247, 147, 26, 0.09) 0%, rgba(17, 17, 21, 0.96) 65%);
+  border: 1px solid rgba(247, 147, 26, 0.34);
+}
+
+.spotlight-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 700;
+}
+
+.spotlight-tag {
+  padding: 3px 9px;
+  border-radius: 999px;
+  letter-spacing: 0.04em;
+}
+.spotlight-tag.hot { background: rgba(244, 63, 94, 0.16); color: #fda4af; border: 1px solid rgba(244, 63, 94, 0.35); }
+.spotlight-tag.gold { background: var(--gold-bg); color: var(--gold-soft); border: 1px solid var(--gold-border); }
+
+.spotlight-bounty { color: var(--gold-soft); letter-spacing: 0.03em; }
+
+.spotlight-card h3 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 19px;
+  font-weight: 600;
+  color: #ffffff;
+  line-height: 1.3;
+}
+
+.spotlight-card p {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.spotlight-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+
+.btn-spotlight-hot, .btn-spotlight-gold {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 7px 13px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.16s ease;
+}
+
+.btn-spotlight-hot {
+  background: rgba(244, 63, 94, 0.15);
+  color: #fecdd3;
+  border: 1px solid rgba(244, 63, 94, 0.45);
+}
+.btn-spotlight-hot:hover { background: rgba(244, 63, 94, 0.28); color: #fff; }
+
+.btn-spotlight-gold {
+  background: rgba(247, 147, 26, 0.16);
+  color: #fde68a;
+  border: 1px solid rgba(247, 147, 26, 0.45);
+}
+.btn-spotlight-gold:hover { background: rgba(247, 147, 26, 0.28); color: #fff; }
+
+@media (max-width: 1080px) {
+  .mempool-rail { grid-template-columns: 1fr; }
+  .mempool-divider { flex-direction: row; padding: 4px 0; }
+  .divider-line { width: auto; height: 0; border-left: none; border-top: 1.5px dashed rgba(103, 232, 249, 0.45); }
+  .spotlight-grid { grid-template-columns: 1fr; }
 }
