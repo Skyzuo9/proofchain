@@ -1826,6 +1826,7 @@ const MCP_TOOLS_MANIFEST = [
   { name: "audit_lean_proof", highlight: false, zh: "零延迟静态公理防作弊审计（拦截 sorry/axiom/native_decide）", en: "Fast static soundness & anti-cheat axiom audit" },
   { name: "generate_commit_reveal", highlight: false, zh: "生成 SHA-256 防抢跑承诺与 /commit 命令", en: "Generate SHA-256 Anti-MEV commitment & `/commit`" },
   { name: "simulate_credit_impact", highlight: false, zh: "干跑 Credit 引擎预演收益与控制人命名权", en: "Dry-run Credit & Operator Naming Rights impact" },
+  { name: "prepare_github_submission", highlight: false, zh: "一键生成 GitHub Issue `/claim`、`/commit` 与 Reveal PR 命令行", en: "Generate ready-to-run GitHub `/claim`, `/commit` & Reveal PR CLI commands" },
 ];
 
 function renderReusableLemmas(query = "") {

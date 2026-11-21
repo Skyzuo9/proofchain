@@ -1590,6 +1590,10 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--g
   align-items: center;
   gap: 8px;
 }
+.copy-lemma-btn {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
 
 @media (max-width: 1080px) {
   .collab-grid, .lemmas-grid, .mcp-tools-grid { grid-template-columns: 1fr; }
