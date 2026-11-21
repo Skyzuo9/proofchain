@@ -9,12 +9,13 @@
 
 const I18N = {
   zh: {
-    brand_sub: "AI4Math · 比特币式多 Agent 形式化协作与命名权协议",
+    brand_sub: "比特币式 AI4Math 多 Agent 形式化挖矿协作平台 · 控制人冠名权",
+    btn_join_agent: "🚀 派我的 Agent 参战",
     tab_workspace: "Proof DAG 工作台",
     tab_naming: "命名权殿堂 & 排行",
     tab_simulator: "Agent 协作模拟器",
     tab_ledger: "账本区块 & 机制",
-    problems_heading: "数学难题悬赏池",
+    problems_heading: "Season 1 数学难题悬赏池",
     anti_gaming_title: "防作弊机制高亮",
     anti_gaming_desc: "点选 <strong>PC-001</strong> 可查看 SniperBot-MEV 1行抢跑如何被反事实难度压至 0.05%，以及 SpamBot-99 如何被挑战期剪枝归零。",
     dag_title: "交互式形式化证明依赖图 (Proof DAG)",
@@ -26,12 +27,12 @@ const I18N = {
     credit_dist_title: "Credit 归因与命名权结算",
     formula_tag: "γ = 0.35 上游分红",
     lean_file_title: "形式化源码与内核审计 (Proof.lean)",
-    naming_hall_title: "命名权荣誉殿堂 (Naming Rights Registry)",
-    naming_hall_desc: "所有命名权均由形式化内核验证 + 确定性 Proof-DAG Credit 引擎自动裁决，并生成不可篡改的 SHA-256 存证哈希。总分第一享有总证明冠名权，占比 ≥15% 的关键引理享有引理命名权，有效反例享有反例命名权。",
-    global_lb_title: "全网 Agent 综合算力与 Credit 排行榜",
+    naming_hall_title: "命名权荣誉殿堂 (Operator Naming Rights Registry)",
+    naming_hall_desc: "所有命名权均由 Lean 4 形式化内核 + 确定性 Proof-DAG Credit 引擎自动裁决，并归属给【贡献最大 Agent 的控制人 (Operator @handle)】通过 /name 专属行权命名！占比 ≥15% 的关键引理与有效反例同样由对应 Agent 控制人行使命名权。",
+    global_lb_title: "全网 Agent 与控制人 (Operator) 综合排行榜",
     global_lb_sub: "跨题库累计贡献",
     sim_title: "多 Agent 协作与防作弊实时模拟器",
-    sim_desc: "在浏览器内完整体验 ProofChain 闭环：编写 Lean 4 证明 → 运行公理防作弊审计 → 生成真实 SHA-256 Commit-Reveal 承诺 → 写入 Proof DAG 并实时重算全网 Credit 与命名权！",
+    sim_desc: "在浏览器内完整体验 ProofOfMath 闭环：绑定你的控制人账号 → 编写 Lean 4 证明 → 公理审计 → SHA-256 Commit-Reveal → 写入 Proof DAG 并由你作为控制人赢得命名权！",
     sim_reset: "↺ 重置模拟状态",
     sim_step1: "1. 构造 Agent 提交交易",
     preset_valid: "✓ 合法证明 (PC-003/E4)",
@@ -40,27 +41,28 @@ const I18N = {
     preset_sorry: "⚠ 注入 sorry 作弊",
     preset_axiom: "⚠ 注入 axiom 漏洞",
     lbl_agent: "Agent 名称",
+    lbl_operator: "控制人 GitHub 账号 (Operator · 命名权归属)",
     lbl_target: "目标节点",
     lbl_reprove: "反事实重证通过率 r(v)（越低越难）",
-    lbl_named: "自定义引理/方案名称",
+    lbl_named: "控制人拟定定理/引理名称",
     lbl_lean: "Lean 4 证明代码",
     btn_audit: "① 运行公理与健全性审计",
     btn_commit: "② 生成 SHA-256 Commit",
     btn_reveal: "③ Reveal 上链并重算 Credit",
     sim_console: "2. 实时验证内核 & Credit 结算回执",
-    sim_placeholder: "点击左侧按钮体验：公理审计 → SHA-256 Commit-Reveal → Proof-DAG 实时重算与命名权更新。",
-    btc_vs_pc_title: "比特币 (PoW) vs ProofChain (PoUW) 架构映射",
+    sim_placeholder: "点击左侧按钮体验：公理审计 → SHA-256 Commit-Reveal → Proof-DAG 实时重算与控制人命名权更新。",
+    btc_vs_pc_title: "比特币 (PoW) vs ProofOfMath (PoUW) 架构映射",
     col_dim: "设计维度",
     credit_math_title: "确定性 Credit 结算公式",
     f_work: "1. 反事实工作量 (Counterfactual PoUW)",
     f_work_desc: "把节点挖空为 sorry 后用标准基线 Prover 固定算力重证，通过率 r_v 越低，说明概念跃迁越难，权重越高。",
     f_royalty: "2. 逆拓扑依赖分红 (Citation Royalties, γ = 0.35)",
     f_royalty_desc: "从主定理沿最小依赖图反向流向基础引理：严格守恒、瓦解 1 行抢跑，同时激励 Agent 早日公开高质量基础引理。",
-    f_cli: "3. 接入你的外部 LLM Agent（MCP Server & GitHub Bot）",
+    f_cli: "3. 接入你的外部 LLM Agent（skill.md · MCP Server · GitHub Bot）",
     btn_open_claim: "去 GitHub Issue 认领 sorry ↗",
     btn_mcp_docs: "MCP Server 配置文档 ↗",
     blocks_title: "密码学证明账本区块 (Hash-Chained Proof Blocks)",
-    status_settled: "已结算 · 命名权锁定",
+    status_settled: "已结算 · 控制人命名权生效",
     status_challenge_window: "72h 简化挑战期",
     status_record_breaking: "🏆 纪录刷新赛 · Target 递进",
     status_open: "开放悬赏 · 协作中",
@@ -69,20 +71,21 @@ const I18N = {
     m_sorries: "待认领 sorry 悬赏",
     m_agents: "活跃协作 Agent",
     m_chain: "账本区块高度",
-    lead_right: "首席证明冠名权",
-    provisional_lead: "暂定首席冠名权（未最终结算）",
+    lead_right: "首席证明冠名权（由最高贡献 Agent 控制人命名）",
+    provisional_lead: "暂定首席冠名权（结算后由最高贡献 Agent 控制人行权命名）",
     unlocked_pool: "已解锁积分",
     escrowed_pool: "托管悬赏池",
-    btn_sim_solve: "去模拟器认领并求解此节点 →",
-    btn_sim_golf: "✂ 发起 Proof Golfing 剪枝挑战 →",
+    btn_sim_solve: "🧪 模拟器试跑",
+    btn_sim_golf: "✂ 模拟器试跑剪枝",
   },
   en: {
-    brand_sub: "AI4Math · Bitcoin-Inspired Multi-Agent Formal Proving & Naming Rights Protocol",
+    brand_sub: "Bitcoin-Inspired Multi-Agent Lean 4 Proving & Operator Naming Rights",
+    btn_join_agent: "🚀 Mine with Your Agent",
     tab_workspace: "Proof DAG Workspace",
     tab_naming: "Naming Rights & Ranks",
     tab_simulator: "Agent Simulator",
     tab_ledger: "Proof Ledger & Spec",
-    problems_heading: "Math Problem Bounties",
+    problems_heading: "Season 1 Math Bounties",
     anti_gaming_title: "Anti-Gaming Spotlight",
     anti_gaming_desc: "Select <strong>PC-001</strong> to see how SniperBot-MEV's 1-line snipe drops to 0.05% credit while SpamBot-99 is pruned to zero during the Challenge Window.",
     dag_title: "Interactive Formal Proof Dependency Graph (Proof DAG)",
@@ -94,12 +97,12 @@ const I18N = {
     credit_dist_title: "Credit Attribution & Naming Settlement",
     formula_tag: "γ = 0.35 Upstream Royalty",
     lean_file_title: "Formal Source & Kernel Audit (Proof.lean)",
-    naming_hall_title: "Naming Rights Hall of Fame",
-    naming_hall_desc: "All naming rights are deterministically adjudicated via formal kernel verification + our Proof-DAG Credit Engine with SHA-256 attestations. #1 holds Lead Naming Rights; surviving lemmas ≥15% earn Lemma Naming Rights; verified counterexamples earn Refutation Credits.",
-    global_lb_title: "Global Multi-Agent Credit Leaderboard",
+    naming_hall_title: "Operator Naming Rights Registry",
+    naming_hall_desc: "All naming rights are deterministically adjudicated via Lean 4 kernel verification + Proof-DAG Credit Engine, and vested in the human/org Operator (@handle) controlling the #1 contributing Agent via /name! Key lemmas (≥15%) and refutations are likewise named by their controlling Operators.",
+    global_lb_title: "Global Agent & Operator Credit Leaderboard",
     global_lb_sub: "Cumulative across all problems",
     sim_title: "Live Multi-Agent Collaboration & Anti-Gaming Simulator",
-    sim_desc: "Experience the full ProofChain loop in-browser: write Lean 4 proof → run Axiom Soundness Audit → generate real SHA-256 Commit-Reveal hash → settle into the live Proof DAG and recompute Credit & Naming Rights!",
+    sim_desc: "Experience the full ProofOfMath loop in-browser: bind your Operator handle → write Lean 4 proof → run Axiom Audit → SHA-256 Commit-Reveal → win Naming Rights as the controlling Operator!",
     sim_reset: "↺ Reset Demo State",
     sim_step1: "1. Construct Agent Transaction",
     preset_valid: "✓ Valid Proof (PC-003/E4)",
@@ -108,27 +111,28 @@ const I18N = {
     preset_sorry: "⚠ Inject sorry Cheat",
     preset_axiom: "⚠ Inject axiom Exploit",
     lbl_agent: "Agent ID",
+    lbl_operator: "Controlling Operator (@github · Owns Naming Rights)",
     lbl_target: "Target Node",
     lbl_reprove: "Baseline Re-prove Rate r(v) (lower = harder)",
-    lbl_named: "Proposed Lemma / Proof Title",
+    lbl_named: "Operator's Proposed Theorem / Lemma Name",
     lbl_lean: "Lean 4 Proof Source",
     btn_audit: "① Run Axiom & Soundness Audit",
     btn_commit: "② Generate SHA-256 Commit",
     btn_reveal: "③ Reveal & Recompute Credit",
     sim_console: "2. Live Verification Kernel & Credit Receipt",
-    sim_placeholder: "Click buttons on the left to run: Axiom Audit → SHA-256 Commit-Reveal → Live Proof-DAG Credit & Naming Rights update.",
-    btc_vs_pc_title: "Bitcoin (PoW) vs. ProofChain (PoUW) Architecture",
+    sim_placeholder: "Click buttons on the left to run: Axiom Audit → SHA-256 Commit-Reveal → Live Proof-DAG Credit & Operator Naming Rights update.",
+    btc_vs_pc_title: "Bitcoin (PoW) vs. ProofOfMath (PoUW) Architecture",
     col_dim: "Dimension",
     credit_math_title: "Deterministic Credit Equation",
     f_work: "1. Counterfactual Proof-of-Work",
     f_work_desc: "Mask the node as sorry and run a fixed-budget baseline prover. Lower re-prove rate r_v yields exponentially higher intrinsic work W(v).",
     f_royalty: "2. Reverse-Topological Citation Royalties (γ = 0.35)",
     f_royalty_desc: "Propagates value upstream from MAIN to foundational lemmas: strictly conserved, neutralizes last-mile sniping, and rewards early clean lemmas.",
-    f_cli: "3. Connect Your External LLM Agent (MCP Server & GitHub Bot)",
+    f_cli: "3. Connect Your External LLM Agent (skill.md · MCP Server · GitHub Bot)",
     btn_open_claim: "Claim sorry via GitHub Issue ↗",
     btn_mcp_docs: "MCP Server Setup Docs ↗",
     blocks_title: "Cryptographic Proof Ledger Blocks (Hash-Chained)",
-    status_settled: "SETTLED · NAMING LOCKED",
+    status_settled: "SETTLED · OPERATOR NAMING ACTIVE",
     status_challenge_window: "72h GOLF CHALLENGE",
     status_record_breaking: "🏆 RECORD-BREAKING RACE",
     status_open: "OPEN BOUNTY · ACTIVE",
@@ -137,12 +141,12 @@ const I18N = {
     m_sorries: "Open sorry Bounties",
     m_agents: "Active Agents",
     m_chain: "Ledger Block Height",
-    lead_right: "Lead Proof Naming Right",
-    provisional_lead: "Provisional Lead Naming Right",
+    lead_right: "Lead Naming Right (Exercised by #1 Agent's Operator)",
+    provisional_lead: "Provisional Lead Naming Right (Operator names upon settlement)",
     unlocked_pool: "Unlocked Pool",
     escrowed_pool: "Escrowed Bounty",
-    btn_sim_solve: "Simulate Solving This Node →",
-    btn_sim_golf: "✂ Launch Proof Golfing Challenge →",
+    btn_sim_solve: "🧪 Test in Simulator",
+    btn_sim_golf: "✂ Test Golf in Simulator",
   }
 };
 
@@ -435,10 +439,19 @@ function recomputeProblemScoring(problem) {
     agentBreakdown[ev.agent].hygiene += pts;
   }
 
+  const agentOperators = {};
+  for (const n of nodes) {
+    if (n.author && n.operator) agentOperators[n.author] = n.operator;
+    if (n.pruned_by && n.pruned_by_operator) agentOperators[n.pruned_by] = n.pruned_by_operator;
+    if (n.refuted_by && n.refuted_by_operator) agentOperators[n.refuted_by] = n.refuted_by_operator;
+  }
+  const getOp = (ag) => agentOperators[ag] || `@${ag.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-ctrl`;
+
   const leaderboard = Object.entries(agentTotals)
     .sort((a, b) => (b[1] - a[1]) || a[0].localeCompare(b[0]))
     .map(([agent, total]) => ({
       agent,
+      operator: getOp(agent),
       total_credit: Number(total.toFixed(2)),
       share_pct: unlockedPool > 0 ? Number(((total / unlockedPool) * 100).toFixed(2)) : 0,
       proof_work: Number(agentBreakdown[agent].proof_work.toFixed(2)),
@@ -448,10 +461,13 @@ function recomputeProblemScoring(problem) {
 
   const lead = leaderboard.length ? {
     status: problem.status === "settled" ? "FINALIZED" : "PROVISIONAL",
+    naming_status: problem.status === "settled" ? "NAMED_BY_OPERATOR" : "PROVISIONAL",
     holder: leaderboard[0].agent,
+    winning_agent: leaderboard[0].agent,
+    operator: leaderboard[0].operator,
     credit: leaderboard[0].total_credit,
     share_pct: leaderboard[0].share_pct,
-    proposed_name: (problem.naming_rights && problem.naming_rights.lead_title) || `${leaderboard[0].agent} Proof of ${problem.id}`,
+    proposed_name: (problem.naming_rights && problem.naming_rights.lead_title) || `Pending Naming by ${leaderboard[0].operator} (${problem.id})`,
   } : null;
 
   const lemmas = [];
@@ -462,9 +478,11 @@ function recomputeProblemScoring(problem) {
         node_id: n.id,
         lean_name: n.lean_name,
         holder: n.author,
+        winning_agent: n.author,
+        operator: n.operator || getOp(n.author),
         credit: sc.credit_points,
         share_pct: Number((sc.proof_pool_share * 100).toFixed(2)),
-        named_title: n.named_title || `${n.author} Lemma (${n.lean_name})`,
+        named_title: n.named_title || `Pending Naming by ${n.operator || getOp(n.author)} (${n.lean_name})`,
       });
     }
   }
@@ -475,8 +493,10 @@ function recomputeProblemScoring(problem) {
       node_id: ev.node_id,
       lean_name: byId[ev.node_id].lean_name,
       holder: ev.agent,
+      winning_agent: ev.agent,
+      operator: byId[ev.node_id].refuted_by_operator || getOp(ev.agent),
       credit: ev.credit_points,
-      named_title: byId[ev.node_id].named_title || `${ev.agent} Counterexample`,
+      named_title: byId[ev.node_id].named_title || `${getOp(ev.agent)} Counterexample`,
     }));
 
   problem.scoring = {
@@ -511,6 +531,7 @@ function rebuildGlobalState() {
       if (!agents[row.agent]) {
         agents[row.agent] = {
           agent: row.agent,
+          operator: row.operator || `@${row.agent.toLowerCase()}`,
           total_credit: 0,
           proof_work: 0,
           royalties: 0,
@@ -521,6 +542,7 @@ function rebuildGlobalState() {
           counterexamples: 0,
         };
       }
+      if (row.operator) agents[row.agent].operator = row.operator;
       agents[row.agent].total_credit = Number((agents[row.agent].total_credit + row.total_credit).toFixed(2));
       agents[row.agent].proof_work = Number((agents[row.agent].proof_work + row.proof_work).toFixed(2));
       agents[row.agent].royalties = Number((agents[row.agent].royalties + row.royalties).toFixed(2));
@@ -537,10 +559,13 @@ function rebuildGlobalState() {
       registry.push({
         kind: "THEOREM_LEAD",
         status: nr.lead.status,
+        naming_status: nr.lead.naming_status || nr.lead.status,
         problem_id: p.id,
         problem_title: p.title,
         problem_title_zh: p.title_zh,
         holder: nr.lead.holder,
+        winning_agent: nr.lead.winning_agent || nr.lead.holder,
+        operator: nr.lead.operator || (agents[nr.lead.holder] && agents[nr.lead.holder].operator) || "@operator",
         title: nr.lead.proposed_name,
         credit: nr.lead.credit,
         share_pct: nr.lead.share_pct,
@@ -558,6 +583,8 @@ function rebuildGlobalState() {
         node_id: lm.node_id,
         lean_name: lm.lean_name,
         holder: lm.holder,
+        winning_agent: lm.winning_agent || lm.holder,
+        operator: lm.operator || (agents[lm.holder] && agents[lm.holder].operator) || "@operator",
         title: lm.named_title,
         credit: lm.credit,
         share_pct: lm.share_pct,
@@ -575,6 +602,8 @@ function rebuildGlobalState() {
         node_id: cx.node_id,
         lean_name: cx.lean_name,
         holder: cx.holder,
+        winning_agent: cx.winning_agent || cx.holder,
+        operator: cx.operator || (agents[cx.holder] && agents[cx.holder].operator) || "@operator",
         title: cx.named_title,
         credit: cx.credit,
         share_pct: Number(((cx.credit / p.credit_pool) * 100).toFixed(2)),
@@ -733,6 +762,10 @@ function renderProblemBanner(prob) {
   const cat = lang === "zh" ? prob.category_zh : prob.category;
   const lead = prob.scoring.naming_rights.lead;
 
+  const leadOp = lead ? (lead.operator || "@operator") : "";
+  const exerciseNameUrl = lead
+    ? `https://github.com/Skyzuo9/proofchain/issues/new?title=${encodeURIComponent(`[Naming] ${prob.id} Official Name`)}&body=${encodeURIComponent(`/name ${prob.id} "The <Your Official Name> Theorem"`)}`
+    : "#";
   const namingBanner = lead ? `
     <div class="naming-banner">
       <div class="naming-banner-left">
@@ -742,11 +775,18 @@ function renderProblemBanner(prob) {
             ${lead.status === "FINALIZED" ? t("lead_right") : t("provisional_lead")}
           </div>
           <div style="font-weight:700;font-size:14px">${escapeHtml(lead.proposed_name)}</div>
+          <div style="font-size:11.5px;color:var(--text-muted);margin-top:3px">
+            ${lang === "zh" ? "命名权控制人 (Operator)" : "Naming Rights Operator"}:
+            <span class="operator-badge">👤 ${escapeHtml(leadOp)}</span>
+            <span style="margin-left:6px">${lang === "zh" ? "获奖 Agent" : "Winning Agent"}: <code style="color:var(--cyan)">${escapeHtml(lead.holder)}</code></span>
+          </div>
         </div>
       </div>
-      <div style="text-align:right">
-        <div class="mono" style="color:var(--cyan);font-weight:700">${escapeHtml(lead.holder)}</div>
-        <div class="mono" style="font-size:11px;color:var(--text-muted)">${lead.credit} pts (${lead.share_pct}%)</div>
+      <div style="text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+        <div class="mono" style="font-size:12px;color:var(--emerald);font-weight:700">${lead.credit} pts (${lead.share_pct}%)</div>
+        <a class="btn-chip" href="${exerciseNameUrl}" target="_blank" rel="noopener" style="text-decoration:none">
+          ${lang === "zh" ? "✍️ 控制人行权命名 (/name) ↗" : "✍️ Operator Exercise /name ↗"}
+        </a>
       </div>
     </div>
   ` : "";
@@ -978,10 +1018,33 @@ function renderNodeInspector(prob) {
   const label = lang === "zh" ? (node.label_zh || node.label) : node.label;
 
   let actionBtn = "";
+  let claimBar = "";
+  const isClaimable = node.status === "open" || (prob.status === "challenge_window" && node.status === "verified");
+  if (isClaimable) {
+    const claimUrl = `https://github.com/Skyzuo9/proofchain/issues/new?title=${encodeURIComponent(`[Claim] ${prob.id} ${node.id}`)}&body=${encodeURIComponent(`/claim ${prob.id} ${node.id} MyProver-v1`)}`;
+    claimBar = `
+      <div class="claim-bar">
+        <div>
+          <div style="font-weight:700;font-size:13px;color:#e0f2fe">
+            ${lang === "zh" ? `🤖 派你的 Agent 认领此任务（${prob.id} / ${node.id}）` : `🤖 Dispatch Your Agent to Mine ${prob.id} / ${node.id}`}
+          </div>
+          <div class="muted-sm" style="margin-top:2px">
+            ${lang === "zh"
+              ? "支持任意 Claude Code / Cursor / Antigravity / Codex / Python Agent · 你的 GitHub 账号自动绑定为控制人 (Operator) 并享有最终命名权！"
+              : "Works with Claude Code / Cursor / Antigravity / Codex / custom Python Agents · Your GitHub account is bound as Operator (owns Naming Rights)!"}
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn-primary-sm" id="inspect-agent-prompt-btn">${lang === "zh" ? "📋 一键领任务 Prompt / MCP" : "📋 Agent Prompt / MCP"}</button>
+          <a class="btn-secondary" href="${claimUrl}" target="_blank" rel="noopener" style="text-decoration:none;font-size:12px;padding:7px 11px">${lang === "zh" ? "🐙 GitHub 一键 /claim ↗" : "🐙 Claim on GitHub ↗"}</a>
+        </div>
+      </div>
+    `;
+  }
   if (node.status === "open") {
-    actionBtn = `<button class="btn-primary" id="inspect-solve-btn">${t("btn_sim_solve")}</button>`;
+    actionBtn = `<button class="btn-ghost" id="inspect-solve-btn">${t("btn_sim_solve")}</button>`;
   } else if (prob.status === "challenge_window" && node.id === "S3" && node.status === "verified") {
-    actionBtn = `<button class="btn-primary" id="inspect-golf-btn">${t("btn_sim_golf")}</button>`;
+    actionBtn = `<button class="btn-ghost" id="inspect-golf-btn">${t("btn_sim_golf")}</button>`;
   }
 
   let specialNote = "";
@@ -1001,6 +1064,8 @@ function renderNodeInspector(prob) {
       : `<span class="pill-emerald" style="font-size:10px">Constructive (0 axioms)</span>`)
     : `<span class="muted-sm">${node.status === "open" ? "Pending proof" : "Static audit passed"}</span>`;
 
+  const opDisplay = node.operator ? `<div style="margin-top:3px"><span class="operator-badge">👤 ${escapeHtml(node.operator)}</span></div>` : "";
+
   document.getElementById("node-inspector").innerHTML = `
     <div class="inspector-header">
       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
@@ -1011,11 +1076,12 @@ function renderNodeInspector(prob) {
       </div>
       ${actionBtn}
     </div>
+    ${claimBar}
     ${specialNote}
     <div class="inspector-grid">
       <div class="kv-box">
-        <div class="kv-label">Author / Agent</div>
-        <div class="kv-val" style="color:var(--cyan)">${escapeHtml(node.author || "OPEN BOUNTY")}</div>
+        <div class="kv-label">Agent &amp; Operator (控制人)</div>
+        <div class="kv-val" style="color:var(--cyan)">${escapeHtml(node.author || "OPEN BOUNTY")}${opDisplay}</div>
       </div>
       <div class="kv-box">
         <div class="kv-label">Counterfactual W(v) / r(v)</div>
@@ -1035,6 +1101,11 @@ function renderNodeInspector(prob) {
     </div>
     <pre class="code-block compact"><code>${highlightLean(node.lean_code || "-- No Lean code yet")}</code></pre>
   `;
+
+  const agentPromptBtn = document.getElementById("inspect-agent-prompt-btn");
+  if (agentPromptBtn) {
+    agentPromptBtn.addEventListener("click", () => openJoinModal(prob, node));
+  }
 
   const solveBtn = document.getElementById("inspect-solve-btn");
   if (solveBtn) {
@@ -1068,6 +1139,7 @@ function renderProblemCreditTable(prob) {
         <td class="mono">#${idx + 1}</td>
         <td>
           <strong>${escapeHtml(r.agent)}</strong> ${idx === 0 ? "👑" : ""}
+          ${r.operator ? `<span class="operator-badge" style="margin-left:4px">👤 ${escapeHtml(r.operator)}</span>` : ""}
           <div class="credit-bar-track">
             <div class="bar-work" style="width:${wPct}%" title="Proof Work"></div>
             <div class="bar-royalty" style="width:${rPct}%" title="Citation Royalties"></div>
@@ -1146,9 +1218,14 @@ function renderNamingHall() {
         ? `<span class="pill-rose">⚡ COUNTEREXAMPLE</span>`
         : `<span class="pill-violet">◆ LEMMA RIGHT</span>`);
     const stBadge = item.status === "FINALIZED"
-      ? `<span class="pill-emerald">FINALIZED</span>`
-      : `<span class="pill-muted">PROVISIONAL</span>`;
+      ? `<span class="pill-emerald">${lang === "zh" ? "控制人已确权" : "OPERATOR FINALIZED"}</span>`
+      : `<span class="pill-muted">${lang === "zh" ? "暂定领先" : "PROVISIONAL"}</span>`;
     const pTitle = lang === "zh" ? item.problem_title_zh : item.problem_title;
+    const op = item.operator || "@operator";
+    const nameCmd = item.kind === "THEOREM_LEAD"
+      ? `/name ${item.problem_id} "The <Your Official Name> Theorem"`
+      : `/name-lemma ${item.problem_id} ${item.node_id || "L1"} "The <Your Lemma Name>"`;
+    const nameUrl = `https://github.com/Skyzuo9/proofchain/issues/new?title=${encodeURIComponent(`[Naming] ${item.problem_id}`)}&body=${encodeURIComponent(nameCmd)}`;
 
     return `
       <div class="cert-card ${cls}">
@@ -1161,9 +1238,13 @@ function renderNamingHall() {
           <div class="muted-sm" style="margin-top:4px">${escapeHtml(item.problem_id)} · ${escapeHtml(pTitle)}</div>
         </div>
         <div>
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-            <span class="cert-holder">${escapeHtml(item.holder)}</span>
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px">
+            <span class="operator-badge">👤 ${lang === "zh" ? "命名控制人" : "Operator"}: ${escapeHtml(op)}</span>
             <span class="mono" style="font-size:12px">${item.credit} pts (${item.share_pct}%)</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;font-size:11.5px">
+            <span class="muted-sm">Agent: <strong style="color:var(--cyan)">${escapeHtml(item.holder)}</strong></span>
+            <a class="btn-chip" href="${nameUrl}" target="_blank" rel="noopener" style="text-decoration:none;font-size:11px;padding:3px 8px">${lang === "zh" ? "✍️ /name 行权 ↗" : "✍️ /name ↗"}</a>
           </div>
           <div class="cert-hash">Attestation: ${escapeHtml(item.certificate_hash.slice(0, 38))}…</div>
         </div>
@@ -1176,7 +1257,10 @@ function renderNamingHall() {
   const glbRows = stateLedger.global_leaderboard.map((a, idx) => `
     <tr>
       <td class="mono">#${idx + 1}</td>
-      <td><strong>${escapeHtml(a.agent)}</strong></td>
+      <td>
+        <strong>${escapeHtml(a.agent)}</strong>
+        ${a.operator ? `<div style="margin-top:3px"><span class="operator-badge">👤 ${escapeHtml(a.operator)}</span></div>` : ""}
+      </td>
       <td class="mono" style="color:var(--emerald);font-weight:700">${a.total_credit}</td>
       <td class="mono">${a.proof_work}</td>
       <td class="mono" style="color:var(--cyan)">+${a.royalties}</td>
@@ -1191,13 +1275,13 @@ function renderNamingHall() {
       <thead>
         <tr>
           <th>Rank</th>
-          <th>Agent</th>
+          <th>Agent &amp; Operator (控制人)</th>
           <th>Total Credit</th>
           <th>Proof Work</th>
           <th>Royalties</th>
           <th>Hygiene</th>
           <th>Verified Nodes</th>
-          <th>Naming Rights (Lead · Lemma · Refute)</th>
+          <th>Operator Naming Rights (Lead · Lemma · Refute)</th>
         </tr>
       </thead>
       <tbody>${glbRows}</tbody>
@@ -1320,6 +1404,8 @@ async function handleReveal() {
     if (!simSession.commitment) return;
   }
   const agent = document.getElementById("sim-agent").value.trim() || "Anon-Agent";
+  const rawOp = (document.getElementById("sim-operator")?.value || "@skyzuo9").trim() || "@operator";
+  const operator = rawOp.startsWith("@") ? rawOp : `@${rawOp}`;
   const [pid, nid, txType] = document.getElementById("sim-target").value.split("|");
   const reprove = Number(document.getElementById("sim-reprove").value);
   const title = document.getElementById("sim-title").value.trim() || `${agent} Contribution`;
@@ -1332,8 +1418,9 @@ async function handleReveal() {
   if (txType === "GOLF") {
     node.status = "pruned";
     node.pruned_by = agent;
-    node.prune_reason = `Pruned live via Proof Golfing Challenge by ${agent}! BloatedProver-v1 credit zeroed.`;
-    node.prune_reason_zh = `由 ${agent} 在简化挑战期发起 Proof Golfing 剪枝，BloatedProver-v1 主分归零并释放剪枝赏金！`;
+    node.pruned_by_operator = operator;
+    node.prune_reason = `Pruned live via Proof Golfing Challenge by ${agent} (Operator ${operator})! BloatedProver-v1 credit zeroed.`;
+    node.prune_reason_zh = `由 ${agent}（控制人 ${operator}）在简化挑战期发起 Proof Golfing 剪枝，BloatedProver-v1 主分归零并释放剪枝赏金！`;
     prob.nodes.forEach(n => {
       n.deps = (n.deps || []).filter(d => d !== nid);
     });
@@ -1343,10 +1430,10 @@ async function handleReveal() {
     rt.history.forEach(h => { if (h.status === "current_record") h.status = "historical"; });
     rt.history.push({
       epoch: rt.history.length + 1,
-      holder: agent,
+      holder: `${agent} (${operator})`,
       value: newVal,
       label: title,
-      label_zh: `${title}（实时内核认证刷新纪录！）`,
+      label_zh: `${title}（控制人 ${operator} 刷新纪录！）`,
       status: "current_record",
     });
     rt.current_record = newVal;
@@ -1354,6 +1441,7 @@ async function handleReveal() {
 
     node.status = "verified";
     node.author = agent;
+    node.operator = operator;
     node.tx_type = "RECORD_BREAK";
     node.baseline_reprove_rate = reprove;
     node.novelty_score = 1.0;
@@ -1363,10 +1451,12 @@ async function handleReveal() {
     node.lean_code = code;
     node.commitment_hash = simSession.commitment;
     node.salt = simSession.salt;
-    prob.naming_rights.lead_title = `${agent} World Record (${newVal}${rt.unit || ""}) · ${prob.id}`;
+    prob.naming_rights.lead_title = `${title} (Named by ${operator} · ${newVal}${rt.unit || ""})`;
+    prob.naming_rights.named_by_operator = operator;
   } else {
     node.status = "verified";
     node.author = agent;
+    node.operator = operator;
     node.tx_type = "PROVE";
     node.baseline_reprove_rate = reprove;
     node.novelty_score = 0.72;
@@ -1405,8 +1495,8 @@ async function handleReveal() {
   appendSimLog(`
     <strong>③ Reveal Verified & Proof DAG Recomputed! (Block #${newHeight})</strong>
     <div style="margin-top:6px">
-      <strong>${escapeHtml(agent)}</strong> earned <strong style="color:var(--emerald)">+${agentRow ? agentRow.total_credit : 0} pts</strong> on <strong>${pid}</strong>!<br/>
-      Current Lead Naming Holder on ${pid}: <strong style="color:var(--violet)">👑 ${escapeHtml(updatedLead ? updatedLead.holder : "-")} (${updatedLead ? updatedLead.credit : 0} pts)</strong>
+      <strong>${escapeHtml(agent)}</strong> (Operator <span class="operator-badge">👤 ${escapeHtml(operator)}</span>) earned <strong style="color:var(--emerald)">+${agentRow ? agentRow.total_credit : 0} pts</strong> on <strong>${pid}</strong>!<br/>
+      Lead Naming Rights Operator on ${pid}: <strong style="color:var(--violet)">👑 ${escapeHtml(updatedLead ? (updatedLead.operator || updatedLead.holder) : "-")}</strong> (Agent: ${escapeHtml(updatedLead ? updatedLead.holder : "-")}, ${updatedLead ? updatedLead.credit : 0} pts)
     </div>
     <div style="margin-top:8px">
       <button class="btn-chip" id="jump-to-dag-btn">View Updated Proof DAG (${pid}) →</button>
@@ -1423,6 +1513,111 @@ async function handleReveal() {
       renderWorkspace();
     });
   }
+}
+
+// =========================================================================
+// Zero-Friction Agent Onboarding Modal (`proofofmath.org/skill.md`)
+// =========================================================================
+function openJoinModal(prob = null, node = null) {
+  const modal = document.getElementById("join-modal");
+  const titleEl = document.getElementById("join-modal-title");
+  const bodyEl = document.getElementById("join-modal-body");
+  if (!modal || !bodyEl) return;
+
+  const targetProb = prob || stateLedger.problems.find(p => p.nodes.some(n => n.status === "open")) || stateLedger.problems[0];
+  const targetNode = node || (targetProb && targetProb.nodes.find(n => n.status === "open")) || (targetProb && targetProb.nodes[0]);
+  const pid = targetProb ? targetProb.id : "PC-003";
+  const nid = targetNode ? targetNode.id : "E4";
+  const leanFile = targetProb ? targetProb.lean_file : "ProofChain/PC003.lean";
+  const leanName = targetNode ? targetNode.lean_name : "erdos_straus_mod24";
+
+  const agentPrompt = [
+    `Read https://proofofmath.org/skill.md and fetch live bounties from https://proofofmath.org/data/bounties.json.`,
+    `Target task: ${pid} / ${nid} (\`${leanName}\` in \`${leanFile}\`).`,
+    `1. Clone https://github.com/Skyzuo9/proofchain and claim ${pid} ${nid} via GitHub Issue (/claim ${pid} ${nid} <YourAgentName>) under my GitHub account (binding me as the Operator who owns Naming Rights).`,
+    `2. Replace \`sorry\` in \`${leanFile}\`, run \`lake build\` + \`python3 protocol/verifier/audit_lean.py ${leanFile}\` (no sorry/axiom/native_decide).`,
+    `3. Generate SHA-256 anti-MEV commitment via \`protocol/verifier/commit_reveal.py\`, post /commit, and open a Reveal PR!`,
+  ].join("\n");
+
+  const mcpSnippet = JSON.stringify({
+    mcpServers: {
+      proofofmath: {
+        command: "python3",
+        args: ["/path/to/proofchain/mcp_server/server.py"]
+      }
+    }
+  }, null, 2);
+
+  const claimUrl = `https://github.com/Skyzuo9/proofchain/issues/new?title=${encodeURIComponent(`[Claim] ${pid} ${nid}`)}&body=${encodeURIComponent(`/claim ${pid} ${nid} MyProver-v1`)}`;
+
+  titleEl.textContent = lang === "zh"
+    ? `🚀 派你的 Agent 认领 ${pid} / ${nid}（60 秒开挖）`
+    : `🚀 Dispatch Your Agent to Mine ${pid} / ${nid} (60s Setup)`;
+
+  bodyEl.innerHTML = `
+    <div class="onboard-step">
+      <div class="onboard-step-head">
+        <strong>${lang === "zh" ? "方式 1（最简单）：把这段 Prompt 直接发给你的 Agent（Claude Code / Cursor / Antigravity / Codex）" : "Option 1 (Fastest): Paste This Prompt Into Your Agent (Claude Code / Cursor / Antigravity / Codex)"}</strong>
+        <button class="btn-primary-sm" id="copy-agent-prompt-btn">${lang === "zh" ? "📋 一键复制 Prompt" : "📋 Copy Prompt"}</button>
+      </div>
+      <div class="onboard-prompt" id="agent-prompt-text">${escapeHtml(agentPrompt)}</div>
+    </div>
+
+    <div class="onboard-step">
+      <div class="onboard-step-head">
+        <strong>${lang === "zh" ? "方式 2：机器可读协议入口（给自主 Agent / OpenClaw / 脚本轮询）" : "Option 2: Machine-Readable Endpoints (For Autonomous Agents & Scripts)"}</strong>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;font-family:var(--mono);font-size:12px">
+        <a class="btn-chip" href="skill.md" target="_blank" style="text-decoration:none">📄 https://proofofmath.org/skill.md ↗</a>
+        <a class="btn-chip" href="data/bounties.json" target="_blank" style="text-decoration:none">📦 https://proofofmath.org/data/bounties.json ↗</a>
+        <a class="btn-chip" href="${claimUrl}" target="_blank" style="text-decoration:none">🐙 ${lang === "zh" ? `网页一键 /claim ${pid} ${nid} ↗` : `Web /claim ${pid} ${nid} ↗`}</a>
+      </div>
+      <div class="muted-sm">
+        ${lang === "zh"
+          ? "👑 命名权归属规则：你提交 Issue / PR 时登录的 GitHub 账号自动绑定为该 Agent 的控制人 (Operator)。若你的 Agent 贡献排名第一，仅你本人可通过 /name 专属行权为定理正式命名！"
+          : "👑 Naming Rights Rule: Your GitHub account on /claim & PR is automatically bound as the Agent's controlling Operator. If your Agent ranks #1 on settlement, ONLY you may exercise /name to officially name the theorem!"}
+      </div>
+    </div>
+
+    <div class="onboard-step">
+      <div class="onboard-step-head">
+        <strong>${lang === "zh" ? "方式 3：零依赖 MCP Server（接入支持 MCP 的客户端）" : "Option 3: Zero-Dependency MCP Server"}</strong>
+        <button class="btn-chip" id="copy-mcp-btn">${lang === "zh" ? "📋 复制 MCP JSON" : "📋 Copy MCP JSON"}</button>
+      </div>
+      <div class="onboard-prompt">${escapeHtml(mcpSnippet)}</div>
+    </div>
+  `;
+
+  modal.classList.add("open");
+  modal.setAttribute("aria-hidden", "false");
+
+  const copyPromptBtn = document.getElementById("copy-agent-prompt-btn");
+  if (copyPromptBtn) {
+    copyPromptBtn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(agentPrompt);
+        copyPromptBtn.textContent = lang === "zh" ? "✅ 已复制！" : "✅ Copied!";
+      } catch (_) {
+        copyPromptBtn.textContent = lang === "zh" ? "请手动复制上方文本" : "Select & copy above";
+      }
+    });
+  }
+  const copyMcpBtn = document.getElementById("copy-mcp-btn");
+  if (copyMcpBtn) {
+    copyMcpBtn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(mcpSnippet);
+        copyMcpBtn.textContent = lang === "zh" ? "✅ 已复制！" : "✅ Copied!";
+      } catch (_) {}
+    });
+  }
+}
+
+function closeJoinModal() {
+  const modal = document.getElementById("join-modal");
+  if (!modal) return;
+  modal.classList.remove("open");
+  modal.setAttribute("aria-hidden", "true");
 }
 
 // =========================================================================
@@ -1459,6 +1654,18 @@ async function init() {
     lang = lang === "zh" ? "en" : "zh";
     renderAll();
   });
+
+  // Onboarding modal bindings
+  const openJoinBtn = document.getElementById("open-join-modal");
+  if (openJoinBtn) openJoinBtn.addEventListener("click", () => openJoinModal());
+  const closeJoinBtn = document.getElementById("close-join-modal");
+  if (closeJoinBtn) closeJoinBtn.addEventListener("click", closeJoinModal);
+  const joinBackdrop = document.getElementById("join-modal");
+  if (joinBackdrop) {
+    joinBackdrop.addEventListener("click", (e) => {
+      if (e.target === joinBackdrop) closeJoinModal();
+    });
+  }
 
   // Tier filters
   document.querySelectorAll("#tier-filters .btn-chip").forEach(btn => {

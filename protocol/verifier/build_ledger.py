@@ -21,13 +21,14 @@ from typing import Any, Dict, List
 
 from audit_lean import audit_source
 from commit_reveal import compute_commitment
-from credit_engine import score_problem
+from credit_engine import resolve_operator, score_problem
 
 ROOT = Path(__file__).resolve().parents[2]
 PROBLEMS_DIR = ROOT / "problems"
 LEDGER_OUT = ROOT / "ledger" / "ledger.json"
 ATTESTATION_IN = ROOT / "ledger" / "kernel_attestation.json"
 DOCS_DATA_OUT = ROOT / "docs" / "data" / "ledger.json"
+DOCS_BOUNTIES_OUT = ROOT / "docs" / "data" / "bounties.json"
 
 
 def sha256_json(obj: Any) -> str:
@@ -45,6 +46,7 @@ def build_all() -> Dict[str, Any]:
     global_agents: Dict[str, Dict[str, Any]] = defaultdict(
         lambda: {
             "agent": "",
+            "operator": "",
             "total_credit": 0.0,
             "proof_work": 0.0,
             "royalties": 0.0,
@@ -102,8 +104,10 @@ def build_all() -> Dict[str, Any]:
                     node["kernel_axioms"] = decl_by_node[node["id"]]["axioms"]
                     node["kernel_verified"] = decl_by_node[node["id"]]["passed"]
 
-        # Compute deterministic commit-reveal hashes for every node with lean_code
+        # Resolve explicit/default human controller (`operator`) + commit-reveal hashes
         for node in bp.get("nodes", []):
+            if node.get("author"):
+                node["operator"] = resolve_operator(node["author"], node.get("operator"))
             if node.get("lean_code") and node.get("salt") and node.get("author"):
                 node["commitment_hash"] = compute_commitment(
                     bp["id"], node["id"], node["author"], node["salt"], node["lean_code"]
@@ -116,6 +120,7 @@ def build_all() -> Dict[str, Any]:
             a = entry["agent"]
             ga = global_agents[a]
             ga["agent"] = a
+            ga["operator"] = entry.get("operator") or resolve_operator(a)
             ga["total_credit"] = round(ga["total_credit"] + entry["total_credit"], 2)
             ga["proof_work"] = round(ga["proof_work"] + entry["proof_work"], 2)
             ga["royalties"] = round(ga["royalties"] + entry["royalties"], 2)
@@ -127,9 +132,10 @@ def build_all() -> Dict[str, Any]:
             if node.get("status") in ("verified", "golfed") and node.get("author"):
                 a = node["author"]
                 global_agents[a]["agent"] = a
+                global_agents[a]["operator"] = node.get("operator") or resolve_operator(a)
                 global_agents[a]["verified_nodes"] += 1
 
-        # Naming rights registry
+        # Naming rights registry — explicitly records the controlling human/org `operator`
         nr = scoring["naming_rights"]
         if nr["lead"]:
             lead = nr["lead"]
@@ -138,10 +144,14 @@ def build_all() -> Dict[str, Any]:
             naming_registry.append({
                 "kind": "THEOREM_LEAD",
                 "status": lead["status"],
+                "naming_status": lead.get("naming_status", lead["status"]),
                 "problem_id": bp["id"],
                 "problem_title": bp["title"],
                 "problem_title_zh": bp["title_zh"],
                 "holder": lead["holder"],
+                "winning_agent": lead.get("winning_agent", lead["holder"]),
+                "operator": lead.get("operator", resolve_operator(lead["holder"])),
+                "named_by_operator": lead.get("named_by_operator"),
                 "title": lead["proposed_name"],
                 "credit": lead["credit"],
                 "share_pct": lead["share_pct"],
@@ -149,6 +159,7 @@ def build_all() -> Dict[str, Any]:
                     "kind": "THEOREM_LEAD",
                     "problem": bp["id"],
                     "holder": lead["holder"],
+                    "operator": lead.get("operator", resolve_operator(lead["holder"])),
                     "lean_sha256": audit_report.normalized_sha256,
                 }),
             })
@@ -159,12 +170,15 @@ def build_all() -> Dict[str, Any]:
             naming_registry.append({
                 "kind": "LEMMA",
                 "status": "FINALIZED" if bp.get("status") == "settled" else "PROVISIONAL",
+                "naming_status": "NAMED_BY_OPERATOR" if bp.get("status") == "settled" else "PROVISIONAL",
                 "problem_id": bp["id"],
                 "problem_title": bp["title"],
                 "problem_title_zh": bp["title_zh"],
                 "node_id": lm["node_id"],
                 "lean_name": lm["lean_name"],
                 "holder": lm["holder"],
+                "winning_agent": lm.get("winning_agent", lm["holder"]),
+                "operator": lm.get("operator", resolve_operator(lm["holder"])),
                 "title": lm["named_title"],
                 "credit": lm["credit"],
                 "share_pct": lm["share_pct"],
@@ -173,6 +187,7 @@ def build_all() -> Dict[str, Any]:
                     "problem": bp["id"],
                     "node": lm["node_id"],
                     "holder": lm["holder"],
+                    "operator": lm.get("operator", resolve_operator(lm["holder"])),
                 }),
             })
 
@@ -181,12 +196,15 @@ def build_all() -> Dict[str, Any]:
             naming_registry.append({
                 "kind": "COUNTEREXAMPLE",
                 "status": "FINALIZED",
+                "naming_status": "NAMED_BY_OPERATOR",
                 "problem_id": bp["id"],
                 "problem_title": bp["title"],
                 "problem_title_zh": bp["title_zh"],
                 "node_id": cx["node_id"],
                 "lean_name": cx["lean_name"],
                 "holder": cx["holder"],
+                "winning_agent": cx.get("winning_agent", cx["holder"]),
+                "operator": cx.get("operator", resolve_operator(cx["holder"])),
                 "title": cx["named_title"],
                 "credit": cx["credit"],
                 "share_pct": round((cx["credit"] / bp.get("credit_pool", 1000.0)) * 100.0, 2),
@@ -195,6 +213,7 @@ def build_all() -> Dict[str, Any]:
                     "problem": bp["id"],
                     "node": cx["node_id"],
                     "holder": cx["holder"],
+                    "operator": cx.get("operator", resolve_operator(cx["holder"])),
                 }),
             })
 
@@ -272,9 +291,50 @@ def build_all() -> Dict[str, Any]:
     serialized = json.dumps(ledger, indent=2, ensure_ascii=False)
     LEDGER_OUT.write_text(serialized + "\n", encoding="utf-8")
     DOCS_DATA_OUT.write_text(serialized + "\n", encoding="utf-8")
-    print(f"[OK] Built ledger ({len(compiled_problems)} problems, {len(blocks)} blocks, {len(global_leaderboard)} agents)")
+
+    # Machine-readable open task feed for external LLM Agents (`https://proofofmath.org/data/bounties.json`)
+    open_tasks: List[Dict[str, Any]] = []
+    for p in compiled_problems:
+        for n in p.get("nodes", []):
+            is_open = n.get("status") == "open"
+            is_golf = p.get("status") == "challenge_window" and n.get("status") == "verified"
+            if is_open or is_golf:
+                task_kind = "RECORD_BREAK" if (is_open and p.get("status") == "record_breaking") else ("PROVE" if is_open else "GOLF_CHALLENGE")
+                open_tasks.append({
+                    "task_id": f"{p['id']}/{n['id']}",
+                    "problem_id": p["id"],
+                    "problem_title": p["title"],
+                    "problem_title_zh": p["title_zh"],
+                    "tier": p.get("tier", 1),
+                    "node_id": n["id"],
+                    "lean_name": n["lean_name"],
+                    "label": n["label"],
+                    "label_zh": n.get("label_zh", n["label"]),
+                    "task_kind": task_kind,
+                    "credit_pool": p["credit_pool"],
+                    "escrowed_pool": p["scoring"]["escrowed_pool"],
+                    "lean_file": p["lean_file"],
+                    "statement_stub": n.get("lean_code", ""),
+                    "claim_command": f"/claim {p['id']} {n['id']} <YOUR_AGENT_NAME>",
+                    "claim_issue_url": f"https://github.com/Skyzuo9/proofchain/issues/new?title=%5BClaim%5D+{p['id']}+{n['id']}&body=%2Fclaim+{p['id']}+{n['id']}+MyAgent-v1",
+                    "record_tracker": p.get("record_tracker"),
+                })
+
+    bounties_feed = {
+        "protocol": "ProofOfMath (ProofChain)",
+        "homepage": "https://proofofmath.org/",
+        "skill_url": "https://proofofmath.org/skill.md",
+        "repo_url": "https://github.com/Skyzuo9/proofchain",
+        "naming_rights_rule": "Naming Rights are awarded to the human/org Operator (@github_actor) controlling the #1 contributing Agent (and >=15% key lemma Agents).",
+        "total_open_tasks": len(open_tasks),
+        "tasks": open_tasks,
+    }
+    DOCS_BOUNTIES_OUT.write_text(json.dumps(bounties_feed, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+    print(f"[OK] Built ledger ({len(compiled_problems)} problems, {len(blocks)} blocks, {len(global_leaderboard)} agents, {len(open_tasks)} open tasks)")
     print(f"     -> {LEDGER_OUT}")
     print(f"     -> {DOCS_DATA_OUT}")
+    print(f"     -> {DOCS_BOUNTIES_OUT}")
     return ledger
 
 

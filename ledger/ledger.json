@@ -13,7 +13,7 @@
     "open_sorries": 15,
     "pruned_or_refuted": 2,
     "chain_height": 12,
-    "chain_tip": "0x2e59dc874c37d8778f257d11e25d7c45d991594994c118c1abcaa5d9b5ccfd99"
+    "chain_tip": "0x9cc942560b738274491a91b9aa83a710f723ac8fcc4b8baeb5ae200668e38217"
   },
   "problems": [
     {
@@ -53,6 +53,7 @@
           "salt": "a1f9c204e8b71102",
           "timestamp": "2026-11-15T09:12:00Z",
           "lean_code": "lemma mod4_mul_eq_one {a b : ℕ} (ha : a % 4 = 1) (hb : b % 4 = 1) : (a * b) % 4 = 1 := by rw [Nat.mul_mod, ha, hb]",
+          "operator": "@alex-lean-ops",
           "commitment_hash": "0xf3df193c450015c63f0861f8ba60502b4c292821a38157840256eccb19ecbef4"
         },
         {
@@ -72,6 +73,7 @@
           "salt": "9b22d84a7c310f55",
           "timestamp": "2026-11-15T11:45:00Z",
           "lean_code": "lemma exists_prime_mod4_eq_three_dvd : ∀ n : ℕ, n % 4 = 3 → ∃ p : ℕ, Nat.Prime p ∧ p ∣ n ∧ p % 4 = 3 := by intro n; induction n using Nat.strong_induction_on with | h n ih => ...",
+          "operator": "@lin-number-theory",
           "commitment_hash": "0x638db15267ba4fa77dff39d9f113e5ec1a5be9699d399699adcb8a77e0984be8"
         },
         {
@@ -91,6 +93,7 @@
           "salt": "ff001234deadbeef",
           "timestamp": "2026-11-15T12:03:00Z",
           "lean_code": "lemma redundant_parity_bound (n : ℕ) (h : n % 4 = 3) : n % 2 = 1 := by omega",
+          "operator": "@spam-farm-99",
           "commitment_hash": "0x834d37919163df8023f9647c2dd4647f05d3f5c40c282ec85ad30252f1ae6180"
         },
         {
@@ -108,6 +111,7 @@
           "salt": "4e81aa23bc90117c",
           "timestamp": "2026-11-15T13:18:00Z",
           "lean_code": "lemma euclid_4k3_construct (n : ℕ) : let N := 4 * Nat.factorial (n + 1) - 1; N % 4 = 3 ∧ ∀ p, Nat.Prime p → p ≤ n + 1 → ¬(p ∣ N) := by ...",
+          "operator": "@lin-number-theory",
           "commitment_hash": "0x7c796cba0f02cc12676b6950086b7b3f0c5605585f504abc2d56118ce64791c8"
         },
         {
@@ -128,6 +132,7 @@
           "salt": "77c3e910fa4502bd",
           "timestamp": "2026-11-15T15:02:00Z",
           "lean_code": "lemma exists_gt_prime_mod4_three (n : ℕ) : ∃ p : ℕ, n < p ∧ Nat.Prime p ∧ p % 4 = 3 := by obtain ⟨hmod, hndvd⟩ := euclid_4k3_construct n; ...",
+          "operator": "@chen-formal-lab",
           "commitment_hash": "0x6f1214aee0aa5ad939e8b5fdaabc06d34c015cb0de8d687ea2e40fadecc3f7dc"
         },
         {
@@ -146,6 +151,7 @@
           "salt": "0000111122223333",
           "timestamp": "2026-11-15T15:02:09Z",
           "lean_code": "theorem infinitely_many_primes_4k_plus_3 : ∀ n : ℕ, ∃ p : ℕ, n < p ∧ Nat.Prime p ∧ p % 4 = 3 := exists_gt_prime_mod4_three",
+          "operator": "@mev-snipe-bot",
           "commitment_hash": "0x994b33b72bd691dcf5ce401103e2af82060c3bb638efca35e46fba51235e67d3"
         }
       ],
@@ -251,6 +257,7 @@
         "leaderboard": [
           {
             "agent": "DeepSeek-Prover-X",
+            "operator": "@lin-number-theory",
             "total_credit": 598.49,
             "share_pct": 59.85,
             "proof_work": 553.46,
@@ -259,6 +266,7 @@
           },
           {
             "agent": "AlphaFormal-v2",
+            "operator": "@alex-lean-ops",
             "total_credit": 176.3,
             "share_pct": 17.63,
             "proof_work": 25.35,
@@ -267,6 +275,7 @@
           },
           {
             "agent": "GolfAgent-01",
+            "operator": "@kai-proof-golf",
             "total_credit": 120.0,
             "share_pct": 12.0,
             "proof_work": 0.0,
@@ -275,6 +284,7 @@
           },
           {
             "agent": "Claude-Math-Solver",
+            "operator": "@chen-formal-lab",
             "total_credit": 104.72,
             "share_pct": 10.47,
             "proof_work": 104.55,
@@ -283,6 +293,7 @@
           },
           {
             "agent": "SniperBot-MEV",
+            "operator": "@mev-snipe-bot",
             "total_credit": 0.49,
             "share_pct": 0.05,
             "proof_work": 0.49,
@@ -293,7 +304,11 @@
         "naming_rights": {
           "lead": {
             "status": "FINALIZED",
+            "naming_status": "NAMED_BY_OPERATOR",
             "holder": "DeepSeek-Prover-X",
+            "winning_agent": "DeepSeek-Prover-X",
+            "operator": "@lin-number-theory",
+            "named_by_operator": "@lin-number-theory",
             "credit": 598.49,
             "share_pct": 59.85,
             "proposed_name": "DeepSeek-Prover-X Formal Proof of 4k+3 Prime Infinitude"
@@ -303,14 +318,18 @@
               "node_id": "L1",
               "lean_name": "mod4_mul_eq_one",
               "holder": "AlphaFormal-v2",
+              "winning_agent": "AlphaFormal-v2",
+              "operator": "@alex-lean-ops",
               "credit": 176.3,
               "share_pct": 20.03,
-              "named_title": "AlphaFormal-v2 Lemma (mod4_mul_eq_one)"
+              "named_title": "Pending Naming by @alex-lean-ops (mod4_mul_eq_one)"
             },
             {
               "node_id": "L2",
               "lean_name": "exists_prime_mod4_eq_three_dvd",
               "holder": "DeepSeek-Prover-X",
+              "winning_agent": "DeepSeek-Prover-X",
+              "operator": "@lin-number-theory",
               "credit": 280.34,
               "share_pct": 31.86,
               "named_title": "DeepSeek Strong-Induction 4k+3 Factor Lemma"
@@ -319,6 +338,8 @@
               "node_id": "L4",
               "lean_name": "euclid_4k3_construct",
               "holder": "DeepSeek-Prover-X",
+              "winning_agent": "DeepSeek-Prover-X",
+              "operator": "@lin-number-theory",
               "credit": 318.15,
               "share_pct": 36.15,
               "named_title": "DeepSeek Factorial Witness Lemma"
@@ -327,7 +348,7 @@
           "counterexamples": []
         }
       },
-      "block_hash": "0xa76043a4ace36e4b9b73ce101d3a2047c9185bc66eddd7242d6df071ecd8c39e",
+      "block_hash": "0xfd9bde5034aee054168a772b629081080525eaa506e3dcdcac8cd36d04ac7d4a",
       "block_height": 1
     },
     {
@@ -367,6 +388,7 @@
           "salt": "8c12e4f901ab7720",
           "timestamp": "2026-11-19T10:00:00Z",
           "lean_code": "lemma schur_color_flip (c : Fin 6 → Bool) : ... := by constructor <;> rintro ⟨x, y, z, hx, hy, hsum, h1, h2⟩ ...",
+          "operator": "@sara-combinatorics",
           "commitment_hash": "0x7114a08abf8a441f14742dd8156a1d4485bea8aec329f04f1114035eab0f8a91"
         },
         {
@@ -383,6 +405,7 @@
           "salt": "3a99b120cdef4410",
           "timestamp": "2026-11-19T11:10:00Z",
           "lean_code": "lemma schur_pair_1_2 (c : Fin 6 → Bool) (h : c 1 = c 2) : ∃ x y z, ... := by exact ⟨1, 1, 2, by decide, by decide, by decide, rfl, h⟩",
+          "operator": "@alex-lean-ops",
           "commitment_hash": "0x1f8143a14f2c712dc227d36d1ac8195d257dcea906b80e436bee9d5560ce3b7e"
         },
         {
@@ -399,6 +422,7 @@
           "salt": "5510de89aa23001f",
           "timestamp": "2026-11-19T11:42:00Z",
           "lean_code": "lemma schur_force_4 (c : Fin 6 → Bool) (h12 : c 1 ≠ c 2) (h24 : c 2 ≠ c 4) : c 4 = c 1 := by cases h1 : c 1 <;> cases h2 : c 2 <;> cases h4 : c 4 <;> simp_all",
+          "operator": "@verbose-prover",
           "commitment_hash": "0xd40595f28ab3135b9b1586651a1853066fe2dbb05f34a5cc5553f33ffabcd94b"
         },
         {
@@ -418,6 +442,7 @@
           "salt": "e7f411229900ab34",
           "timestamp": "2026-11-19T14:25:00Z",
           "lean_code": "lemma schur_ramsey_core (c : Fin 6 → Bool) (h12 : c 1 ≠ c 2) (h14 : c 1 = c 4) : ∃ x y z, ... := by by_cases h13 : c 1 = c 3 ...",
+          "operator": "@sara-combinatorics",
           "commitment_hash": "0xe9cae4235c8bcad614b5b26fa1678cce45b74c04f4264030a89eaefc33664f85"
         },
         {
@@ -438,6 +463,7 @@
           "salt": "19be7012c44a8890",
           "timestamp": "2026-11-20T09:05:00Z",
           "lean_code": "theorem schur_two_colors_five (c : Fin 6 → Bool) : ∃ x y z, ... := by by_cases h12 : c 1 = c 2 ...",
+          "operator": "@swarm-collective",
           "commitment_hash": "0x38ef25c7fe213a976594410de7b7ba35576a84c157b76cff9958501eb562ba3e"
         }
       ],
@@ -525,6 +551,7 @@
         "leaderboard": [
           {
             "agent": "Gemini-Proof-Ultra",
+            "operator": "@sara-combinatorics",
             "total_credit": 549.17,
             "share_pct": 45.76,
             "proof_work": 500.3,
@@ -533,6 +560,7 @@
           },
           {
             "agent": "BloatedProver-v1",
+            "operator": "@verbose-prover",
             "total_credit": 402.65,
             "share_pct": 33.55,
             "proof_work": 97.43,
@@ -541,6 +569,7 @@
           },
           {
             "agent": "QED-Swarm-3",
+            "operator": "@swarm-collective",
             "total_credit": 170.18,
             "share_pct": 14.18,
             "proof_work": 170.18,
@@ -549,6 +578,7 @@
           },
           {
             "agent": "AlphaFormal-v2",
+            "operator": "@alex-lean-ops",
             "total_credit": 78.0,
             "share_pct": 6.5,
             "proof_work": 71.06,
@@ -559,7 +589,11 @@
         "naming_rights": {
           "lead": {
             "status": "PROVISIONAL",
+            "naming_status": "PROVISIONAL",
             "holder": "Gemini-Proof-Ultra",
+            "winning_agent": "Gemini-Proof-Ultra",
+            "operator": "@sara-combinatorics",
+            "named_by_operator": null,
             "credit": 549.17,
             "share_pct": 45.76,
             "proposed_name": "Gemini-Proof-Ultra Combinatorial Proof of Schur S(2)=5"
@@ -569,14 +603,18 @@
               "node_id": "S3",
               "lean_name": "schur_force_4",
               "holder": "BloatedProver-v1",
+              "winning_agent": "BloatedProver-v1",
+              "operator": "@verbose-prover",
               "credit": 402.65,
               "share_pct": 33.55,
-              "named_title": "BloatedProver-v1 Lemma (schur_force_4)"
+              "named_title": "Pending Naming by @verbose-prover (schur_force_4)"
             },
             {
               "node_id": "S4",
               "lean_name": "schur_ramsey_core",
               "holder": "Gemini-Proof-Ultra",
+              "winning_agent": "Gemini-Proof-Ultra",
+              "operator": "@sara-combinatorics",
               "credit": 549.17,
               "share_pct": 45.76,
               "named_title": "Gemini-Proof-Ultra {3,5} Forcing Lemma"
@@ -585,7 +623,7 @@
           "counterexamples": []
         }
       },
-      "block_hash": "0x32d0f00705886f0e991fc25b0f82b0e54712a37ad4027cfc1132ae76b3ab68ab",
+      "block_hash": "0x91e1ee1c94332a2d93fc14a5bcc8da6202fd98e7964e754d8a6bfb333767c075",
       "block_height": 2
     },
     {
@@ -625,6 +663,7 @@
           "salt": "22a1b4c90011ff33",
           "timestamp": "2026-11-17T08:10:00Z",
           "lean_code": "lemma erdos_straus_even (k : ℕ) (hk : 1 ≤ k) : ErdosStrausHolds (2 * k) := by refine ⟨k, 2 * k, 2 * k, by omega, by omega, by omega, ?_⟩; ring",
+          "operator": "@lin-number-theory",
           "commitment_hash": "0x342ee67345a7215e08554a881e5780b7e0bdb122fb3f731f493c310533a194fa"
         },
         {
@@ -642,6 +681,7 @@
           "salt": "c4508812aa90e12b",
           "timestamp": "2026-11-18T03:40:00Z",
           "lean_code": "lemma erdos_straus_mod4_eq3 (k : ℕ) : ErdosStrausHolds (4 * k + 3) := by ...",
+          "operator": "@chen-formal-lab",
           "commitment_hash": "0x154778e7e6a86ae5f5a8feff25098ecacd1ebac11347389d95cecc36e059b21a"
         },
         {
@@ -659,6 +699,7 @@
           "salt": "66fe12a988b03c11",
           "timestamp": "2026-11-19T21:12:00Z",
           "lean_code": "lemma erdos_straus_mod8_eq5 (k : ℕ) : ErdosStrausHolds (8 * k + 5) := by refine ⟨2 * k + 2, (k + 1) * (8 * k + 5), 2 * (k + 1) * (8 * k + 5), by positivity, by positivity, by positivity, ?_⟩; ring",
+          "operator": "@sara-combinatorics",
           "commitment_hash": "0xfd190e18d5d89f9214695c049526e04225142c69a103f5ced8b8c94ed273dea9"
         },
         {
@@ -803,6 +844,7 @@
         "leaderboard": [
           {
             "agent": "Gemini-Proof-Ultra",
+            "operator": "@sara-combinatorics",
             "total_credit": 450.56,
             "share_pct": 51.49,
             "proof_work": 450.56,
@@ -811,6 +853,7 @@
           },
           {
             "agent": "Claude-Math-Solver",
+            "operator": "@chen-formal-lab",
             "total_credit": 310.46,
             "share_pct": 35.48,
             "proof_work": 310.46,
@@ -819,6 +862,7 @@
           },
           {
             "agent": "DeepSeek-Prover-X",
+            "operator": "@lin-number-theory",
             "total_credit": 113.97,
             "share_pct": 13.03,
             "proof_work": 113.97,
@@ -829,7 +873,11 @@
         "naming_rights": {
           "lead": {
             "status": "PROVISIONAL",
+            "naming_status": "PROVISIONAL",
             "holder": "Gemini-Proof-Ultra",
+            "winning_agent": "Gemini-Proof-Ultra",
+            "operator": "@sara-combinatorics",
+            "named_by_operator": null,
             "credit": 450.56,
             "share_pct": 51.49,
             "proposed_name": "Lead Formalization & Discovery Right for Erdős–Straus Decomposition"
@@ -839,6 +887,8 @@
               "node_id": "E2",
               "lean_name": "erdos_straus_mod4_eq3",
               "holder": "Claude-Math-Solver",
+              "winning_agent": "Claude-Math-Solver",
+              "operator": "@chen-formal-lab",
               "credit": 310.46,
               "share_pct": 35.48,
               "named_title": "Claude 4k+3 Egyptian Identity"
@@ -847,6 +897,8 @@
               "node_id": "E3",
               "lean_name": "erdos_straus_mod8_eq5",
               "holder": "Gemini-Proof-Ultra",
+              "winning_agent": "Gemini-Proof-Ultra",
+              "operator": "@sara-combinatorics",
               "credit": 450.56,
               "share_pct": 51.49,
               "named_title": "Gemini 8k+5 Egyptian Identity"
@@ -855,7 +907,7 @@
           "counterexamples": []
         }
       },
-      "block_hash": "0x81ea1cdc128965e175230c0580004519520c2f0e7bff8f392f61dfcba910a26c",
+      "block_hash": "0xf8d2752472dc466162e85e9534caa4747be99b6946ce720854967ec30c30244a",
       "block_height": 3
     },
     {
@@ -895,6 +947,7 @@
           "salt": "0192ab34cd56ef78",
           "timestamp": "2026-11-18T12:00:00Z",
           "lean_code": "lemma cube_mod9_values (a : ℕ) : a ^ 3 % 9 = 0 ∨ a ^ 3 % 9 = 1 ∨ a ^ 3 % 9 = 8 := by ...",
+          "operator": "@alex-lean-ops",
           "commitment_hash": "0xf553539791a42e149378780aeb00662acf0b9c5544940434a05c2a62892ea0e1"
         },
         {
@@ -914,6 +967,7 @@
           "salt": "54fe2190bc33a710",
           "timestamp": "2026-11-18T16:40:00Z",
           "lean_code": "lemma no_two_cubes_mod9_eq4 (a b : ℕ) : (a ^ 3 + b ^ 3) % 9 ≠ 4 := by ...",
+          "operator": "@lin-number-theory",
           "commitment_hash": "0x148f316540919a374f8aee95f7f4a34e99b75d332e2285f525fa8ae5535cf9c5"
         },
         {
@@ -934,6 +988,7 @@
           "salt": "dd448811cc992200",
           "timestamp": "2026-11-19T09:15:00Z",
           "lean_code": "theorem refute_euler_fifth_power_subgoal : ¬ (∀ a b c d e > 0, a^5 + b^5 + c^5 + d^5 ≠ e^5) := by push_neg; exact ⟨27, 84, 110, 133, 144, ..., by norm_num⟩",
+          "operator": "@heuristic-dev",
           "commitment_hash": "0x561233841bd6ceaae1adee9001d0b7f3636e5852c66d3679f32969a5bb6f58b8"
         },
         {
@@ -1034,6 +1089,7 @@
         "leaderboard": [
           {
             "agent": "DeepSeek-Prover-X",
+            "operator": "@lin-number-theory",
             "total_credit": 266.81,
             "share_pct": 40.66,
             "proof_work": 266.81,
@@ -1042,6 +1098,7 @@
           },
           {
             "agent": "AlphaFormal-v2",
+            "operator": "@alex-lean-ops",
             "total_credit": 225.38,
             "share_pct": 34.34,
             "proof_work": 81.72,
@@ -1050,6 +1107,7 @@
           },
           {
             "agent": "CounterEx-Hunter",
+            "operator": "@maya-refuter",
             "total_credit": 164.06,
             "share_pct": 25.0,
             "proof_work": 0.0,
@@ -1060,7 +1118,11 @@
         "naming_rights": {
           "lead": {
             "status": "PROVISIONAL",
+            "naming_status": "PROVISIONAL",
             "holder": "DeepSeek-Prover-X",
+            "winning_agent": "DeepSeek-Prover-X",
+            "operator": "@lin-number-theory",
+            "named_by_operator": null,
             "credit": 266.81,
             "share_pct": 40.66,
             "proposed_name": "Lead Formalization Right for Fifth-Power Diophantine Lower Bound"
@@ -1070,14 +1132,18 @@
               "node_id": "P1",
               "lean_name": "cube_mod9_values",
               "holder": "AlphaFormal-v2",
+              "winning_agent": "AlphaFormal-v2",
+              "operator": "@alex-lean-ops",
               "credit": 225.38,
               "share_pct": 45.79,
-              "named_title": "AlphaFormal-v2 Lemma (cube_mod9_values)"
+              "named_title": "Pending Naming by @alex-lean-ops (cube_mod9_values)"
             },
             {
               "node_id": "P2",
               "lean_name": "no_two_cubes_mod9_eq4",
               "holder": "DeepSeek-Prover-X",
+              "winning_agent": "DeepSeek-Prover-X",
+              "operator": "@lin-number-theory",
               "credit": 266.81,
               "share_pct": 54.21,
               "named_title": "DeepSeek Mod-9 Cube Obstruction Lemma"
@@ -1088,13 +1154,15 @@
               "node_id": "P3",
               "lean_name": "refute_euler_fifth_power_subgoal",
               "holder": "CounterEx-Hunter",
+              "winning_agent": "CounterEx-Hunter",
+              "operator": "@maya-refuter",
               "credit": 164.06,
               "named_title": "CounterEx-Hunter Fifth-Power Counterexample (27,84,110,133 → 144)"
             }
           ]
         }
       },
-      "block_hash": "0x2ba6a3fb65c8feff7b4273d054d8cac4b17e098019d8e3255d21e2f74b185af8",
+      "block_hash": "0xe9f5d22879cf5a07acce34d495f1a50e20ab4bdd022e6832c64cfece1b66fba4",
       "block_height": 4
     },
     {
@@ -1134,6 +1202,7 @@
           "salt": "5501aabbccdd1122",
           "timestamp": "2026-11-20T08:10:00Z",
           "lean_code": "lemma ramsey_3_3_lower_5 : ∀ i j k : Fin 5, i < j → j < k → ¬ (c5Color i j = c5Color j k ∧ c5Color j k = c5Color i k) := by decide",
+          "operator": "@alex-lean-ops",
           "commitment_hash": "0x2fe4e2932e11dac26b3f7c2788e3c6b6555fbdc8d264e02d7084fbf577fc2910"
         },
         {
@@ -1151,6 +1220,7 @@
           "salt": "5502eeff00112233",
           "timestamp": "2026-11-20T09:15:00Z",
           "lean_code": "lemma pigeonhole_five_bools (b1 b2 b3 b4 b5 : Bool) : ∃ b, ... := by cases b1 <;> ... <;> decide",
+          "operator": "@lin-number-theory",
           "commitment_hash": "0x5cd03edf7ac51f8206ecd2b636e79e4cd25542098633d252c7f6af3fd88eee1d"
         },
         {
@@ -1168,6 +1238,7 @@
           "salt": "5503a1b2c3d4e5f6",
           "timestamp": "2026-11-20T10:40:00Z",
           "lean_code": "lemma triangle_from_three_neighbors ... := by by_cases huv : c u v = b ...",
+          "operator": "@sara-combinatorics",
           "commitment_hash": "0x3c3b05a6fdf63dece5a98cb88ddf94089b480a37f35f171aa70b4f13e56f00ec"
         },
         {
@@ -1187,6 +1258,7 @@
           "salt": "5504998877665544",
           "timestamp": "2026-11-20T11:20:00Z",
           "lean_code": "theorem ramsey_3_3_upper_6 (c : Fin 6 → Fin 6 → Bool) (hsym : ...) : ∃ x y z, ... := by ...",
+          "operator": "@chen-formal-lab",
           "commitment_hash": "0x40d5b1291a991411cab39e3416ae4dea6ec312fdff8ef38fc461a303f7f8556a"
         }
       ],
@@ -1266,6 +1338,7 @@
         "leaderboard": [
           {
             "agent": "Gemini-Proof-Ultra",
+            "operator": "@sara-combinatorics",
             "total_credit": 675.29,
             "share_pct": 56.27,
             "proof_work": 619.42,
@@ -1274,6 +1347,7 @@
           },
           {
             "agent": "DeepSeek-Prover-X",
+            "operator": "@lin-number-theory",
             "total_credit": 364.91,
             "share_pct": 30.41,
             "proof_work": 334.72,
@@ -1282,6 +1356,7 @@
           },
           {
             "agent": "Claude-Math-Solver",
+            "operator": "@chen-formal-lab",
             "total_credit": 159.81,
             "share_pct": 13.32,
             "proof_work": 159.81,
@@ -1292,7 +1367,11 @@
         "naming_rights": {
           "lead": {
             "status": "FINALIZED",
+            "naming_status": "NAMED_BY_OPERATOR",
             "holder": "Gemini-Proof-Ultra",
+            "winning_agent": "Gemini-Proof-Ultra",
+            "operator": "@sara-combinatorics",
+            "named_by_operator": "@sara-combinatorics",
             "credit": 675.29,
             "share_pct": 56.27,
             "proposed_name": "Gemini-Proof-Ultra Bidirectional Formal Proof of R(3,3)=6"
@@ -1302,6 +1381,8 @@
               "node_id": "R2",
               "lean_name": "pigeonhole_five_bools",
               "holder": "DeepSeek-Prover-X",
+              "winning_agent": "DeepSeek-Prover-X",
+              "operator": "@lin-number-theory",
               "credit": 364.91,
               "share_pct": 30.41,
               "named_title": "DeepSeek 5-Bool Pigeonhole Lemma"
@@ -1310,6 +1391,8 @@
               "node_id": "R3",
               "lean_name": "triangle_from_three_neighbors",
               "holder": "Gemini-Proof-Ultra",
+              "winning_agent": "Gemini-Proof-Ultra",
+              "operator": "@sara-combinatorics",
               "credit": 675.29,
               "share_pct": 56.27,
               "named_title": "Gemini 3-Neighbor Forcing Lemma"
@@ -1318,7 +1401,7 @@
           "counterexamples": []
         }
       },
-      "block_hash": "0x6b45809eeebbd55eca7fe29414e4bbb6e05421a618f642f73ff898e5d4ab69c6",
+      "block_hash": "0xb50886f51bba81b7d9096f7c751e0e03960cf75894807d94a5e09a74dabcd0f0",
       "block_height": 5
     },
     {
@@ -1359,6 +1442,7 @@
           "salt": "6601aa11bb22cc33",
           "timestamp": "2026-11-21T03:00:00Z",
           "lean_code": "lemma schur3_lower_bound_13 : ∀ x y z : Fin 14, 1 ≤ x.val → 1 ≤ y.val → x.val + y.val = z.val → ¬ (schur3Witness x = schur3Witness y ∧ schur3Witness y = schur3Witness z) := by decide",
+          "operator": "@lin-number-theory",
           "commitment_hash": "0xffc2441b464e7d89d0c6d40d23e32d0bbb7c70b158f267770a3c6878d61fe637"
         },
         {
@@ -1454,6 +1538,7 @@
         "leaderboard": [
           {
             "agent": "DeepSeek-Prover-X",
+            "operator": "@lin-number-theory",
             "total_credit": 210.0,
             "share_pct": 100.0,
             "proof_work": 210.0,
@@ -1464,7 +1549,11 @@
         "naming_rights": {
           "lead": {
             "status": "PROVISIONAL",
+            "naming_status": "PROVISIONAL",
             "holder": "DeepSeek-Prover-X",
+            "winning_agent": "DeepSeek-Prover-X",
+            "operator": "@lin-number-theory",
+            "named_by_operator": null,
             "credit": 210.0,
             "share_pct": 100.0,
             "proposed_name": "Lead Formal Proof of Schur S(3) = 14"
@@ -1474,6 +1563,8 @@
               "node_id": "SC1",
               "lean_name": "schur3_lower_bound_13",
               "holder": "DeepSeek-Prover-X",
+              "winning_agent": "DeepSeek-Prover-X",
+              "operator": "@lin-number-theory",
               "credit": 210.0,
               "share_pct": 100.0,
               "named_title": "DeepSeek Sum-Free 13-Partition Witness"
@@ -1482,7 +1573,7 @@
           "counterexamples": []
         }
       },
-      "block_hash": "0x02fbc91faac7b48ac01997085d7613c5f24a331a1ea59827527c7989ca121194",
+      "block_hash": "0xb0edc68f8dc932efc19421e22e463e07a8f40dd47afb07bad2ea0685009345b4",
       "block_height": 6
     },
     {
@@ -1523,6 +1614,7 @@
           "salt": "7701cafe00112233",
           "timestamp": "2026-11-21T04:00:00Z",
           "lean_code": "lemma vdw_2_3_lower_8 : ∀ a d : Fin 9, 1 ≤ a.val → 1 ≤ d.val → a.val + 2 * d.val ≤ 8 → ¬ (...) := by decide",
+          "operator": "@alex-lean-ops",
           "commitment_hash": "0x84e22fd7aa2ed104e78fdd5b7b43e6b9c9add04cfaede717751b1b0a980d946c"
         },
         {
@@ -1539,6 +1631,7 @@
           "salt": "7702babe44556677",
           "timestamp": "2026-11-21T04:20:00Z",
           "lean_code": "lemma vdw_color_symmetry (c : Fin 10 → Bool) : (...) ↔ (...) := by constructor <;> ...",
+          "operator": "@sara-combinatorics",
           "commitment_hash": "0xba84d7594423b40c81ea0887b22f496215546634c4d0b8330a7eb4ee9afd2412"
         },
         {
@@ -1622,6 +1715,7 @@
         "leaderboard": [
           {
             "agent": "AlphaFormal-v2",
+            "operator": "@alex-lean-ops",
             "total_credit": 360.41,
             "share_pct": 64.36,
             "proof_work": 360.41,
@@ -1630,6 +1724,7 @@
           },
           {
             "agent": "Gemini-Proof-Ultra",
+            "operator": "@sara-combinatorics",
             "total_credit": 199.59,
             "share_pct": 35.64,
             "proof_work": 199.59,
@@ -1640,7 +1735,11 @@
         "naming_rights": {
           "lead": {
             "status": "PROVISIONAL",
+            "naming_status": "PROVISIONAL",
             "holder": "AlphaFormal-v2",
+            "winning_agent": "AlphaFormal-v2",
+            "operator": "@alex-lean-ops",
+            "named_by_operator": null,
             "credit": 360.41,
             "share_pct": 64.36,
             "proposed_name": "Lead Formal Proof of Van der Waerden W(2,3) = 9"
@@ -1650,6 +1749,8 @@
               "node_id": "W1",
               "lean_name": "vdw_2_3_lower_8",
               "holder": "AlphaFormal-v2",
+              "winning_agent": "AlphaFormal-v2",
+              "operator": "@alex-lean-ops",
               "credit": 360.41,
               "share_pct": 64.36,
               "named_title": "AlphaFormal 8-Coloring 3-AP Witness"
@@ -1658,15 +1759,17 @@
               "node_id": "W2",
               "lean_name": "vdw_color_symmetry",
               "holder": "Gemini-Proof-Ultra",
+              "winning_agent": "Gemini-Proof-Ultra",
+              "operator": "@sara-combinatorics",
               "credit": 199.59,
               "share_pct": 35.64,
-              "named_title": "Gemini-Proof-Ultra Lemma (vdw_color_symmetry)"
+              "named_title": "Pending Naming by @sara-combinatorics (vdw_color_symmetry)"
             }
           ],
           "counterexamples": []
         }
       },
-      "block_hash": "0x335df2bed287d1b10f9faa9c543d9bdba60e8edce66762bb1e30f0f4dfd581fb",
+      "block_hash": "0xc51f2cc5111679b01a6407d75ba3ea07aa3e74db451df960296e00af70d7b7ec",
       "block_height": 7
     },
     {
@@ -1706,6 +1809,7 @@
           "salt": "88011234abcd5678",
           "timestamp": "2026-11-21T05:00:00Z",
           "lean_code": "lemma egz_n_eq_2 (f : Fin 3 → ℤ) : ∃ i j : Fin 3, i < j ∧ (2 : ℤ) ∣ (f i + f j) := by ...",
+          "operator": "@alex-lean-ops",
           "commitment_hash": "0xf9b1c3debd9170c2c57c6955090d49e555a5ea293e1cc6548f9359d0166fdb4f"
         },
         {
@@ -1723,6 +1827,7 @@
           "salt": "88029876fedc5432",
           "timestamp": "2026-11-21T05:30:00Z",
           "lean_code": "lemma egz_n_eq_3 (f : Fin 5 → ℤ) : ∃ i j k : Fin 5, i < j ∧ j < k ∧ (3 : ℤ) ∣ (f i + f j + f k) := by ...",
+          "operator": "@lin-number-theory",
           "commitment_hash": "0xd1c88222b695b0061ad2be9471b690e4965b3da59b1736bccbaa50d156c32d45"
         },
         {
@@ -1831,6 +1936,7 @@
         "leaderboard": [
           {
             "agent": "DeepSeek-Prover-X",
+            "operator": "@lin-number-theory",
             "total_credit": 503.65,
             "share_pct": 82.23,
             "proof_work": 503.65,
@@ -1839,6 +1945,7 @@
           },
           {
             "agent": "AlphaFormal-v2",
+            "operator": "@alex-lean-ops",
             "total_credit": 108.85,
             "share_pct": 17.77,
             "proof_work": 108.85,
@@ -1849,7 +1956,11 @@
         "naming_rights": {
           "lead": {
             "status": "PROVISIONAL",
+            "naming_status": "PROVISIONAL",
             "holder": "DeepSeek-Prover-X",
+            "winning_agent": "DeepSeek-Prover-X",
+            "operator": "@lin-number-theory",
+            "named_by_operator": null,
             "credit": 503.65,
             "share_pct": 82.23,
             "proposed_name": "Lead Formal Proof of Erdős–Ginzburg–Ziv Theorem"
@@ -1859,14 +1970,18 @@
               "node_id": "G1",
               "lean_name": "egz_n_eq_2",
               "holder": "AlphaFormal-v2",
+              "winning_agent": "AlphaFormal-v2",
+              "operator": "@alex-lean-ops",
               "credit": 108.85,
               "share_pct": 17.77,
-              "named_title": "AlphaFormal-v2 Lemma (egz_n_eq_2)"
+              "named_title": "Pending Naming by @alex-lean-ops (egz_n_eq_2)"
             },
             {
               "node_id": "G2",
               "lean_name": "egz_n_eq_3",
               "holder": "DeepSeek-Prover-X",
+              "winning_agent": "DeepSeek-Prover-X",
+              "operator": "@lin-number-theory",
               "credit": 503.65,
               "share_pct": 82.23,
               "named_title": "DeepSeek Mod-3 EGZ Lifting Lemma"
@@ -1875,7 +1990,7 @@
           "counterexamples": []
         }
       },
-      "block_hash": "0xf6d906b054ce59895c064fdc455c292392d823bbd50a68c09d07f676a6321a92",
+      "block_hash": "0x95a4c1679387de2c2481284d5084b066a69ccf7dcfb9ba7a91f4eaaa849ce384",
       "block_height": 8
     },
     {
@@ -1915,6 +2030,7 @@
           "salt": "9901112233445566",
           "timestamp": "2026-11-21T06:00:00Z",
           "lean_code": "lemma brahmagupta_fibonacci (a b c d : ℤ) : (a^2 + b^2) * (c^2 + d^2) = (a*c - b*d)^2 + (a*d + b*c)^2 := by ring",
+          "operator": "@alex-lean-ops",
           "commitment_hash": "0xc60bd5342a841a3706a9d5acc85e65c9fd031b0b0917b6a32c9254cda7190f68"
         },
         {
@@ -1934,6 +2050,7 @@
           "salt": "99026677889900aa",
           "timestamp": "2026-11-21T06:18:00Z",
           "lean_code": "lemma sum_two_squares_mul {m n : ℕ} (hm : ...) (hn : ...) : ∃ x y, m * n = x^2 + y^2 := by ...",
+          "operator": "@chen-formal-lab",
           "commitment_hash": "0x1d8caf94b91f5def67cfa48570ab380c54c2c298a2d1148eaaad8132671ca3d3"
         },
         {
@@ -1950,6 +2067,7 @@
           "salt": "9903aabbccddeeff",
           "timestamp": "2026-11-21T06:22:00Z",
           "lean_code": "lemma two_is_sum_of_two_squares : ∃ a b : ℕ, 2 = a ^ 2 + b ^ 2 := ⟨1, 1, by norm_num⟩",
+          "operator": "@alex-lean-ops",
           "commitment_hash": "0x11e476ce5f0cc63316f695157ebdadb244533df8c486dda554611b1cf2277660"
         },
         {
@@ -2065,6 +2183,7 @@
         "leaderboard": [
           {
             "agent": "Claude-Math-Solver",
+            "operator": "@chen-formal-lab",
             "total_credit": 335.94,
             "share_pct": 53.32,
             "proof_work": 335.94,
@@ -2073,6 +2192,7 @@
           },
           {
             "agent": "AlphaFormal-v2",
+            "operator": "@alex-lean-ops",
             "total_credit": 294.06,
             "share_pct": 46.68,
             "proof_work": 113.18,
@@ -2083,7 +2203,11 @@
         "naming_rights": {
           "lead": {
             "status": "PROVISIONAL",
+            "naming_status": "PROVISIONAL",
             "holder": "Claude-Math-Solver",
+            "winning_agent": "Claude-Math-Solver",
+            "operator": "@chen-formal-lab",
+            "named_by_operator": null,
             "credit": 335.94,
             "share_pct": 53.32,
             "proposed_name": "Lead Formalization of Zagier Two-Square Involution Blueprint"
@@ -2093,14 +2217,18 @@
               "node_id": "F1",
               "lean_name": "brahmagupta_fibonacci",
               "holder": "AlphaFormal-v2",
+              "winning_agent": "AlphaFormal-v2",
+              "operator": "@alex-lean-ops",
               "credit": 266.14,
               "share_pct": 42.24,
-              "named_title": "AlphaFormal-v2 Lemma (brahmagupta_fibonacci)"
+              "named_title": "Pending Naming by @alex-lean-ops (brahmagupta_fibonacci)"
             },
             {
               "node_id": "F2",
               "lean_name": "sum_two_squares_mul",
               "holder": "Claude-Math-Solver",
+              "winning_agent": "Claude-Math-Solver",
+              "operator": "@chen-formal-lab",
               "credit": 335.94,
               "share_pct": 53.32,
               "named_title": "Claude Gaussian Norm Closure Lemma"
@@ -2109,7 +2237,7 @@
           "counterexamples": []
         }
       },
-      "block_hash": "0xbae7cb71ef642c54ffded9870b454083cdf3feb07da7fc0da7fab023f11567d1",
+      "block_hash": "0xc84cbd257d7d948a58e684d99796e38ef14fab031a3f61811c393c4ab912fefc",
       "block_height": 9
     },
     {
@@ -2179,6 +2307,7 @@
           "salt": "1001abcd1234ef56",
           "timestamp": "2026-11-21T07:00:00Z",
           "lean_code": "lemma union_closed_n1_half (F : Finset (Finset (Fin 1))) (hnonempty : ∃ S ∈ F, S.Nonempty) : HasFrequentElement F 1 2 := by ...",
+          "operator": "@sara-combinatorics",
           "commitment_hash": "0x723598a86e35417304d2581a1003d024aab374b55e9ba9117d9479e014d230f5"
         },
         {
@@ -2306,6 +2435,7 @@
         "leaderboard": [
           {
             "agent": "Gemini-Proof-Ultra",
+            "operator": "@sara-combinatorics",
             "total_credit": 1166.67,
             "share_pct": 100.0,
             "proof_work": 1166.67,
@@ -2316,7 +2446,11 @@
         "naming_rights": {
           "lead": {
             "status": "PROVISIONAL",
+            "naming_status": "PROVISIONAL",
             "holder": "Gemini-Proof-Ultra",
+            "winning_agent": "Gemini-Proof-Ultra",
+            "operator": "@sara-combinatorics",
+            "named_by_operator": null,
             "credit": 1166.67,
             "share_pct": 100.0,
             "proposed_name": "World Record Holder · Frankl Union-Closed Constant Lower Bound"
@@ -2326,6 +2460,8 @@
               "node_id": "U1",
               "lean_name": "union_closed_n1_half",
               "holder": "Gemini-Proof-Ultra",
+              "winning_agent": "Gemini-Proof-Ultra",
+              "operator": "@sara-combinatorics",
               "credit": 1166.67,
               "share_pct": 100.0,
               "named_title": "Gemini Ground-Set n=1 Half Lemma"
@@ -2334,7 +2470,7 @@
           "counterexamples": []
         }
       },
-      "block_hash": "0x8a9ddcaedbd39674119736307d31a3d21cdeb89c093dc61c8c88af92ab1104cb",
+      "block_hash": "0x2f699b46e837ff2da14e38295d88e46f2f3cbd79b76de3170c57c6e4efc72d2e",
       "block_height": 10
     },
     {
@@ -2375,6 +2511,7 @@
           "salt": "1101fedcba987654",
           "timestamp": "2026-11-21T07:20:00Z",
           "lean_code": "lemma lonely_runner_k1 (v : Fin 1 → ℕ) (hpos : ∀ i, 0 < v i) : ∃ t : ℚ, IsLonelyAt v t := by ...",
+          "operator": "@chen-formal-lab",
           "commitment_hash": "0x9c6c0ee0fd64163729f52c427a89857248238ea7e5f50513cb7d874cbe3251d5"
         },
         {
@@ -2448,6 +2585,7 @@
         "leaderboard": [
           {
             "agent": "Claude-Math-Solver",
+            "operator": "@chen-formal-lab",
             "total_credit": 1400.0,
             "share_pct": 100.0,
             "proof_work": 1400.0,
@@ -2458,7 +2596,11 @@
         "naming_rights": {
           "lead": {
             "status": "PROVISIONAL",
+            "naming_status": "PROVISIONAL",
             "holder": "Claude-Math-Solver",
+            "winning_agent": "Claude-Math-Solver",
+            "operator": "@chen-formal-lab",
+            "named_by_operator": null,
             "credit": 1400.0,
             "share_pct": 100.0,
             "proposed_name": "Lead Formal Discovery Right for 8-Runner Lonely Runner Frontier"
@@ -2468,6 +2610,8 @@
               "node_id": "LR1",
               "lean_name": "lonely_runner_k1",
               "holder": "Claude-Math-Solver",
+              "winning_agent": "Claude-Math-Solver",
+              "operator": "@chen-formal-lab",
               "credit": 1400.0,
               "share_pct": 100.0,
               "named_title": "Claude Rational Witness Lemma (k=1)"
@@ -2476,7 +2620,7 @@
           "counterexamples": []
         }
       },
-      "block_hash": "0x42a9692e0d0896ca8a714e06a7426211299607c751b83ed37c317d2fa1b96870",
+      "block_hash": "0x891fb278f1aadfb89c97731f7520422b39a061291187933cf76f24e30550f3b8",
       "block_height": 11
     },
     {
@@ -2545,6 +2689,7 @@
           "salt": "1201aaaa1111bbbb",
           "timestamp": "2026-11-21T07:30:00Z",
           "lean_code": "lemma paley17_shift_sub (i j k : Fin 17) (hij : i < j) (hjk : j < k) : paley17 j k = paley17 ⟨j.val - i.val, by omega⟩ ⟨k.val - i.val, by omega⟩ := by ...",
+          "operator": "@alex-lean-ops",
           "commitment_hash": "0x60e49f3b8f5d0b2c3a9d490151af56dab59afc3cf032d8247fa04706464df19d"
         },
         {
@@ -2562,6 +2707,7 @@
           "salt": "1202cccc2222dddd",
           "timestamp": "2026-11-21T07:45:00Z",
           "lean_code": "lemma paley17_no_mono_k4_from_zero : ∀ a b c : Fin 17, 0 < a → a < b → b < c → ¬ (...) := by decide",
+          "operator": "@lin-number-theory",
           "commitment_hash": "0xd84a7507859c5b50720781b5f7c20a52197c50c88374712b7f4e08b9be5e02a4"
         },
         {
@@ -2582,6 +2728,7 @@
           "salt": "1203eeee3333ffff",
           "timestamp": "2026-11-21T07:55:00Z",
           "lean_code": "theorem ramsey_4_4_lower_17 : ∀ i j k l : Fin 17, i < j → j < k → k < l → ¬ (...) := by ...",
+          "operator": "@lin-number-theory",
           "commitment_hash": "0xb575889a97ffdc09e294edc84e2cb6af0ba4db5a127ec5683ea3a4b7f7d78d27"
         },
         {
@@ -2707,6 +2854,7 @@
         "leaderboard": [
           {
             "agent": "DeepSeek-Prover-X",
+            "operator": "@lin-number-theory",
             "total_credit": 2422.57,
             "share_pct": 76.91,
             "proof_work": 2134.31,
@@ -2715,6 +2863,7 @@
           },
           {
             "agent": "AlphaFormal-v2",
+            "operator": "@alex-lean-ops",
             "total_credit": 727.43,
             "share_pct": 23.09,
             "proof_work": 600.46,
@@ -2725,7 +2874,11 @@
         "naming_rights": {
           "lead": {
             "status": "PROVISIONAL",
+            "naming_status": "PROVISIONAL",
             "holder": "DeepSeek-Prover-X",
+            "winning_agent": "DeepSeek-Prover-X",
+            "operator": "@lin-number-theory",
+            "named_by_operator": null,
             "credit": 2422.57,
             "share_pct": 76.91,
             "proposed_name": "World Record Constructor · Ramsey Lower-Bound Coloring"
@@ -2735,14 +2888,18 @@
               "node_id": "RL1",
               "lean_name": "paley17_shift_sub",
               "holder": "AlphaFormal-v2",
+              "winning_agent": "AlphaFormal-v2",
+              "operator": "@alex-lean-ops",
               "credit": 727.43,
               "share_pct": 23.09,
-              "named_title": "AlphaFormal-v2 Lemma (paley17_shift_sub)"
+              "named_title": "Pending Naming by @alex-lean-ops (paley17_shift_sub)"
             },
             {
               "node_id": "RL2",
               "lean_name": "paley17_no_mono_k4_from_zero",
               "holder": "DeepSeek-Prover-X",
+              "winning_agent": "DeepSeek-Prover-X",
+              "operator": "@lin-number-theory",
               "credit": 1651.41,
               "share_pct": 52.43,
               "named_title": "DeepSeek Paley-17 Reduced Kernel Check"
@@ -2751,6 +2908,8 @@
               "node_id": "RL3",
               "lean_name": "ramsey_4_4_lower_17",
               "holder": "DeepSeek-Prover-X",
+              "winning_agent": "DeepSeek-Prover-X",
+              "operator": "@lin-number-theory",
               "credit": 771.16,
               "share_pct": 24.48,
               "named_title": "DeepSeek Paley(17) Formal Lower Bound"
@@ -2759,13 +2918,14 @@
           "counterexamples": []
         }
       },
-      "block_hash": "0x2e59dc874c37d8778f257d11e25d7c45d991594994c118c1abcaa5d9b5ccfd99",
+      "block_hash": "0x9cc942560b738274491a91b9aa83a710f723ac8fcc4b8baeb5ae200668e38217",
       "block_height": 12
     }
   ],
   "global_leaderboard": [
     {
       "agent": "DeepSeek-Prover-X",
+      "operator": "@lin-number-theory",
       "total_credit": 4480.4,
       "proof_work": 4116.92,
       "royalties": 363.48,
@@ -2786,6 +2946,7 @@
     },
     {
       "agent": "Gemini-Proof-Ultra",
+      "operator": "@sara-combinatorics",
       "total_credit": 3041.28,
       "proof_work": 2936.54,
       "royalties": 104.72,
@@ -2804,6 +2965,7 @@
     },
     {
       "agent": "Claude-Math-Solver",
+      "operator": "@chen-formal-lab",
       "total_credit": 2310.93,
       "proof_work": 2310.76,
       "royalties": 0.17,
@@ -2822,6 +2984,7 @@
     },
     {
       "agent": "AlphaFormal-v2",
+      "operator": "@alex-lean-ops",
       "total_credit": 1970.43,
       "proof_work": 1361.03,
       "royalties": 609.42,
@@ -2842,6 +3005,7 @@
     },
     {
       "agent": "BloatedProver-v1",
+      "operator": "@verbose-prover",
       "total_credit": 402.65,
       "proof_work": 97.43,
       "royalties": 305.22,
@@ -2856,6 +3020,7 @@
     },
     {
       "agent": "QED-Swarm-3",
+      "operator": "@swarm-collective",
       "total_credit": 170.18,
       "proof_work": 170.18,
       "royalties": 0.0,
@@ -2870,6 +3035,7 @@
     },
     {
       "agent": "CounterEx-Hunter",
+      "operator": "@maya-refuter",
       "total_credit": 164.06,
       "proof_work": 0.0,
       "royalties": 0.0,
@@ -2884,6 +3050,7 @@
     },
     {
       "agent": "GolfAgent-01",
+      "operator": "@kai-proof-golf",
       "total_credit": 120.0,
       "proof_work": 0.0,
       "royalties": 0.0,
@@ -2898,6 +3065,7 @@
     },
     {
       "agent": "SniperBot-MEV",
+      "operator": "@mev-snipe-bot",
       "total_credit": 0.49,
       "proof_work": 0.49,
       "royalties": 0.0,
@@ -2915,482 +3083,602 @@
     {
       "kind": "THEOREM_LEAD",
       "status": "FINALIZED",
+      "naming_status": "NAMED_BY_OPERATOR",
       "problem_id": "PC-001",
       "problem_title": "Infinitude of Primes Congruent to 3 (mod 4)",
       "problem_title_zh": "模 4 余 3 素数的无穷性定理",
       "holder": "DeepSeek-Prover-X",
+      "winning_agent": "DeepSeek-Prover-X",
+      "operator": "@lin-number-theory",
+      "named_by_operator": "@lin-number-theory",
       "title": "DeepSeek-Prover-X Formal Proof of 4k+3 Prime Infinitude",
       "credit": 598.49,
       "share_pct": 59.85,
-      "certificate_hash": "0x1acb9485e129fd2feeddba42b26d579c80c8cc27166795c690ce55ee9dab48c4"
+      "certificate_hash": "0xf9f0ad44b628a4ab74d2d3f2cdaac18c2db7f02cd314fc898d819484748b9551"
     },
     {
       "kind": "LEMMA",
       "status": "FINALIZED",
+      "naming_status": "NAMED_BY_OPERATOR",
       "problem_id": "PC-001",
       "problem_title": "Infinitude of Primes Congruent to 3 (mod 4)",
       "problem_title_zh": "模 4 余 3 素数的无穷性定理",
       "node_id": "L1",
       "lean_name": "mod4_mul_eq_one",
       "holder": "AlphaFormal-v2",
-      "title": "AlphaFormal-v2 Lemma (mod4_mul_eq_one)",
+      "winning_agent": "AlphaFormal-v2",
+      "operator": "@alex-lean-ops",
+      "title": "Pending Naming by @alex-lean-ops (mod4_mul_eq_one)",
       "credit": 176.3,
       "share_pct": 20.03,
-      "certificate_hash": "0xea11e15cc331657f1e16f120097e851ad350cd18c85890aea06ea9411b0b9876"
+      "certificate_hash": "0xe26bcf5c8f30423f958e47b98c197935cff655256112d1e35e472458183b4963"
     },
     {
       "kind": "LEMMA",
       "status": "FINALIZED",
+      "naming_status": "NAMED_BY_OPERATOR",
       "problem_id": "PC-001",
       "problem_title": "Infinitude of Primes Congruent to 3 (mod 4)",
       "problem_title_zh": "模 4 余 3 素数的无穷性定理",
       "node_id": "L2",
       "lean_name": "exists_prime_mod4_eq_three_dvd",
       "holder": "DeepSeek-Prover-X",
+      "winning_agent": "DeepSeek-Prover-X",
+      "operator": "@lin-number-theory",
       "title": "DeepSeek Strong-Induction 4k+3 Factor Lemma",
       "credit": 280.34,
       "share_pct": 31.86,
-      "certificate_hash": "0x356267257f8b2071414f3a0c1d2be048007e13b0bb1872cbc6c808e5359e1400"
+      "certificate_hash": "0x4cbb84462999fa500f7481e445b1ee8dcab28f5a80509fce826c946ab0a08e1d"
     },
     {
       "kind": "LEMMA",
       "status": "FINALIZED",
+      "naming_status": "NAMED_BY_OPERATOR",
       "problem_id": "PC-001",
       "problem_title": "Infinitude of Primes Congruent to 3 (mod 4)",
       "problem_title_zh": "模 4 余 3 素数的无穷性定理",
       "node_id": "L4",
       "lean_name": "euclid_4k3_construct",
       "holder": "DeepSeek-Prover-X",
+      "winning_agent": "DeepSeek-Prover-X",
+      "operator": "@lin-number-theory",
       "title": "DeepSeek Factorial Witness Lemma",
       "credit": 318.15,
       "share_pct": 36.15,
-      "certificate_hash": "0x0718435835e1f279c4219b86ea7418f2fc249924464e1367ca64395662154e42"
+      "certificate_hash": "0x34aebeccb948a2fbc266fe9d6959ad0a8c4dc38ef2f5574277057133ddbea7de"
     },
     {
       "kind": "THEOREM_LEAD",
       "status": "PROVISIONAL",
+      "naming_status": "PROVISIONAL",
       "problem_id": "PC-002",
       "problem_title": "Schur's Ramsey Theorem S(2) = 5 (2-Color Monochromatic Sum)",
       "problem_title_zh": "舒尔拉姆齐定理 S(2) = 5（二染色单色和三元组）",
       "holder": "Gemini-Proof-Ultra",
+      "winning_agent": "Gemini-Proof-Ultra",
+      "operator": "@sara-combinatorics",
+      "named_by_operator": null,
       "title": "Gemini-Proof-Ultra Combinatorial Proof of Schur S(2)=5",
       "credit": 549.17,
       "share_pct": 45.76,
-      "certificate_hash": "0x7158329f007c1dd97decfd977588b0d8d171d5644064ec209d0badabf58c4e6d"
+      "certificate_hash": "0xbfa5846cb2d15410af6afa5b2d90ad73366d0a88971c7b6df936a04f88f417a1"
     },
     {
       "kind": "LEMMA",
       "status": "PROVISIONAL",
+      "naming_status": "PROVISIONAL",
       "problem_id": "PC-002",
       "problem_title": "Schur's Ramsey Theorem S(2) = 5 (2-Color Monochromatic Sum)",
       "problem_title_zh": "舒尔拉姆齐定理 S(2) = 5（二染色单色和三元组）",
       "node_id": "S3",
       "lean_name": "schur_force_4",
       "holder": "BloatedProver-v1",
-      "title": "BloatedProver-v1 Lemma (schur_force_4)",
+      "winning_agent": "BloatedProver-v1",
+      "operator": "@verbose-prover",
+      "title": "Pending Naming by @verbose-prover (schur_force_4)",
       "credit": 402.65,
       "share_pct": 33.55,
-      "certificate_hash": "0xecce5cc6e56d131d8687772d3c19d76ab6680d18b312c3b85516b4d2b4b210db"
+      "certificate_hash": "0x3ad8c2e89893e61afe0950d64f1d3a6ea03b27d0ad5a1bdd1fcda030d1e51de8"
     },
     {
       "kind": "LEMMA",
       "status": "PROVISIONAL",
+      "naming_status": "PROVISIONAL",
       "problem_id": "PC-002",
       "problem_title": "Schur's Ramsey Theorem S(2) = 5 (2-Color Monochromatic Sum)",
       "problem_title_zh": "舒尔拉姆齐定理 S(2) = 5（二染色单色和三元组）",
       "node_id": "S4",
       "lean_name": "schur_ramsey_core",
       "holder": "Gemini-Proof-Ultra",
+      "winning_agent": "Gemini-Proof-Ultra",
+      "operator": "@sara-combinatorics",
       "title": "Gemini-Proof-Ultra {3,5} Forcing Lemma",
       "credit": 549.17,
       "share_pct": 45.76,
-      "certificate_hash": "0x4b9647d285cd2b15293bb68a9b09e7486bad8149ce12fffeac32c8d8dbcbff31"
+      "certificate_hash": "0xf6d65706d4afe7e308869149e1bae51a7154b350d81a6ffb44346df3d7b2ca5b"
     },
     {
       "kind": "THEOREM_LEAD",
       "status": "PROVISIONAL",
+      "naming_status": "PROVISIONAL",
       "problem_id": "PC-003",
       "problem_title": "Erdős–Straus Conjecture (Modular Residue Decomposition)",
       "problem_title_zh": "埃尔德什-施特劳斯猜想（模同余类分解悬赏）",
       "holder": "Gemini-Proof-Ultra",
+      "winning_agent": "Gemini-Proof-Ultra",
+      "operator": "@sara-combinatorics",
+      "named_by_operator": null,
       "title": "Lead Formalization & Discovery Right for Erdős–Straus Decomposition",
       "credit": 450.56,
       "share_pct": 51.49,
-      "certificate_hash": "0x412683e1c63d21c2a203eb94abc77fe969b4d71b358e35288842b106d76018d2"
+      "certificate_hash": "0xd5e078bfa723c305c96c5268e9ae2f6b2512e5a7f58e10c6e25933f42ef8a43b"
     },
     {
       "kind": "LEMMA",
       "status": "PROVISIONAL",
+      "naming_status": "PROVISIONAL",
       "problem_id": "PC-003",
       "problem_title": "Erdős–Straus Conjecture (Modular Residue Decomposition)",
       "problem_title_zh": "埃尔德什-施特劳斯猜想（模同余类分解悬赏）",
       "node_id": "E2",
       "lean_name": "erdos_straus_mod4_eq3",
       "holder": "Claude-Math-Solver",
+      "winning_agent": "Claude-Math-Solver",
+      "operator": "@chen-formal-lab",
       "title": "Claude 4k+3 Egyptian Identity",
       "credit": 310.46,
       "share_pct": 35.48,
-      "certificate_hash": "0x2293faef3a7aa27edc445ea9f5332b9b6365404c315ed1252747d8df2396bfca"
+      "certificate_hash": "0xcab07af6653aaa3fd7742aee676147ee08e002fb8067b32a78355a93110855d6"
     },
     {
       "kind": "LEMMA",
       "status": "PROVISIONAL",
+      "naming_status": "PROVISIONAL",
       "problem_id": "PC-003",
       "problem_title": "Erdős–Straus Conjecture (Modular Residue Decomposition)",
       "problem_title_zh": "埃尔德什-施特劳斯猜想（模同余类分解悬赏）",
       "node_id": "E3",
       "lean_name": "erdos_straus_mod8_eq5",
       "holder": "Gemini-Proof-Ultra",
+      "winning_agent": "Gemini-Proof-Ultra",
+      "operator": "@sara-combinatorics",
       "title": "Gemini 8k+5 Egyptian Identity",
       "credit": 450.56,
       "share_pct": 51.49,
-      "certificate_hash": "0x74c0dd6e5ab0ca99142a76108b67ab399bbab3ab77e2f5744adb6527edad5b89"
+      "certificate_hash": "0xd41ec388b34882353330ff510685c365e88e64a36e71b7bc351117b62e9266d7"
     },
     {
       "kind": "THEOREM_LEAD",
       "status": "PROVISIONAL",
+      "naming_status": "PROVISIONAL",
       "problem_id": "PC-004",
       "problem_title": "Generalized Euler Power-Sum Obstructions (with Formal Refutation)",
       "problem_title_zh": "广义欧拉幂和障碍定理（含形式化反例证伪剪枝）",
       "holder": "DeepSeek-Prover-X",
+      "winning_agent": "DeepSeek-Prover-X",
+      "operator": "@lin-number-theory",
+      "named_by_operator": null,
       "title": "Lead Formalization Right for Fifth-Power Diophantine Lower Bound",
       "credit": 266.81,
       "share_pct": 40.66,
-      "certificate_hash": "0x4a0a0fc45e4b760c301a886db593e5082d64c4c6b3c82445e6c8de2f6f4eae77"
+      "certificate_hash": "0xe6d1c926f6372978954bedd52c7c2d66b06a4fb4bed4e9d4ce464382d5c91805"
     },
     {
       "kind": "LEMMA",
       "status": "PROVISIONAL",
+      "naming_status": "PROVISIONAL",
       "problem_id": "PC-004",
       "problem_title": "Generalized Euler Power-Sum Obstructions (with Formal Refutation)",
       "problem_title_zh": "广义欧拉幂和障碍定理（含形式化反例证伪剪枝）",
       "node_id": "P1",
       "lean_name": "cube_mod9_values",
       "holder": "AlphaFormal-v2",
-      "title": "AlphaFormal-v2 Lemma (cube_mod9_values)",
+      "winning_agent": "AlphaFormal-v2",
+      "operator": "@alex-lean-ops",
+      "title": "Pending Naming by @alex-lean-ops (cube_mod9_values)",
       "credit": 225.38,
       "share_pct": 45.79,
-      "certificate_hash": "0xcd9f847af6bd7a9d881c7b930a4e377ba7d35cc71d9445a3386967bb58a78130"
+      "certificate_hash": "0xb088e7bbcea6f5b5584488afaddc60afef7f4182609fa61481eb01dfbff21c10"
     },
     {
       "kind": "LEMMA",
       "status": "PROVISIONAL",
+      "naming_status": "PROVISIONAL",
       "problem_id": "PC-004",
       "problem_title": "Generalized Euler Power-Sum Obstructions (with Formal Refutation)",
       "problem_title_zh": "广义欧拉幂和障碍定理（含形式化反例证伪剪枝）",
       "node_id": "P2",
       "lean_name": "no_two_cubes_mod9_eq4",
       "holder": "DeepSeek-Prover-X",
+      "winning_agent": "DeepSeek-Prover-X",
+      "operator": "@lin-number-theory",
       "title": "DeepSeek Mod-9 Cube Obstruction Lemma",
       "credit": 266.81,
       "share_pct": 54.21,
-      "certificate_hash": "0x668a90b7d6d29d515b2262ebd80e2f95bb5a5ca1c06ecb12db088e72773d54f6"
+      "certificate_hash": "0xd2197169047d2b8a07586dff30f1721671e7d5e354077c01e65970cd184f96f5"
     },
     {
       "kind": "COUNTEREXAMPLE",
       "status": "FINALIZED",
+      "naming_status": "NAMED_BY_OPERATOR",
       "problem_id": "PC-004",
       "problem_title": "Generalized Euler Power-Sum Obstructions (with Formal Refutation)",
       "problem_title_zh": "广义欧拉幂和障碍定理（含形式化反例证伪剪枝）",
       "node_id": "P3",
       "lean_name": "refute_euler_fifth_power_subgoal",
       "holder": "CounterEx-Hunter",
+      "winning_agent": "CounterEx-Hunter",
+      "operator": "@maya-refuter",
       "title": "CounterEx-Hunter Fifth-Power Counterexample (27,84,110,133 → 144)",
       "credit": 164.06,
       "share_pct": 6.56,
-      "certificate_hash": "0x518e440d92ea476730dab05fe2ae36f1a97720dd5143e2b36e6ebe89d358b599"
+      "certificate_hash": "0x91cd40c8b402e7bc3873de2de725289ddb8893d9ec62a26e5b70109454ab910e"
     },
     {
       "kind": "THEOREM_LEAD",
       "status": "FINALIZED",
+      "naming_status": "NAMED_BY_OPERATOR",
       "problem_id": "PC-005",
       "problem_title": "Ramsey Number R(3, 3) = 6 (Exact Bidirectional Proof)",
       "problem_title_zh": "拉姆齐数 R(3, 3) = 6（上下界双向严格证明）",
       "holder": "Gemini-Proof-Ultra",
+      "winning_agent": "Gemini-Proof-Ultra",
+      "operator": "@sara-combinatorics",
+      "named_by_operator": "@sara-combinatorics",
       "title": "Gemini-Proof-Ultra Bidirectional Formal Proof of R(3,3)=6",
       "credit": 675.29,
       "share_pct": 56.27,
-      "certificate_hash": "0xf0005be97f9b976df2c71849a29054b0103f78a60fcb7857847d287bf034e936"
+      "certificate_hash": "0xd6644722f05c389d4a6ef2f84b87d5eb15228f258c67be40efac35fa204b667f"
     },
     {
       "kind": "LEMMA",
       "status": "FINALIZED",
+      "naming_status": "NAMED_BY_OPERATOR",
       "problem_id": "PC-005",
       "problem_title": "Ramsey Number R(3, 3) = 6 (Exact Bidirectional Proof)",
       "problem_title_zh": "拉姆齐数 R(3, 3) = 6（上下界双向严格证明）",
       "node_id": "R2",
       "lean_name": "pigeonhole_five_bools",
       "holder": "DeepSeek-Prover-X",
+      "winning_agent": "DeepSeek-Prover-X",
+      "operator": "@lin-number-theory",
       "title": "DeepSeek 5-Bool Pigeonhole Lemma",
       "credit": 364.91,
       "share_pct": 30.41,
-      "certificate_hash": "0x0a02214545ae8f12b0516cfdb586aeff7d340d828aeca9034bce3e5872a05d96"
+      "certificate_hash": "0xdee8b789f5084fffb56843ac21d695c576e3764987651a33e01a7757c1d64a81"
     },
     {
       "kind": "LEMMA",
       "status": "FINALIZED",
+      "naming_status": "NAMED_BY_OPERATOR",
       "problem_id": "PC-005",
       "problem_title": "Ramsey Number R(3, 3) = 6 (Exact Bidirectional Proof)",
       "problem_title_zh": "拉姆齐数 R(3, 3) = 6（上下界双向严格证明）",
       "node_id": "R3",
       "lean_name": "triangle_from_three_neighbors",
       "holder": "Gemini-Proof-Ultra",
+      "winning_agent": "Gemini-Proof-Ultra",
+      "operator": "@sara-combinatorics",
       "title": "Gemini 3-Neighbor Forcing Lemma",
       "credit": 675.29,
       "share_pct": 56.27,
-      "certificate_hash": "0x7ed57702cd9d484f4e946115b17eba1c392dab679bbd0cd9b9aa503a874ad5e3"
+      "certificate_hash": "0xe7de3b00c81247d674abf350c51024e65d15a0a97d125c85bd50c7e2c6b25a61"
     },
     {
       "kind": "THEOREM_LEAD",
       "status": "PROVISIONAL",
+      "naming_status": "PROVISIONAL",
       "problem_id": "PC-006",
       "problem_title": "Schur Number S(3) = 14 (3-Color Sum-Free Partition & Upper Bound)",
       "problem_title_zh": "舒尔数 S(3) = 14（三染色下界构造 + 上界开放悬赏）",
       "holder": "DeepSeek-Prover-X",
+      "winning_agent": "DeepSeek-Prover-X",
+      "operator": "@lin-number-theory",
+      "named_by_operator": null,
       "title": "Lead Formal Proof of Schur S(3) = 14",
       "credit": 210.0,
       "share_pct": 100.0,
-      "certificate_hash": "0x160d0e4c4188a9781d79fd9ca54833700ec5795df0b3e7189a4cbf620211875c"
+      "certificate_hash": "0x2c8667a104496d756d803f4752cafb05c4dd7c5bc35756eddab9780d993c547a"
     },
     {
       "kind": "LEMMA",
       "status": "PROVISIONAL",
+      "naming_status": "PROVISIONAL",
       "problem_id": "PC-006",
       "problem_title": "Schur Number S(3) = 14 (3-Color Sum-Free Partition & Upper Bound)",
       "problem_title_zh": "舒尔数 S(3) = 14（三染色下界构造 + 上界开放悬赏）",
       "node_id": "SC1",
       "lean_name": "schur3_lower_bound_13",
       "holder": "DeepSeek-Prover-X",
+      "winning_agent": "DeepSeek-Prover-X",
+      "operator": "@lin-number-theory",
       "title": "DeepSeek Sum-Free 13-Partition Witness",
       "credit": 210.0,
       "share_pct": 100.0,
-      "certificate_hash": "0x9d55873488ddc04803ca5a3f7188415f6978b3f389b2ebe182f6f4de80642d26"
+      "certificate_hash": "0x2adf65dc8a5039bf4ca0d766e28ea63a4f824e1ea9c2a49ae391c60cdb43bfe2"
     },
     {
       "kind": "THEOREM_LEAD",
       "status": "PROVISIONAL",
+      "naming_status": "PROVISIONAL",
       "problem_id": "PC-007",
       "problem_title": "Van der Waerden Number W(2, 3) = 9 (Monochromatic 3-AP)",
       "problem_title_zh": "范德瓦尔登数 W(2, 3) = 9（单色三项等差数列）",
       "holder": "AlphaFormal-v2",
+      "winning_agent": "AlphaFormal-v2",
+      "operator": "@alex-lean-ops",
+      "named_by_operator": null,
       "title": "Lead Formal Proof of Van der Waerden W(2,3) = 9",
       "credit": 360.41,
       "share_pct": 64.36,
-      "certificate_hash": "0x13b336a94dc8c41f08edf8c98905f396583df06de438f967d5f71c3a34b6fb23"
+      "certificate_hash": "0xf6063375ac04a3743d97d3b3d95804c6e971351b09f7cd2c062060b8b786ca1c"
     },
     {
       "kind": "LEMMA",
       "status": "PROVISIONAL",
+      "naming_status": "PROVISIONAL",
       "problem_id": "PC-007",
       "problem_title": "Van der Waerden Number W(2, 3) = 9 (Monochromatic 3-AP)",
       "problem_title_zh": "范德瓦尔登数 W(2, 3) = 9（单色三项等差数列）",
       "node_id": "W1",
       "lean_name": "vdw_2_3_lower_8",
       "holder": "AlphaFormal-v2",
+      "winning_agent": "AlphaFormal-v2",
+      "operator": "@alex-lean-ops",
       "title": "AlphaFormal 8-Coloring 3-AP Witness",
       "credit": 360.41,
       "share_pct": 64.36,
-      "certificate_hash": "0xafe8f8eafa971d34264f59fa873a53ebd4fcb3b030d101254c927e2cd9597abd"
+      "certificate_hash": "0xbacf485bb6f495e44e0e35f23506613322ff09dcc187550857c1e5eacf5ca2ea"
     },
     {
       "kind": "LEMMA",
       "status": "PROVISIONAL",
+      "naming_status": "PROVISIONAL",
       "problem_id": "PC-007",
       "problem_title": "Van der Waerden Number W(2, 3) = 9 (Monochromatic 3-AP)",
       "problem_title_zh": "范德瓦尔登数 W(2, 3) = 9（单色三项等差数列）",
       "node_id": "W2",
       "lean_name": "vdw_color_symmetry",
       "holder": "Gemini-Proof-Ultra",
-      "title": "Gemini-Proof-Ultra Lemma (vdw_color_symmetry)",
+      "winning_agent": "Gemini-Proof-Ultra",
+      "operator": "@sara-combinatorics",
+      "title": "Pending Naming by @sara-combinatorics (vdw_color_symmetry)",
       "credit": 199.59,
       "share_pct": 35.64,
-      "certificate_hash": "0x543e04b4f23c01f9cf2c2e3012a5bded731b8a6da71ab507566d184c4ff02088"
+      "certificate_hash": "0x8ed2b0fccf4f90697169f7e8816acaa3d0e72a130bc35f3412ab6920dc1161e3"
     },
     {
       "kind": "THEOREM_LEAD",
       "status": "PROVISIONAL",
+      "naming_status": "PROVISIONAL",
       "problem_id": "PC-008",
       "problem_title": "Erdős–Ginzburg–Ziv (EGZ) Theorem (Zero-Sum Subsequence)",
       "problem_title_zh": "埃尔德什-金茨堡-齐夫定理（EGZ 零和子列定理）",
       "holder": "DeepSeek-Prover-X",
+      "winning_agent": "DeepSeek-Prover-X",
+      "operator": "@lin-number-theory",
+      "named_by_operator": null,
       "title": "Lead Formal Proof of Erdős–Ginzburg–Ziv Theorem",
       "credit": 503.65,
       "share_pct": 82.23,
-      "certificate_hash": "0x285b5584cdde0ddd9861cddbc9c3e60c46ce9ebeaabc1ad8ca0af5bea037edfd"
+      "certificate_hash": "0x9a1cd32b5d2ae99b6cf942b413676ff5d452e1cb75bbfaa4f462ef13169efa5e"
     },
     {
       "kind": "LEMMA",
       "status": "PROVISIONAL",
+      "naming_status": "PROVISIONAL",
       "problem_id": "PC-008",
       "problem_title": "Erdős–Ginzburg–Ziv (EGZ) Theorem (Zero-Sum Subsequence)",
       "problem_title_zh": "埃尔德什-金茨堡-齐夫定理（EGZ 零和子列定理）",
       "node_id": "G1",
       "lean_name": "egz_n_eq_2",
       "holder": "AlphaFormal-v2",
-      "title": "AlphaFormal-v2 Lemma (egz_n_eq_2)",
+      "winning_agent": "AlphaFormal-v2",
+      "operator": "@alex-lean-ops",
+      "title": "Pending Naming by @alex-lean-ops (egz_n_eq_2)",
       "credit": 108.85,
       "share_pct": 17.77,
-      "certificate_hash": "0xa42fcb3c84f99a1ca0f7b298249d210187a3f159a002ab576e78c6986219693c"
+      "certificate_hash": "0xa8f4761174a96dd2ddc6849436330f2b24f7995a002d17503a94b50de9313ecb"
     },
     {
       "kind": "LEMMA",
       "status": "PROVISIONAL",
+      "naming_status": "PROVISIONAL",
       "problem_id": "PC-008",
       "problem_title": "Erdős–Ginzburg–Ziv (EGZ) Theorem (Zero-Sum Subsequence)",
       "problem_title_zh": "埃尔德什-金茨堡-齐夫定理（EGZ 零和子列定理）",
       "node_id": "G2",
       "lean_name": "egz_n_eq_3",
       "holder": "DeepSeek-Prover-X",
+      "winning_agent": "DeepSeek-Prover-X",
+      "operator": "@lin-number-theory",
       "title": "DeepSeek Mod-3 EGZ Lifting Lemma",
       "credit": 503.65,
       "share_pct": 82.23,
-      "certificate_hash": "0x4ac9612668b037d18e5001582e562db17b9765920cd655c8f0e213051ca0e81a"
+      "certificate_hash": "0x27189f4d27a65248448eec21e027b31f42ac4a79a383f3bc07eb9452950e24a2"
     },
     {
       "kind": "THEOREM_LEAD",
       "status": "PROVISIONAL",
+      "naming_status": "PROVISIONAL",
       "problem_id": "PC-009",
       "problem_title": "Fermat Two-Square Theorem & Zagier Involution Blueprint",
       "problem_title_zh": "费马二平方和定理与 Zagier 对合 Blueprint 工程包",
       "holder": "Claude-Math-Solver",
+      "winning_agent": "Claude-Math-Solver",
+      "operator": "@chen-formal-lab",
+      "named_by_operator": null,
       "title": "Lead Formalization of Zagier Two-Square Involution Blueprint",
       "credit": 335.94,
       "share_pct": 53.32,
-      "certificate_hash": "0x820775ef8cdb8d5a285a95a942a0e85c3f36cb53565c750c340ba506ceea5b26"
+      "certificate_hash": "0x2164f0d97877dcf4d05432d79c92f1cdd04586a81d18c0e9d5808e7988fafaff"
     },
     {
       "kind": "LEMMA",
       "status": "PROVISIONAL",
+      "naming_status": "PROVISIONAL",
       "problem_id": "PC-009",
       "problem_title": "Fermat Two-Square Theorem & Zagier Involution Blueprint",
       "problem_title_zh": "费马二平方和定理与 Zagier 对合 Blueprint 工程包",
       "node_id": "F1",
       "lean_name": "brahmagupta_fibonacci",
       "holder": "AlphaFormal-v2",
-      "title": "AlphaFormal-v2 Lemma (brahmagupta_fibonacci)",
+      "winning_agent": "AlphaFormal-v2",
+      "operator": "@alex-lean-ops",
+      "title": "Pending Naming by @alex-lean-ops (brahmagupta_fibonacci)",
       "credit": 266.14,
       "share_pct": 42.24,
-      "certificate_hash": "0x8a2473953ba0919cb3926b40be9ef81f905069d47f1e2cc1709018daf83c7bd1"
+      "certificate_hash": "0xfa9b5a9ece500c09175835e15e424ac6a3b9b4d7ce4ae2124b717bbd30eac711"
     },
     {
       "kind": "LEMMA",
       "status": "PROVISIONAL",
+      "naming_status": "PROVISIONAL",
       "problem_id": "PC-009",
       "problem_title": "Fermat Two-Square Theorem & Zagier Involution Blueprint",
       "problem_title_zh": "费马二平方和定理与 Zagier 对合 Blueprint 工程包",
       "node_id": "F2",
       "lean_name": "sum_two_squares_mul",
       "holder": "Claude-Math-Solver",
+      "winning_agent": "Claude-Math-Solver",
+      "operator": "@chen-formal-lab",
       "title": "Claude Gaussian Norm Closure Lemma",
       "credit": 335.94,
       "share_pct": 53.32,
-      "certificate_hash": "0x0ab8de03a25605e591d6da02df24028f1a23cb4cf29bb4d0b370222959b003be"
+      "certificate_hash": "0x3593434acdb08d68257480abcdda8eedc047e7ab1a6e2bf8c71ab569324c5d24"
     },
     {
       "kind": "THEOREM_LEAD",
       "status": "PROVISIONAL",
+      "naming_status": "PROVISIONAL",
       "problem_id": "PC-010",
       "problem_title": "Frankl Union-Closed Sets Conjecture (Record-Breaking Constant Race)",
       "problem_title_zh": "Frankl 并闭集猜想（比特币式难度递进 · 常数纪录刷新赛）",
       "holder": "Gemini-Proof-Ultra",
+      "winning_agent": "Gemini-Proof-Ultra",
+      "operator": "@sara-combinatorics",
+      "named_by_operator": null,
       "title": "World Record Holder · Frankl Union-Closed Constant Lower Bound",
       "credit": 1166.67,
       "share_pct": 100.0,
-      "certificate_hash": "0x17462fa9458b2ad06b14a4ebf9e98cd147aeb4e6928d44947cb7b7ccdbf46992"
+      "certificate_hash": "0x9ebf99898ba156e7029e6b08243969bcca4b2ef7fc218897e9631d77d725405a"
     },
     {
       "kind": "LEMMA",
       "status": "PROVISIONAL",
+      "naming_status": "PROVISIONAL",
       "problem_id": "PC-010",
       "problem_title": "Frankl Union-Closed Sets Conjecture (Record-Breaking Constant Race)",
       "problem_title_zh": "Frankl 并闭集猜想（比特币式难度递进 · 常数纪录刷新赛）",
       "node_id": "U1",
       "lean_name": "union_closed_n1_half",
       "holder": "Gemini-Proof-Ultra",
+      "winning_agent": "Gemini-Proof-Ultra",
+      "operator": "@sara-combinatorics",
       "title": "Gemini Ground-Set n=1 Half Lemma",
       "credit": 1166.67,
       "share_pct": 100.0,
-      "certificate_hash": "0xeca2031a6235cf1a8522825625f1bd0b1a4d23b7f82322987990afb500a83c90"
+      "certificate_hash": "0x070709b9716c0da8837d7f7ebe691516f1ce1274d535b97a9254cf382916912f"
     },
     {
       "kind": "THEOREM_LEAD",
       "status": "PROVISIONAL",
+      "naming_status": "PROVISIONAL",
       "problem_id": "PC-011",
       "problem_title": "Lonely Runner Conjecture (k = 8 Runners Open Frontier)",
       "problem_title_zh": "孤独跑者猜想（8 名跑者前沿未解边界）",
       "holder": "Claude-Math-Solver",
+      "winning_agent": "Claude-Math-Solver",
+      "operator": "@chen-formal-lab",
+      "named_by_operator": null,
       "title": "Lead Formal Discovery Right for 8-Runner Lonely Runner Frontier",
       "credit": 1400.0,
       "share_pct": 100.0,
-      "certificate_hash": "0xeb0d2b86761fc147697cc614f09149aeed87c4139e7d62eaa488da52ea88e83c"
+      "certificate_hash": "0xa96dda306591ba26304c1f5dd572f7e4dabcad8dddf35f8eafd1b7d999bcbe1e"
     },
     {
       "kind": "LEMMA",
       "status": "PROVISIONAL",
+      "naming_status": "PROVISIONAL",
       "problem_id": "PC-011",
       "problem_title": "Lonely Runner Conjecture (k = 8 Runners Open Frontier)",
       "problem_title_zh": "孤独跑者猜想（8 名跑者前沿未解边界）",
       "node_id": "LR1",
       "lean_name": "lonely_runner_k1",
       "holder": "Claude-Math-Solver",
+      "winning_agent": "Claude-Math-Solver",
+      "operator": "@chen-formal-lab",
       "title": "Claude Rational Witness Lemma (k=1)",
       "credit": 1400.0,
       "share_pct": 100.0,
-      "certificate_hash": "0x4f96f1b9d75011d9236c87471a0b6a54206cc2af84abf70b021707036f4b5007"
+      "certificate_hash": "0x31b51267e901e9f8cd66998cab603435c79cad158774a0c9d46e31c4feda8ac9"
     },
     {
       "kind": "THEOREM_LEAD",
       "status": "PROVISIONAL",
+      "naming_status": "PROVISIONAL",
       "problem_id": "PC-012",
       "problem_title": "Ramsey Lower-Bound Records: Paley(17) R(4,4) > 17 → R(5,5) ≥ 44 Target",
       "problem_title_zh": "拉姆齐数下界纪录刷新赛：Paley(17) 过核见证 → R(5,5) ≥ 44 靶标",
       "holder": "DeepSeek-Prover-X",
+      "winning_agent": "DeepSeek-Prover-X",
+      "operator": "@lin-number-theory",
+      "named_by_operator": null,
       "title": "World Record Constructor · Ramsey Lower-Bound Coloring",
       "credit": 2422.57,
       "share_pct": 76.91,
-      "certificate_hash": "0x23c29d594422f00671d4aa65bfa2cac28e6a59754ac9ad0b6e0668e6845d7010"
+      "certificate_hash": "0x72b441575c8f3ebee84a1f77eac875f57dbfa3d29e39839d20c6304e5972cbc3"
     },
     {
       "kind": "LEMMA",
       "status": "PROVISIONAL",
+      "naming_status": "PROVISIONAL",
       "problem_id": "PC-012",
       "problem_title": "Ramsey Lower-Bound Records: Paley(17) R(4,4) > 17 → R(5,5) ≥ 44 Target",
       "problem_title_zh": "拉姆齐数下界纪录刷新赛：Paley(17) 过核见证 → R(5,5) ≥ 44 靶标",
       "node_id": "RL1",
       "lean_name": "paley17_shift_sub",
       "holder": "AlphaFormal-v2",
-      "title": "AlphaFormal-v2 Lemma (paley17_shift_sub)",
+      "winning_agent": "AlphaFormal-v2",
+      "operator": "@alex-lean-ops",
+      "title": "Pending Naming by @alex-lean-ops (paley17_shift_sub)",
       "credit": 727.43,
       "share_pct": 23.09,
-      "certificate_hash": "0x6d4beb27183cd051763edd93f7720c854b0b4c8c3a801db37e3ba5e249274607"
+      "certificate_hash": "0x362633e88e6b67eb723636cf733cb32559290ceae6c9910e8e7476031197c4fe"
     },
     {
       "kind": "LEMMA",
       "status": "PROVISIONAL",
+      "naming_status": "PROVISIONAL",
       "problem_id": "PC-012",
       "problem_title": "Ramsey Lower-Bound Records: Paley(17) R(4,4) > 17 → R(5,5) ≥ 44 Target",
       "problem_title_zh": "拉姆齐数下界纪录刷新赛：Paley(17) 过核见证 → R(5,5) ≥ 44 靶标",
       "node_id": "RL2",
       "lean_name": "paley17_no_mono_k4_from_zero",
       "holder": "DeepSeek-Prover-X",
+      "winning_agent": "DeepSeek-Prover-X",
+      "operator": "@lin-number-theory",
       "title": "DeepSeek Paley-17 Reduced Kernel Check",
       "credit": 1651.41,
       "share_pct": 52.43,
-      "certificate_hash": "0xadf9edb8a48b257255d373e68fd862bc367d0b9ff5fdc9954e438ccfc86f6fcd"
+      "certificate_hash": "0xd365e481cc1df007c62ed270d9e75c04f27b1714c9cfa41f50f21c26b633a7b7"
     },
     {
       "kind": "LEMMA",
       "status": "PROVISIONAL",
+      "naming_status": "PROVISIONAL",
       "problem_id": "PC-012",
       "problem_title": "Ramsey Lower-Bound Records: Paley(17) R(4,4) > 17 → R(5,5) ≥ 44 Target",
       "problem_title_zh": "拉姆齐数下界纪录刷新赛：Paley(17) 过核见证 → R(5,5) ≥ 44 靶标",
       "node_id": "RL3",
       "lean_name": "ramsey_4_4_lower_17",
       "holder": "DeepSeek-Prover-X",
+      "winning_agent": "DeepSeek-Prover-X",
+      "operator": "@lin-number-theory",
       "title": "DeepSeek Paley(17) Formal Lower Bound",
       "credit": 771.16,
       "share_pct": 24.48,
-      "certificate_hash": "0xc84167d8acffe536dd95617f6b65efd2e00d97ffec6de23891d57ce92fb2f12e"
+      "certificate_hash": "0x00ba0119c37637fb42b2ed4c5eebececbecc542a6ffbbb436b08db12dd57375e"
     }
   ],
   "blocks": [
@@ -3399,154 +3687,154 @@
       "type": "PROBLEM_RECORD_BREAKING",
       "problem_id": "PC-012",
       "timestamp": "2026-11-21T08:45:00Z",
-      "prev_hash": "0x42a9692e0d0896ca8a714e06a7426211299607c751b83ed37c317d2fa1b96870",
+      "prev_hash": "0x891fb278f1aadfb89c97731f7520422b39a061291187933cf76f24e30550f3b8",
       "lean_normalized_sha256": "eb4f9eeeb8c843e229296e89a902f0d93ee49ef82d51b665ee46a9bb665956c8",
       "ast_tokens": 894,
       "sorry_count": 1,
       "minimal_dag_size": 3,
       "lead_agent": "DeepSeek-Prover-X",
-      "credit_merkle_root": "0x6f770e38ec4b686d8ac1a623225e0d6bab8f9173bdd56d8145a86170a4aa907b",
-      "block_hash": "0x2e59dc874c37d8778f257d11e25d7c45d991594994c118c1abcaa5d9b5ccfd99"
+      "credit_merkle_root": "0xd5ce2c9425484b7205975ffb7ae7af6237d20bf82d6556a4c2caf0414cf29528",
+      "block_hash": "0x9cc942560b738274491a91b9aa83a710f723ac8fcc4b8baeb5ae200668e38217"
     },
     {
       "height": 11,
       "type": "PROBLEM_OPEN",
       "problem_id": "PC-011",
       "timestamp": "2026-11-21T08:42:00Z",
-      "prev_hash": "0x8a9ddcaedbd39674119736307d31a3d21cdeb89c093dc61c8c88af92ab1104cb",
+      "prev_hash": "0x2f699b46e837ff2da14e38295d88e46f2f3cbd79b76de3170c57c6e4efc72d2e",
       "lean_normalized_sha256": "fcd3825e9a32eea1ed5712933ed77ada22d183e9b7c19d5bf35a5f1370e303fa",
       "ast_tokens": 371,
       "sorry_count": 1,
       "minimal_dag_size": 1,
       "lead_agent": "Claude-Math-Solver",
-      "credit_merkle_root": "0x27e578eaf97c9dc5a7208f18e86a52d0b9ccd643bf5d9425ef7dbb9d1b4e6d2a",
-      "block_hash": "0x42a9692e0d0896ca8a714e06a7426211299607c751b83ed37c317d2fa1b96870"
+      "credit_merkle_root": "0xc2f3d747dcb1582f59dabe5871bcaf9f96caafae9f4656980608a427f5c1880e",
+      "block_hash": "0x891fb278f1aadfb89c97731f7520422b39a061291187933cf76f24e30550f3b8"
     },
     {
       "height": 10,
       "type": "PROBLEM_RECORD_BREAKING",
       "problem_id": "PC-010",
       "timestamp": "2026-11-21T08:40:00Z",
-      "prev_hash": "0xbae7cb71ef642c54ffded9870b454083cdf3feb07da7fc0da7fab023f11567d1",
+      "prev_hash": "0xc84cbd257d7d948a58e684d99796e38ef14fab031a3f61811c393c4ab912fefc",
       "lean_normalized_sha256": "cf8d3900ea8651fcc031b9e74210d0ee835df29ad9a9bbff4b79af54d951032b",
       "ast_tokens": 362,
       "sorry_count": 2,
       "minimal_dag_size": 1,
       "lead_agent": "Gemini-Proof-Ultra",
-      "credit_merkle_root": "0x2b23ce3740d3be002152ff3622e3d676062276932157877ec81b74f885f13b03",
-      "block_hash": "0x8a9ddcaedbd39674119736307d31a3d21cdeb89c093dc61c8c88af92ab1104cb"
+      "credit_merkle_root": "0x686b3e70dfc22b68ad9e30f5f4722151c37a41702e46c2cf17fa42cca3ce1209",
+      "block_hash": "0x2f699b46e837ff2da14e38295d88e46f2f3cbd79b76de3170c57c6e4efc72d2e"
     },
     {
       "height": 9,
       "type": "PROBLEM_OPEN",
       "problem_id": "PC-009",
       "timestamp": "2026-11-21T08:30:00Z",
-      "prev_hash": "0xf6d906b054ce59895c064fdc455c292392d823bbd50a68c09d07f676a6321a92",
+      "prev_hash": "0x95a4c1679387de2c2481284d5084b066a69ccf7dcfb9ba7a91f4eaaa849ce384",
       "lean_normalized_sha256": "d02675a3dd2db721df3ddc2f77f4bbed462fbe30e652e448a86cb3c45450262c",
       "ast_tokens": 324,
       "sorry_count": 2,
       "minimal_dag_size": 3,
       "lead_agent": "Claude-Math-Solver",
-      "credit_merkle_root": "0xddc33de384276e4921158ade198a0f247c03da640c14d7c11d07232556bfd952",
-      "block_hash": "0xbae7cb71ef642c54ffded9870b454083cdf3feb07da7fc0da7fab023f11567d1"
+      "credit_merkle_root": "0x7d10b5a29a95d57e5053660f7bc10dfd26047ad0c43333849c77c5f1f87202ad",
+      "block_hash": "0xc84cbd257d7d948a58e684d99796e38ef14fab031a3f61811c393c4ab912fefc"
     },
     {
       "height": 8,
       "type": "PROBLEM_OPEN",
       "problem_id": "PC-008",
       "timestamp": "2026-11-21T08:25:00Z",
-      "prev_hash": "0x335df2bed287d1b10f9faa9c543d9bdba60e8edce66762bb1e30f0f4dfd581fb",
+      "prev_hash": "0xc51f2cc5111679b01a6407d75ba3ea07aa3e74db451df960296e00af70d7b7ec",
       "lean_normalized_sha256": "2089558f2e1f5f598c236a1a7e64101690f00e4b9adab659adf9926d1b4b8ed8",
       "ast_tokens": 527,
       "sorry_count": 2,
       "minimal_dag_size": 2,
       "lead_agent": "DeepSeek-Prover-X",
-      "credit_merkle_root": "0xce3658bde2d7577bf902903923adb470aca91e7ef7fa517ed722aad0e0d0a47e",
-      "block_hash": "0xf6d906b054ce59895c064fdc455c292392d823bbd50a68c09d07f676a6321a92"
+      "credit_merkle_root": "0xbe9e4aedc471d2cdffe80836cf9bcccdc5dd41755f85e9af4a58c59fd9e28523",
+      "block_hash": "0x95a4c1679387de2c2481284d5084b066a69ccf7dcfb9ba7a91f4eaaa849ce384"
     },
     {
       "height": 7,
       "type": "PROBLEM_OPEN",
       "problem_id": "PC-007",
       "timestamp": "2026-11-21T08:20:00Z",
-      "prev_hash": "0x02fbc91faac7b48ac01997085d7613c5f24a331a1ea59827527c7989ca121194",
+      "prev_hash": "0xb0edc68f8dc932efc19421e22e463e07a8f40dd47afb07bad2ea0685009345b4",
       "lean_normalized_sha256": "b1a3e9be5fccfd7569da9391d957462ede00222c40c5852940f68b1584aac3b9",
       "ast_tokens": 412,
       "sorry_count": 1,
       "minimal_dag_size": 2,
       "lead_agent": "AlphaFormal-v2",
-      "credit_merkle_root": "0x13a8d71eb155041d30d61c309afeec756e07d197cecd6af9d067fb40c1ed5bda",
-      "block_hash": "0x335df2bed287d1b10f9faa9c543d9bdba60e8edce66762bb1e30f0f4dfd581fb"
+      "credit_merkle_root": "0xe4c9e81a3a41a46f6b7dd5a591dd80c5c51ecb49c0db3d55e3b11989ee1c8622",
+      "block_hash": "0xc51f2cc5111679b01a6407d75ba3ea07aa3e74db451df960296e00af70d7b7ec"
     },
     {
       "height": 6,
       "type": "PROBLEM_OPEN",
       "problem_id": "PC-006",
       "timestamp": "2026-11-21T08:15:00Z",
-      "prev_hash": "0x6b45809eeebbd55eca7fe29414e4bbb6e05421a618f642f73ff898e5d4ab69c6",
+      "prev_hash": "0xb50886f51bba81b7d9096f7c751e0e03960cf75894807d94a5e09a74dabcd0f0",
       "lean_normalized_sha256": "ee61869af481e0ef377400c111e42d3de133a982195233e67989babd6f45659f",
       "ast_tokens": 269,
       "sorry_count": 2,
       "minimal_dag_size": 1,
       "lead_agent": "DeepSeek-Prover-X",
-      "credit_merkle_root": "0x21ac1bb5ca7724feceb222c662ad571a985568c9344f10c34d5d2078c15b16d8",
-      "block_hash": "0x02fbc91faac7b48ac01997085d7613c5f24a331a1ea59827527c7989ca121194"
+      "credit_merkle_root": "0xedbf5cfc5fe5d23b82c1eb89c85f00eaba0087ffcce0610ae14fdf23716286ff",
+      "block_hash": "0xb0edc68f8dc932efc19421e22e463e07a8f40dd47afb07bad2ea0685009345b4"
     },
     {
       "height": 5,
       "type": "PROBLEM_SETTLED",
       "problem_id": "PC-005",
       "timestamp": "2026-11-21T08:00:00Z",
-      "prev_hash": "0x2ba6a3fb65c8feff7b4273d054d8cac4b17e098019d8e3255d21e2f74b185af8",
+      "prev_hash": "0xe9f5d22879cf5a07acce34d495f1a50e20ab4bdd022e6832c64cfece1b66fba4",
       "lean_normalized_sha256": "13d89d9eacdd3e4fef116a3235dacfeb98886425ee95e627b1bd65dd667374fa",
       "ast_tokens": 1069,
       "sorry_count": 0,
       "minimal_dag_size": 3,
       "lead_agent": "Gemini-Proof-Ultra",
-      "credit_merkle_root": "0x642a20adb6c6385672170e1491d0f1b0d865bfa4b91c92dad2b601b6f851b8ba",
-      "block_hash": "0x6b45809eeebbd55eca7fe29414e4bbb6e05421a618f642f73ff898e5d4ab69c6"
+      "credit_merkle_root": "0x14a3ec8ec3367fac39b597bc866cd880868b8d770b5817e455961fc5b0a3c354",
+      "block_hash": "0xb50886f51bba81b7d9096f7c751e0e03960cf75894807d94a5e09a74dabcd0f0"
     },
     {
       "height": 4,
       "type": "PROBLEM_OPEN",
       "problem_id": "PC-004",
       "timestamp": "2026-11-21T07:30:00Z",
-      "prev_hash": "0x81ea1cdc128965e175230c0580004519520c2f0e7bff8f392f61dfcba910a26c",
+      "prev_hash": "0xf8d2752472dc466162e85e9534caa4747be99b6946ce720854967ec30c30244a",
       "lean_normalized_sha256": "78c7ef3d90d90f756aa53b25d593506e181d3f6f12311ecb7a8621499566f7b4",
       "ast_tokens": 283,
       "sorry_count": 1,
       "minimal_dag_size": 2,
       "lead_agent": "DeepSeek-Prover-X",
-      "credit_merkle_root": "0x508d5d570fbce9dfd099320965f963fdd4d4b628cc0908efe06abf257003663c",
-      "block_hash": "0x2ba6a3fb65c8feff7b4273d054d8cac4b17e098019d8e3255d21e2f74b185af8"
+      "credit_merkle_root": "0x379abf574dde431da640944e3a5911d61e16c6e2549ad08fc9ee93d71031c5be",
+      "block_hash": "0xe9f5d22879cf5a07acce34d495f1a50e20ab4bdd022e6832c64cfece1b66fba4"
     },
     {
       "height": 3,
       "type": "PROBLEM_OPEN",
       "problem_id": "PC-003",
       "timestamp": "2026-11-21T06:15:00Z",
-      "prev_hash": "0x32d0f00705886f0e991fc25b0f82b0e54712a37ad4027cfc1132ae76b3ab68ab",
+      "prev_hash": "0x91e1ee1c94332a2d93fc14a5bcc8da6202fd98e7964e754d8a6bfb333767c075",
       "lean_normalized_sha256": "4b3e01cdb45ba6df11127cea70ef22638a04c984f70e5ec2315df4ab6e9b2726",
       "ast_tokens": 322,
       "sorry_count": 3,
       "minimal_dag_size": 3,
       "lead_agent": "Gemini-Proof-Ultra",
-      "credit_merkle_root": "0x7a3f7dc71954bbba9623e25493ba804951f4212f07647e8e49331f306f950636",
-      "block_hash": "0x81ea1cdc128965e175230c0580004519520c2f0e7bff8f392f61dfcba910a26c"
+      "credit_merkle_root": "0xdd85e31051aeb3302457daff83d3900bc2af357bf1cb0e4ba880715825a75e63",
+      "block_hash": "0xf8d2752472dc466162e85e9534caa4747be99b6946ce720854967ec30c30244a"
     },
     {
       "height": 2,
       "type": "PROBLEM_CHALLENGE_WINDOW",
       "problem_id": "PC-002",
       "timestamp": "2026-11-20T18:30:00Z",
-      "prev_hash": "0xa76043a4ace36e4b9b73ce101d3a2047c9185bc66eddd7242d6df071ecd8c39e",
+      "prev_hash": "0xfd9bde5034aee054168a772b629081080525eaa506e3dcdcac8cd36d04ac7d4a",
       "lean_normalized_sha256": "cbf6cb7c1178a83959da46e0022474a4ff0559553e43383c9eccaddab8d21964",
       "ast_tokens": 720,
       "sorry_count": 0,
       "minimal_dag_size": 4,
       "lead_agent": "Gemini-Proof-Ultra",
-      "credit_merkle_root": "0x855bc5964798bb391ea0498cd53fc71414d9b6f42a8b30e75820e5842c96ca0c",
-      "block_hash": "0x32d0f00705886f0e991fc25b0f82b0e54712a37ad4027cfc1132ae76b3ab68ab"
+      "credit_merkle_root": "0x54f0b45bce94dd58e1e33aa8d89ce50750b7f08ee3b249ab634be3fd1b8b6410",
+      "block_hash": "0x91e1ee1c94332a2d93fc14a5bcc8da6202fd98e7964e754d8a6bfb333767c075"
     },
     {
       "height": 1,
@@ -3559,8 +3847,8 @@
       "sorry_count": 0,
       "minimal_dag_size": 5,
       "lead_agent": "DeepSeek-Prover-X",
-      "credit_merkle_root": "0x4e9fdad16ecc4e5fe362aa544fc78400604c78d82c402105f668447199a923df",
-      "block_hash": "0xa76043a4ace36e4b9b73ce101d3a2047c9185bc66eddd7242d6df071ecd8c39e"
+      "credit_merkle_root": "0xb5ce853c43b31c8c31a6f6253a72223cb833050d087ad0e2dd33d1a5d9925628",
+      "block_hash": "0xfd9bde5034aee054168a772b629081080525eaa506e3dcdcac8cd36d04ac7d4a"
     },
     {
       "height": 0,

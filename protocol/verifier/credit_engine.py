@@ -25,6 +25,33 @@ ROYALTY_GAMMA = 0.35
 NOVELTY_ALPHA = 0.25
 LEMMA_NAMING_THRESHOLD = 0.15
 
+# Default seed operator mapping (all real GitHub PR / Issue submissions bind
+# `operator` directly to the authenticated GitHub actor `@<handle>`).
+DEFAULT_AGENT_OPERATORS: Dict[str, str] = {
+    "DeepSeek-Prover-X": "@lin-number-theory",
+    "Claude-Math-Solver": "@chen-formal-lab",
+    "Gemini-Proof-Ultra": "@sara-combinatorics",
+    "AlphaFormal-v2": "@alex-lean-ops",
+    "GolfAgent-01": "@kai-proof-golf",
+    "CounterEx-Hunter": "@maya-refuter",
+    "QED-Swarm-3": "@swarm-collective",
+    "SniperBot-MEV": "@mev-snipe-bot",
+    "SpamBot-99": "@spam-farm-99",
+    "BloatedProver-v1": "@verbose-prover",
+    "HeuristicAgent-04": "@heuristic-dev",
+}
+
+
+def resolve_operator(agent: str, explicit_operator: str | None = None) -> str:
+    """Resolve the human/org controller handle (`@operator`) for an Agent."""
+    if explicit_operator:
+        op = explicit_operator.strip()
+        return op if op.startswith("@") else f"@{op}"
+    if agent in DEFAULT_AGENT_OPERATORS:
+        return DEFAULT_AGENT_OPERATORS[agent]
+    slug = "".join(c.lower() if c.isalnum() else "-" for c in agent).strip("-") or "operator"
+    return f"@{slug}-ctrl"
+
 
 def counterfactual_work(reprove_rate: float, novelty: float = 0.0) -> float:
     """W(v) = -ln(max(r_v, 1e-3)) * (1 + 0.25 * novelty)."""
@@ -174,6 +201,17 @@ def score_problem(blueprint: Dict[str, Any]) -> Dict[str, Any]:
     node_scores: Dict[str, Dict[str, Any]] = {}
     agent_totals: Dict[str, float] = defaultdict(float)
     agent_breakdown: Dict[str, Dict[str, float]] = defaultdict(lambda: {"proof_work": 0.0, "royalties": 0.0, "hygiene": 0.0})
+    agent_operators: Dict[str, str] = {}
+
+    for n in nodes:
+        if n.get("author"):
+            agent_operators[n["author"]] = resolve_operator(n["author"], n.get("operator"))
+        if n.get("pruned_by"):
+            agent_operators[n["pruned_by"]] = resolve_operator(n["pruned_by"], n.get("pruned_by_operator"))
+        if n.get("refuted_by"):
+            agent_operators[n["refuted_by"]] = resolve_operator(n["refuted_by"], n.get("refuted_by_operator"))
+        if n.get("golfed_by"):
+            agent_operators[n["golfed_by"]] = resolve_operator(n["golfed_by"], n.get("golfed_by_operator"))
 
     for n in nodes:
         nid = n["id"]
@@ -235,8 +273,10 @@ def score_problem(blueprint: Dict[str, Any]) -> Dict[str, Any]:
     leaderboard: List[Dict[str, Any]] = []
     for agent, total_pts in sorted(agent_totals.items(), key=lambda kv: (-kv[1], kv[0])):
         bd = agent_breakdown[agent]
+        op = agent_operators.get(agent, resolve_operator(agent))
         leaderboard.append({
             "agent": agent,
+            "operator": op,
             "total_credit": round(total_pts, 2),
             "share_pct": round((total_pts / unlocked_pool) * 100.0, 2) if unlocked_pool > 0 else 0.0,
             "proof_work": round(bd["proof_work"], 2),
@@ -244,19 +284,29 @@ def score_problem(blueprint: Dict[str, Any]) -> Dict[str, Any]:
             "hygiene": round(bd["hygiene"], 2),
         })
 
-    # Naming Rights Allocation
+    # Naming Rights Allocation — vested in the human/org Operator (controller)
+    # of the highest-contributing Agent!
     lead_naming = None
     if leaderboard:
         winner = leaderboard[0]
+        nr_cfg = blueprint.get("naming_rights", {}) or {}
+        is_settled = blueprint.get("status") == "settled"
+        named_by_op = nr_cfg.get("named_by_operator")
+        custom_title = nr_cfg.get("lead_title")
+        if is_settled:
+            naming_status = "NAMED_BY_OPERATOR" if (named_by_op or custom_title) else "AWAITING_OPERATOR_NAME"
+        else:
+            naming_status = "PROVISIONAL"
         lead_naming = {
-            "status": "FINALIZED" if blueprint.get("status") == "settled" else "PROVISIONAL",
+            "status": "FINALIZED" if is_settled else "PROVISIONAL",
+            "naming_status": naming_status,
             "holder": winner["agent"],
+            "winning_agent": winner["agent"],
+            "operator": winner["operator"],
+            "named_by_operator": named_by_op or (winner["operator"] if (is_settled and custom_title) else None),
             "credit": winner["total_credit"],
             "share_pct": winner["share_pct"],
-            "proposed_name": blueprint.get("naming_rights", {}).get(
-                "lead_title",
-                f"{winner['agent']} Formal Proof of {blueprint['id']}",
-            ),
+            "proposed_name": custom_title or f"Pending Naming by {winner['operator']} ({blueprint['id']})",
         }
 
     lemma_naming: List[Dict[str, Any]] = []
@@ -264,25 +314,31 @@ def score_problem(blueprint: Dict[str, Any]) -> Dict[str, Any]:
         nid = n["id"]
         sc = node_scores[nid]
         if sc["in_minimal_dag"] and sc["proof_pool_share"] >= LEMMA_NAMING_THRESHOLD and nid != root_id:
+            op = agent_operators.get(n["author"], resolve_operator(n["author"], n.get("operator")))
             lemma_naming.append({
                 "node_id": nid,
                 "lean_name": n["lean_name"],
                 "holder": n["author"],
+                "winning_agent": n["author"],
+                "operator": op,
                 "credit": sc["credit_points"],
                 "share_pct": round(sc["proof_pool_share"] * 100.0, 2),
-                "named_title": n.get("named_title", f"{n['author']} Lemma ({n['lean_name']})"),
+                "named_title": n.get("named_title", f"Pending Naming by {op} ({n['lean_name']})"),
             })
 
     counterexample_naming: List[Dict[str, Any]] = []
     for ev in hygiene_events:
         if ev["type"] == "REFUTE_COUNTEREXAMPLE":
             n = nodes_by_id[ev["node_id"]]
+            op = agent_operators.get(ev["agent"], resolve_operator(ev["agent"], n.get("refuted_by_operator")))
             counterexample_naming.append({
                 "node_id": n["id"],
                 "lean_name": n["lean_name"],
                 "holder": ev["agent"],
+                "winning_agent": ev["agent"],
+                "operator": op,
                 "credit": ev["credit_points"],
-                "named_title": n.get("named_title", f"{ev['agent']} Counterexample to {n['lean_name']}"),
+                "named_title": n.get("named_title", f"{op} Counterexample to {n['lean_name']}"),
             })
 
     # Record-Breaking Bounty tracker (Bitcoin-style raising Difficulty Target)

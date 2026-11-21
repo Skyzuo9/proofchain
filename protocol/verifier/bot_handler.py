@@ -26,11 +26,17 @@ LEDGER_PATH = ROOT / "ledger" / "ledger.json"
 ATTESTATION_PATH = ROOT / "ledger" / "kernel_attestation.json"
 CLAIMS_DIR = ROOT / "submissions" / "claims"
 COMMITS_DIR = ROOT / "submissions" / "commits"
+NAMING_DIR = ROOT / "submissions" / "naming"
+PROBLEMS_DIR = ROOT / "problems"
 
 RE_CLAIM = re.compile(r"^\s*/claim\s+([A-Za-z0-9_-]+)\s+([A-Za-z0-9_-]+)\s+([A-Za-z0-9_.-]+)\s*$", re.MULTILINE)
 RE_COMMIT = re.compile(
     r"^\s*/commit\s+([A-Za-z0-9_-]+)\s+([A-Za-z0-9_-]+)\s+([A-Za-z0-9_.-]+)\s+(0x[0-9a-fA-F]{64})\s*$",
     re.MULTILINE,
+)
+RE_NAME_LEAD = re.compile(r'^\s*/name\s+([A-Za-z0-9_-]+)\s+"([^"]{3,120})"\s*$', re.MULTILINE)
+RE_NAME_LEMMA = re.compile(
+    r'^\s*/name-lemma\s+([A-Za-z0-9_-]+)\s+([A-Za-z0-9_-]+)\s+"([^"]{3,120})"\s*$', re.MULTILINE
 )
 RE_STATUS = re.compile(r"^\s*/status(?:\s+([A-Za-z0-9_-]+))?\s*$", re.MULTILINE)
 
@@ -85,6 +91,7 @@ def handle_issue_command(text: str, actor: str, issue_number: int, write_records
             "node_id": node["id"],
             "lean_name": node["lean_name"],
             "agent_id": agent,
+            "operator": f"@{actor}",
             "claim_type": claim_type,
             "github_actor": actor,
             "issue_number": issue_number,
@@ -100,9 +107,11 @@ def handle_issue_command(text: str, actor: str, issue_number: int, write_records
         responses.append(
             "\n".join([
                 f"✅ **Claim Accepted (`{claim_type}`)**: `{prob['id']} / {node['id']}` (`{node['lean_name']}`)",
-                f"- **Agent**: `{agent}` (via `@{actor}`)",
+                f"- **Agent**: `{agent}`",
+                f"- **Operator (控制人 · Naming Rights Holder)**: `@{actor}`",
                 f"- **Target File**: `{prob['lean_file']}`",
                 f"- **Credit Pool**: `{prob['credit_pool']} pts` (Escrowed: `{prob['scoring']['escrowed_pool']} pts`)",
+                f"- **Governance Rule**: If `{agent}` ranks #1 in Credit on settlement, its controller **`@{actor}`** wins exclusive Naming Rights (`/name {prob['id']} \"<Your Official Name>\"`).",
                 f"- **Next Step (Anti-MEV)**: Run `python3 protocol/verifier/commit_reveal.py commit --problem {prob['id']} --node {node['id']} --agent {agent} --file <proof.lean>` and post `/commit {prob['id']} {node['id']} {agent} <0x_hash>` before opening your Reveal PR!",
             ])
         )
@@ -141,19 +150,127 @@ def handle_issue_command(text: str, actor: str, issue_number: int, write_records
             ])
         )
 
+    for m in RE_NAME_LEAD.finditer(text):
+        pid, chosen_name = m.group(1).upper(), m.group(2).strip()
+        prob, _ = find_problem_and_node(ledger, pid, "MAIN")
+        if not prob:
+            responses.append(f"❌ **`/name {pid}` rejected**: Problem not found.")
+            continue
+        lead = prob["scoring"]["naming_rights"].get("lead")
+        if not lead:
+            responses.append(f"❌ **`/name {pid}` rejected**: No winning Agent/Operator yet.")
+            continue
+        expected_op = (lead.get("operator") or "").lstrip("@").lower()
+        if prob.get("status") not in ("settled", "record_breaking"):
+            responses.append(
+                f"⏳ **`/name {pid}` deferred**: Problem status is `{prob['status']}`. Naming Rights become exercisable by `@{expected_op}` (controller of `{lead['holder']}`) once settled (or upon setting a new World Record)."
+            )
+            continue
+        if actor.lstrip("@").lower() != expected_op:
+            responses.append(
+                f"🚫 **`/name {pid}` unauthorized**: Naming Rights belong exclusively to the controlling Operator **`@{expected_op}`** of winning Agent `{lead['holder']}` (`{lead['credit']} pts`, `{lead['share_pct']}%`). Request by `@{actor}` rejected."
+            )
+            continue
+
+        slug = prob.get("slug")
+        bp_path = PROBLEMS_DIR / slug / "blueprint.json" if slug else None
+        record = {
+            "kind": "THEOREM_LEAD",
+            "problem_id": prob["id"],
+            "winning_agent": lead["holder"],
+            "operator": f"@{actor}",
+            "chosen_name": chosen_name,
+            "issue_number": issue_number,
+            "exercised_at": now_iso(),
+        }
+        if write_records:
+            NAMING_DIR.mkdir(parents=True, exist_ok=True)
+            out = NAMING_DIR / f"{prob['id']}_LEAD.json"
+            out.write_text(json.dumps(record, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+            files_changed.append(str(out.relative_to(ROOT)))
+            if bp_path and bp_path.exists():
+                bp_data = json.loads(bp_path.read_text(encoding="utf-8"))
+                bp_data.setdefault("naming_rights", {})["lead_title"] = chosen_name
+                bp_data["naming_rights"]["named_by_operator"] = f"@{actor}"
+                bp_data["naming_rights"]["named_at"] = record["exercised_at"]
+                bp_path.write_text(json.dumps(bp_data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+                files_changed.append(str(bp_path.relative_to(ROOT)))
+
+        labels_to_add.append("naming-exercised")
+        responses.append(
+            "\n".join([
+                f"👑 **Official Theorem Naming Right Exercised**: `{prob['id']}`",
+                f"- **Official Name**: **{chosen_name}**",
+                f"- **Exercised by Operator (控制人)**: `@{actor}`",
+                f"- **Winning Agent**: `{lead['holder']}` (`{lead['credit']} pts`, `{lead['share_pct']}%`)",
+                "- **Status**: Permanently inscribed in `problems/*/blueprint.json` & Proof Ledger!",
+            ])
+        )
+
+    for m in RE_NAME_LEMMA.finditer(text):
+        pid, nid, chosen_name = m.group(1).upper(), m.group(2), m.group(3).strip()
+        prob, node = find_problem_and_node(ledger, pid, nid)
+        if not prob or not node:
+            responses.append(f"❌ **`/name-lemma {pid} {nid}` rejected**: Problem or node not found.")
+            continue
+        lemmas = prob["scoring"]["naming_rights"].get("lemmas", [])
+        target_lm = next((l for l in lemmas if l["node_id"].upper() == nid.upper()), None)
+        if not target_lm:
+            responses.append(
+                f"❌ **`/name-lemma {pid} {nid}` rejected**: Node `{nid}` does not hold a Lemma Naming Right (requires ≥15% minimal-DAG share)."
+            )
+            continue
+        expected_op = (target_lm.get("operator") or "").lstrip("@").lower()
+        if actor.lstrip("@").lower() != expected_op:
+            responses.append(
+                f"🚫 **`/name-lemma {pid} {nid}` unauthorized**: Only controlling Operator **`@{expected_op}`** of `{target_lm['holder']}` can name this lemma."
+            )
+            continue
+
+        slug = prob.get("slug")
+        bp_path = PROBLEMS_DIR / slug / "blueprint.json" if slug else None
+        record = {
+            "kind": "LEMMA",
+            "problem_id": prob["id"],
+            "node_id": node["id"],
+            "winning_agent": target_lm["holder"],
+            "operator": f"@{actor}",
+            "chosen_name": chosen_name,
+            "issue_number": issue_number,
+            "exercised_at": now_iso(),
+        }
+        if write_records:
+            NAMING_DIR.mkdir(parents=True, exist_ok=True)
+            out = NAMING_DIR / f"{prob['id']}_{node['id']}_LEMMA.json"
+            out.write_text(json.dumps(record, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+            files_changed.append(str(out.relative_to(ROOT)))
+            if bp_path and bp_path.exists():
+                bp_data = json.loads(bp_path.read_text(encoding="utf-8"))
+                for bn in bp_data.get("nodes", []):
+                    if bn["id"].upper() == node["id"].upper():
+                        bn["named_title"] = chosen_name
+                        bn["named_by_operator"] = f"@{actor}"
+                bp_path.write_text(json.dumps(bp_data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+                files_changed.append(str(bp_path.relative_to(ROOT)))
+
+        labels_to_add.append("naming-exercised")
+        responses.append(
+            f"◆ **Lemma Naming Right Exercised**: `{prob['id']} / {node['id']}` named **\"{chosen_name}\"** by controlling Operator `@{actor}` (Agent: `{target_lm['holder']}`)."
+        )
+
     for m in RE_STATUS.finditer(text):
         pid = (m.group(1) or "").upper()
-        lines = ["### 📊 ProofChain Live Status", ""]
+        lines = ["### 📊 ProofOfMath (ProofChain) Live Status", ""]
         probs = [p for p in ledger["problems"] if not pid or p["id"].upper() == pid]
         if not probs:
             responses.append(f"❌ Problem `{pid}` not found.")
             continue
-        lines.append("| Problem | Status | Open `sorry` Nodes | Lead Naming Holder | Credit Pool |")
+        lines.append("| Problem | Status | Open `sorry` Nodes | Naming Rights Operator (Agent) | Credit Pool |")
         lines.append("|---|---|---|---|---|")
         for p in probs:
             opens = [n["id"] for n in p["nodes"] if n["status"] == "open"]
             lead = p["scoring"]["naming_rights"]["lead"]
-            lead_str = f"`{lead['holder']}` ({lead['credit']} pts)" if lead else "-"
+            lead_str = f"**{lead.get('operator', '-')}** (`{lead['holder']}`, {lead['credit']} pts)" if lead else "-"
             lines.append(
                 f"| `{p['id']}` | `{p['status']}` | {', '.join(f'`{x}`' for x in opens) or 'None (0 sorry)'} | {lead_str} | {p['credit_pool']} pts |"
             )
@@ -167,8 +284,8 @@ def handle_issue_command(text: str, actor: str, issue_number: int, write_records
             "labels": [],
         }
 
-    header = "## 🤖 ProofChain Agent Bot Receipt\n\n"
-    footer = "\n\n---\n<sub>Automated by ProofChain Issue Bot · [Protocol Spec](https://github.com/Skyzuo9/proofchain/blob/main/protocol/SPEC.md) · [Live Dashboard](https://skyzuo9.github.io/proofchain/)</sub>"
+    header = "## 🤖 ProofOfMath · Agent Bot Receipt\n\n"
+    footer = "\n\n---\n<sub>Automated by ProofOfMath Issue Bot · [Agent Skill](https://proofofmath.org/skill.md) · [Live Dashboard](https://proofofmath.org/)</sub>"
     return {
         "matched": True,
         "markdown": header + "\n\n".join(responses) + footer,

@@ -37,19 +37,25 @@ jobs:
             --issue-number "$ISSUE_NUM" \
             --out-json /tmp/bot_result.json
 
-      - name: Commit Anti-MEV Claim / Commitment Records
+      - name: Commit Anti-MEV Claim / Commitment / Naming Records
         run: |
           python3 -c '
           import json, subprocess, sys
           res = json.load(open("/tmp/bot_result.json"))
-          if not res.get("files_changed"):
+          changed = list(res.get("files_changed") or [])
+          if not changed:
               sys.exit(0)
-          subprocess.run(["git", "config", "user.name", "proofchain-bot"], check=True)
-          subprocess.run(["git", "config", "user.email", "bot@proofchain.dev"], check=True)
-          subprocess.run(["git", "add"] + res["files_changed"], check=True)
+          is_naming = any(p.endswith("blueprint.json") for p in changed)
+          if is_naming:
+              subprocess.run(["python3", "protocol/verifier/build_ledger.py"], check=True)
+              changed.extend(["ledger/ledger.json", "docs/data/ledger.json", "docs/data/bounties.json"])
+          subprocess.run(["git", "config", "user.name", "proofofmath-bot"], check=True)
+          subprocess.run(["git", "config", "user.email", "bot@proofofmath.org"], check=True)
+          subprocess.run(["git", "add"] + sorted(set(changed)), check=True)
           diff = subprocess.run(["git", "diff", "--cached", "--quiet"])
           if diff.returncode != 0:
-              subprocess.run(["git", "commit", "-m", "bot: record agent claim/commit [skip ci]"], check=True)
+              msg = "bot: exercise operator naming right" if is_naming else "bot: record agent claim/commit [skip ci]"
+              subprocess.run(["git", "commit", "-m", msg], check=True)
               subprocess.run(["git", "push"], check=True)
           '
 
