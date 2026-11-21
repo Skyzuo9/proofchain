@@ -26,7 +26,7 @@ lemma lonely_runner_k1 (v : Fin 1 → ℕ) (hpos : ∀ i, 0 < v i) :
   have hval : 1 / (2 * (v 0 : ℚ)) * (v 0 : ℚ) - ((0 : ℤ) : ℚ) = (1 : ℚ) / 2 := by
     field_simp [hv]
     ring
-  refine ⟨0, ?_, ?_⟩ <;> (rw [hval]; norm_num)
+  refine ⟨0, ?_, ?_⟩ <;> (rw [hval, abs_of_nonneg (by norm_num : (0 : ℚ) ≤ 1 / 2)]; norm_num)
 
 /-- [MAIN] FRONTIER OPEN TARGET (`sorry`) | Lonely Runner Conjecture for 8 runners (k = 7 moving). -/
 theorem lonely_runner_k7_frontier (v : Fin 7 → ℕ)

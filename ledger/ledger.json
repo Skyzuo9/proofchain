@@ -13,7 +13,7 @@
     "open_sorries": 15,
     "pruned_or_refuted": 2,
     "chain_height": 12,
-    "chain_tip": "0x707cd478e3368f9408a0a0eedd955ff0c9a9a3d46c7048719690c525c378249c"
+    "chain_tip": "0x86026f99eaaebec8cfaf31aba1ba7890780ee63fc3a2e7a7e7d8108c4729eb61"
   },
   "problems": [
     {
@@ -2530,7 +2530,7 @@
           "lean_code": "theorem lonely_runner_k7_frontier (v : Fin 7 → ℕ) (hpos : ∀ i, 0 < v i) (hinj : Function.Injective v) : ∃ t : ℚ, IsLonelyAt v t := by sorry"
         }
       ],
-      "lean_source": "/-\n  ProofChain Problem PC-011 (TIER 4 · FRONTIER OPEN CONJECTURE)\n  Conjecture: Lonely Runner Conjecture (Wills 1967 / Cusick 1973)\n  Status: k = 1 moving runner (2 total) KERNEL-VERIFIED; Frontier k = 7 moving (8 total) OPEN!\n-/\nimport Mathlib.Tactic\n\nnamespace ProofChain.PC011\n\n/-- At rational time t, all k moving runners are at distance ≥ 1/(k+1) from the stationary runner at 0 mod 1. -/\ndef IsLonelyAt {k : ℕ} (v : Fin k → ℕ) (t : ℚ) : Prop :=\n  ∀ i : Fin k, ∃ m : ℤ,\n    (1 : ℚ) / (k + 1) ≤ |t * (v i : ℚ) - (m : ℚ)| ∧\n    |t * (v i : ℚ) - (m : ℚ)| ≤ 1 - (1 : ℚ) / (k + 1)\n\n/-- [LR1] Author: Claude-Math-Solver | Base case k = 1 (2 runners total):\n    Choosing t = 1 / (2 * v 0) places the moving runner at exact distance 1/2 from 0. -/\nlemma lonely_runner_k1 (v : Fin 1 → ℕ) (hpos : ∀ i, 0 < v i) :\n    ∃ t : ℚ, IsLonelyAt v t := by\n  refine ⟨1 / (2 * (v 0 : ℚ)), ?_⟩\n  intro i\n  have hi : i = 0 := Subsingleton.elim i 0\n  subst hi\n  have hv0 : 0 < v 0 := hpos 0\n  have hv : (v 0 : ℚ) ≠ 0 := Nat.cast_ne_zero.mpr (by omega)\n  have hval : 1 / (2 * (v 0 : ℚ)) * (v 0 : ℚ) - ((0 : ℤ) : ℚ) = (1 : ℚ) / 2 := by\n    field_simp [hv]\n    ring\n  refine ⟨0, ?_, ?_⟩ <;> (rw [hval]; norm_num)\n\n/-- [MAIN] FRONTIER OPEN TARGET (`sorry`) | Lonely Runner Conjecture for 8 runners (k = 7 moving). -/\ntheorem lonely_runner_k7_frontier (v : Fin 7 → ℕ)\n    (hpos : ∀ i, 0 < v i) (hinj : Function.Injective v) :\n    ∃ t : ℚ, IsLonelyAt v t := by\n  sorry\n\nend ProofChain.PC011\n",
+      "lean_source": "/-\n  ProofChain Problem PC-011 (TIER 4 · FRONTIER OPEN CONJECTURE)\n  Conjecture: Lonely Runner Conjecture (Wills 1967 / Cusick 1973)\n  Status: k = 1 moving runner (2 total) KERNEL-VERIFIED; Frontier k = 7 moving (8 total) OPEN!\n-/\nimport Mathlib.Tactic\n\nnamespace ProofChain.PC011\n\n/-- At rational time t, all k moving runners are at distance ≥ 1/(k+1) from the stationary runner at 0 mod 1. -/\ndef IsLonelyAt {k : ℕ} (v : Fin k → ℕ) (t : ℚ) : Prop :=\n  ∀ i : Fin k, ∃ m : ℤ,\n    (1 : ℚ) / (k + 1) ≤ |t * (v i : ℚ) - (m : ℚ)| ∧\n    |t * (v i : ℚ) - (m : ℚ)| ≤ 1 - (1 : ℚ) / (k + 1)\n\n/-- [LR1] Author: Claude-Math-Solver | Base case k = 1 (2 runners total):\n    Choosing t = 1 / (2 * v 0) places the moving runner at exact distance 1/2 from 0. -/\nlemma lonely_runner_k1 (v : Fin 1 → ℕ) (hpos : ∀ i, 0 < v i) :\n    ∃ t : ℚ, IsLonelyAt v t := by\n  refine ⟨1 / (2 * (v 0 : ℚ)), ?_⟩\n  intro i\n  have hi : i = 0 := Subsingleton.elim i 0\n  subst hi\n  have hv0 : 0 < v 0 := hpos 0\n  have hv : (v 0 : ℚ) ≠ 0 := Nat.cast_ne_zero.mpr (by omega)\n  have hval : 1 / (2 * (v 0 : ℚ)) * (v 0 : ℚ) - ((0 : ℤ) : ℚ) = (1 : ℚ) / 2 := by\n    field_simp [hv]\n    ring\n  refine ⟨0, ?_, ?_⟩ <;> (rw [hval, abs_of_nonneg (by norm_num : (0 : ℚ) ≤ 1 / 2)]; norm_num)\n\n/-- [MAIN] FRONTIER OPEN TARGET (`sorry`) | Lonely Runner Conjecture for 8 runners (k = 7 moving). -/\ntheorem lonely_runner_k7_frontier (v : Fin 7 → ℕ)\n    (hpos : ∀ i, 0 < v i) (hinj : Function.Injective v) :\n    ∃ t : ℚ, IsLonelyAt v t := by\n  sorry\n\nend ProofChain.PC011\n",
       "audit": {
         "path": "ProofChain/PC011.lean",
         "passed": true,
@@ -2542,8 +2542,8 @@
           "lonely_runner_k1",
           "lonely_runner_k7_frontier"
         ],
-        "normalized_sha256": "b337d69179bf587bdce6cd872ff2e619219006d6bf89d41acef7001480980676",
-        "ast_token_count": 318,
+        "normalized_sha256": "9a41a00f3024894c3f37623eff37855328993ecc6f7941492223bfa7ffed3a77",
+        "ast_token_count": 334,
         "findings": [],
         "kernel_output": null
       },
@@ -2620,7 +2620,7 @@
           "counterexamples": []
         }
       },
-      "block_hash": "0x9f1ace954a574f581a33bfa6579e22e04e1c6d8e9044c82088b577d94c7f18f1",
+      "block_hash": "0xcf2afc83a9f89f1683dfb96323de05c433a85b61f5e7f604d385a078c6fa2731",
       "block_height": 11
     },
     {
@@ -2918,7 +2918,7 @@
           "counterexamples": []
         }
       },
-      "block_hash": "0x707cd478e3368f9408a0a0eedd955ff0c9a9a3d46c7048719690c525c378249c",
+      "block_hash": "0x86026f99eaaebec8cfaf31aba1ba7890780ee63fc3a2e7a7e7d8108c4729eb61",
       "block_height": 12
     }
   ],
@@ -3594,7 +3594,7 @@
       "title": "Lead Formal Discovery Right for 8-Runner Lonely Runner Frontier",
       "credit": 1400.0,
       "share_pct": 100.0,
-      "certificate_hash": "0x1d99a36ae2e43f85e472636e40504713cb90cdb5b55fa1ba35a3c5b17279efa6"
+      "certificate_hash": "0x39105a46f17e3e1c0072992a1557b7e4288e0aae0c806d0c6807115226cc565b"
     },
     {
       "kind": "LEMMA",
@@ -3687,14 +3687,14 @@
       "type": "PROBLEM_RECORD_BREAKING",
       "problem_id": "PC-012",
       "timestamp": "2026-11-21T08:45:00Z",
-      "prev_hash": "0x9f1ace954a574f581a33bfa6579e22e04e1c6d8e9044c82088b577d94c7f18f1",
+      "prev_hash": "0xcf2afc83a9f89f1683dfb96323de05c433a85b61f5e7f604d385a078c6fa2731",
       "lean_normalized_sha256": "113df6d6fb32e3bfa01d515b763bc98681f05894f6272df79f01113b4668a851",
       "ast_tokens": 961,
       "sorry_count": 1,
       "minimal_dag_size": 3,
       "lead_agent": "DeepSeek-Prover-X",
       "credit_merkle_root": "0xd5ce2c9425484b7205975ffb7ae7af6237d20bf82d6556a4c2caf0414cf29528",
-      "block_hash": "0x707cd478e3368f9408a0a0eedd955ff0c9a9a3d46c7048719690c525c378249c"
+      "block_hash": "0x86026f99eaaebec8cfaf31aba1ba7890780ee63fc3a2e7a7e7d8108c4729eb61"
     },
     {
       "height": 11,
@@ -3702,13 +3702,13 @@
       "problem_id": "PC-011",
       "timestamp": "2026-11-21T08:42:00Z",
       "prev_hash": "0x2c74e3211d22ade9cb166e56990da947fa3a91389875064b6fec2474d930af21",
-      "lean_normalized_sha256": "b337d69179bf587bdce6cd872ff2e619219006d6bf89d41acef7001480980676",
-      "ast_tokens": 318,
+      "lean_normalized_sha256": "9a41a00f3024894c3f37623eff37855328993ecc6f7941492223bfa7ffed3a77",
+      "ast_tokens": 334,
       "sorry_count": 1,
       "minimal_dag_size": 1,
       "lead_agent": "Claude-Math-Solver",
       "credit_merkle_root": "0xc2f3d747dcb1582f59dabe5871bcaf9f96caafae9f4656980608a427f5c1880e",
-      "block_hash": "0x9f1ace954a574f581a33bfa6579e22e04e1c6d8e9044c82088b577d94c7f18f1"
+      "block_hash": "0xcf2afc83a9f89f1683dfb96323de05c433a85b61f5e7f604d385a078c6fa2731"
     },
     {
       "height": 10,
