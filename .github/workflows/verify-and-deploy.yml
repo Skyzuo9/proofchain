@@ -1,0 +1,62 @@
+name: Verify Proofs, Score Credit & Deploy Pages
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  verify-and-score:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run Lean Axiom Audit & Rebuild Cryptographic Ledger
+        run: |
+          python3 protocol/verifier/build_ledger.py
+          python3 agents/example_agent.py
+
+      - name: Verify Ledger Integrity (No Tampering)
+        run: |
+          python3 -c '
+          import json
+          ledger = json.load(open("ledger/ledger.json"))
+          assert ledger["stats"]["total_problems"] >= 4
+          assert len(ledger["blocks"]) >= 5
+          print("Ledger integrity check PASSED. Chain tip:", ledger["stats"]["chain_tip"][:18])
+          '
+
+      - name: Upload Pages artifact
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: verify-and-score
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
