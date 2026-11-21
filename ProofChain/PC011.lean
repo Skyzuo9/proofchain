@@ -19,20 +19,14 @@ lemma lonely_runner_k1 (v : Fin 1 → ℕ) (hpos : ∀ i, 0 < v i) :
     ∃ t : ℚ, IsLonelyAt v t := by
   refine ⟨1 / (2 * (v 0 : ℚ)), ?_⟩
   intro i
-  fin_cases i
-  refine ⟨0, ?_, ?_⟩
-  · have hv0 : 0 < v 0 := hpos 0
-    have hv : (v 0 : ℚ) ≠ 0 := Nat.cast_ne_zero.mpr (by omega)
-    have hval : 1 / (2 * (v 0 : ℚ)) * (v 0 : ℚ) - (0 : ℤ) = (1 : ℚ) / 2 := by
-      field_simp
-    rw [hval]
-    norm_num
-  · have hv0 : 0 < v 0 := hpos 0
-    have hv : (v 0 : ℚ) ≠ 0 := Nat.cast_ne_zero.mpr (by omega)
-    have hval : 1 / (2 * (v 0 : ℚ)) * (v 0 : ℚ) - (0 : ℤ) = (1 : ℚ) / 2 := by
-      field_simp
-    rw [hval]
-    norm_num
+  have hi : i = 0 := Subsingleton.elim i 0
+  subst hi
+  have hv0 : 0 < v 0 := hpos 0
+  have hv : (v 0 : ℚ) ≠ 0 := Nat.cast_ne_zero.mpr (by omega)
+  have hval : 1 / (2 * (v 0 : ℚ)) * (v 0 : ℚ) - ((0 : ℤ) : ℚ) = (1 : ℚ) / 2 := by
+    field_simp [hv]
+    ring
+  refine ⟨0, ?_, ?_⟩ <;> (rw [hval]; norm_num)
 
 /-- [MAIN] FRONTIER OPEN TARGET (`sorry`) | Lonely Runner Conjecture for 8 runners (k = 7 moving). -/
 theorem lonely_runner_k7_frontier (v : Fin 7 → ℕ)

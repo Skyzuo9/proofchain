@@ -18,20 +18,23 @@ def paley17 (i j : Fin 17) : Bool :=
 
 /-- [RL1] Author: AlphaFormal-v2 | Paley(17) coloring is symmetric and translation-invariant. -/
 lemma paley17_symm (i j : Fin 17) : paley17 i j = paley17 j i := by
+  revert i j
   decide
 
 lemma paley17_shift_sub (i j k : Fin 17) (hij : i < j) (hjk : j < k) :
     paley17 j k = paley17 ⟨j.val - i.val, by omega⟩ ⟨k.val - i.val, by omega⟩ := by
   have hij' : i.val < j.val := hij
   have hjk' : j.val < k.val := hjk
-  unfold paley17 isQR17
+  change isQR17 (j.val + 17 - k.val) = isQR17 (j.val - i.val + 17 - (k.val - i.val))
+  unfold isQR17
   have hmod : (j.val + 17 - k.val) % 17 = (j.val - i.val + 17 - (k.val - i.val)) % 17 := by omega
   rw [hmod]
 
 lemma paley17_shift_zero (i j : Fin 17) (hij : i < j) :
     paley17 i j = paley17 0 ⟨j.val - i.val, by omega⟩ := by
   have hij' : i.val < j.val := hij
-  unfold paley17 isQR17
+  change isQR17 (i.val + 17 - j.val) = isQR17 (0 + 17 - (j.val - i.val))
+  unfold isQR17
   have hmod : (i.val + 17 - j.val) % 17 = (0 + 17 - (j.val - i.val)) % 17 := by omega
   rw [hmod]
 

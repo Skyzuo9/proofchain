@@ -13,7 +13,7 @@
     "open_sorries": 15,
     "pruned_or_refuted": 2,
     "chain_height": 12,
-    "chain_tip": "0x9cc942560b738274491a91b9aa83a710f723ac8fcc4b8baeb5ae200668e38217"
+    "chain_tip": "0x707cd478e3368f9408a0a0eedd955ff0c9a9a3d46c7048719690c525c378249c"
   },
   "problems": [
     {
@@ -1262,7 +1262,7 @@
           "commitment_hash": "0x40d5b1291a991411cab39e3416ae4dea6ec312fdff8ef38fc461a303f7f8556a"
         }
       ],
-      "lean_source": "/-\n  ProofChain Problem PC-005 (TIER 1 · SETTLED BENCHMARK)\n  Theorem: Ramsey Number R(3, 3) = 6 (Exact Upper & Lower Bounds)\n  Demonstrates: Bidirectional Combinatorial Proof DAG (Constructive C₅ Witness + Pigeonhole Upper Bound)\n-/\nimport Mathlib.Tactic\n\nnamespace ProofChain.PC005\n\n/-- [R1] Author: AlphaFormal-v2 | Explicit C₅ 2-coloring on Fin 5 avoiding monochromatic triangles. -/\ndef c5Color (i j : Fin 5) : Bool :=\n  let d := (i.val + 5 - j.val) % 5\n  d == 1 || d == 4\n\nlemma c5_symm (i j : Fin 5) : c5Color i j = c5Color j i := by\n  decide\n\nlemma ramsey_3_3_lower_5 :\n    ∀ i j k : Fin 5, i < j → j < k →\n      ¬ (c5Color i j = c5Color j k ∧ c5Color j k = c5Color i k) := by\n  decide\n\n/-- [R2] Author: DeepSeek-Prover-X | Pigeonhole on 5 boolean edges from vertex 0:\n    Among 5 neighbors, at least 3 receive the same color. -/\nlemma pigeonhole_five_bools (b1 b2 b3 b4 b5 : Bool) :\n    ∃ b : Bool,\n      (b1 = b ∧ b2 = b ∧ b3 = b) ∨ (b1 = b ∧ b2 = b ∧ b4 = b) ∨ (b1 = b ∧ b2 = b ∧ b5 = b) ∨\n      (b1 = b ∧ b3 = b ∧ b4 = b) ∨ (b1 = b ∧ b3 = b ∧ b5 = b) ∨ (b1 = b ∧ b4 = b ∧ b5 = b) ∨\n      (b2 = b ∧ b3 = b ∧ b4 = b) ∨ (b2 = b ∧ b3 = b ∧ b5 = b) ∨ (b2 = b ∧ b4 = b ∧ b5 = b) ∨\n      (b3 = b ∧ b4 = b ∧ b5 = b) := by\n  cases b1 <;> cases b2 <;> cases b3 <;> cases b4 <;> cases b5 <;> decide\n\n/-- [R3] Author: Gemini-Proof-Ultra | Triangle forcing from 3 same-colored neighbors of vertex 0. -/\nlemma triangle_from_three_neighbors (c : Fin 6 → Fin 6 → Bool)\n    (hsym : ∀ x y, c x y = c y x)\n    (u v w : Fin 6) (hu : 0 < u) (hv : u < v) (hw : v < w) (b : Bool)\n    (h1 : c 0 u = b) (h2 : c 0 v = b) (h3 : c 0 w = b) :\n    ∃ x y z : Fin 6, x < y ∧ y < z ∧ c x y = c y z ∧ c y z = c x z := by\n  by_cases huv : c u v = b\n  · exact ⟨0, u, v, hu, hv, by rw [h1, huv], by rw [huv, h2]⟩\n  · by_cases hvw : c v w = b\n    · exact ⟨0, v, w, lt_trans hu hv, hw, by rw [h2, hvw], by rw [hvw, h3]⟩\n    · by_cases huw : c u w = b\n      · exact ⟨0, u, w, hu, lt_trans hv hw, by rw [h1, huw], by rw [huw, h3]⟩\n      · have e1 : c u v = !b := by cases h : c u v <;> cases b <;> simp_all\n        have e2 : c v w = !b := by cases h : c v w <;> cases b <;> simp_all\n        have e3 : c u w = !b := by cases h : c u w <;> cases b <;> simp_all\n        exact ⟨u, v, w, hv, hw, by rw [e1, e2], by rw [e2, e3]⟩\n\n/-- [MAIN] Author: Claude-Math-Solver | Every symmetric 2-coloring of K₆ contains a monochromatic K₃. -/\ntheorem ramsey_3_3_upper_6 (c : Fin 6 → Fin 6 → Bool)\n    (hsym : ∀ x y, c x y = c y x) :\n    ∃ x y z : Fin 6, x < y ∧ y < z ∧ c x y = c y z ∧ c y z = c x z := by\n  obtain ⟨b, h⟩ := pigeonhole_five_bools (c 0 1) (c 0 2) (c 0 3) (c 0 4) (c 0 5)\n  rcases h with ⟨h1, h2, h3⟩ | ⟨h1, h2, h3⟩ | ⟨h1, h2, h3⟩ | ⟨h1, h2, h3⟩ | ⟨h1, h2, h3⟩ |\n                ⟨h1, h2, h3⟩ | ⟨h1, h2, h3⟩ | ⟨h1, h2, h3⟩ | ⟨h1, h2, h3⟩ | ⟨h1, h2, h3⟩\n  · exact triangle_from_three_neighbors c hsym 1 2 3 (by decide) (by decide) (by decide) b h1 h2 h3\n  · exact triangle_from_three_neighbors c hsym 1 2 4 (by decide) (by decide) (by decide) b h1 h2 h3\n  · exact triangle_from_three_neighbors c hsym 1 2 5 (by decide) (by decide) (by decide) b h1 h2 h3\n  · exact triangle_from_three_neighbors c hsym 1 3 4 (by decide) (by decide) (by decide) b h1 h2 h3\n  · exact triangle_from_three_neighbors c hsym 1 3 5 (by decide) (by decide) (by decide) b h1 h2 h3\n  · exact triangle_from_three_neighbors c hsym 1 4 5 (by decide) (by decide) (by decide) b h1 h2 h3\n  · exact triangle_from_three_neighbors c hsym 2 3 4 (by decide) (by decide) (by decide) b h1 h2 h3\n  · exact triangle_from_three_neighbors c hsym 2 3 5 (by decide) (by decide) (by decide) b h1 h2 h3\n  · exact triangle_from_three_neighbors c hsym 2 4 5 (by decide) (by decide) (by decide) b h1 h2 h3\n  · exact triangle_from_three_neighbors c hsym 3 4 5 (by decide) (by decide) (by decide) b h1 h2 h3\n\nend ProofChain.PC005\n",
+      "lean_source": "/-\n  ProofChain Problem PC-005 (TIER 1 · SETTLED BENCHMARK)\n  Theorem: Ramsey Number R(3, 3) = 6 (Exact Upper & Lower Bounds)\n  Demonstrates: Bidirectional Combinatorial Proof DAG (Constructive C₅ Witness + Pigeonhole Upper Bound)\n-/\nimport Mathlib.Tactic\n\nnamespace ProofChain.PC005\n\n/-- [R1] Author: AlphaFormal-v2 | Explicit C₅ 2-coloring on Fin 5 avoiding monochromatic triangles. -/\ndef c5Color (i j : Fin 5) : Bool :=\n  let d := (i.val + 5 - j.val) % 5\n  d == 1 || d == 4\n\nlemma c5_symm (i j : Fin 5) : c5Color i j = c5Color j i := by\n  revert i j\n  decide\n\nlemma ramsey_3_3_lower_5 :\n    ∀ i j k : Fin 5, i < j → j < k →\n      ¬ (c5Color i j = c5Color j k ∧ c5Color j k = c5Color i k) := by\n  decide\n\n/-- [R2] Author: DeepSeek-Prover-X | Pigeonhole on 5 boolean edges from vertex 0:\n    Among 5 neighbors, at least 3 receive the same color. -/\nlemma pigeonhole_five_bools (b1 b2 b3 b4 b5 : Bool) :\n    ∃ b : Bool,\n      (b1 = b ∧ b2 = b ∧ b3 = b) ∨ (b1 = b ∧ b2 = b ∧ b4 = b) ∨ (b1 = b ∧ b2 = b ∧ b5 = b) ∨\n      (b1 = b ∧ b3 = b ∧ b4 = b) ∨ (b1 = b ∧ b3 = b ∧ b5 = b) ∨ (b1 = b ∧ b4 = b ∧ b5 = b) ∨\n      (b2 = b ∧ b3 = b ∧ b4 = b) ∨ (b2 = b ∧ b3 = b ∧ b5 = b) ∨ (b2 = b ∧ b4 = b ∧ b5 = b) ∨\n      (b3 = b ∧ b4 = b ∧ b5 = b) := by\n  cases b1 <;> cases b2 <;> cases b3 <;> cases b4 <;> cases b5 <;> decide\n\n/-- [R3] Author: Gemini-Proof-Ultra | Triangle forcing from 3 same-colored neighbors of vertex 0. -/\nlemma triangle_from_three_neighbors (c : Fin 6 → Fin 6 → Bool)\n    (hsym : ∀ x y, c x y = c y x)\n    (u v w : Fin 6) (hu : 0 < u) (hv : u < v) (hw : v < w) (b : Bool)\n    (h1 : c 0 u = b) (h2 : c 0 v = b) (h3 : c 0 w = b) :\n    ∃ x y z : Fin 6, x < y ∧ y < z ∧ c x y = c y z ∧ c y z = c x z := by\n  by_cases huv : c u v = b\n  · exact ⟨0, u, v, hu, hv, by rw [h1, huv], by rw [huv, h2]⟩\n  · by_cases hvw : c v w = b\n    · exact ⟨0, v, w, lt_trans hu hv, hw, by rw [h2, hvw], by rw [hvw, h3]⟩\n    · by_cases huw : c u w = b\n      · exact ⟨0, u, w, hu, lt_trans hv hw, by rw [h1, huw], by rw [huw, h3]⟩\n      · have e1 : c u v = !b := by cases h : c u v <;> cases b <;> simp_all\n        have e2 : c v w = !b := by cases h : c v w <;> cases b <;> simp_all\n        have e3 : c u w = !b := by cases h : c u w <;> cases b <;> simp_all\n        exact ⟨u, v, w, hv, hw, by rw [e1, e2], by rw [e2, e3]⟩\n\n/-- [MAIN] Author: Claude-Math-Solver | Every symmetric 2-coloring of K₆ contains a monochromatic K₃. -/\ntheorem ramsey_3_3_upper_6 (c : Fin 6 → Fin 6 → Bool)\n    (hsym : ∀ x y, c x y = c y x) :\n    ∃ x y z : Fin 6, x < y ∧ y < z ∧ c x y = c y z ∧ c y z = c x z := by\n  obtain ⟨b, h⟩ := pigeonhole_five_bools (c 0 1) (c 0 2) (c 0 3) (c 0 4) (c 0 5)\n  rcases h with ⟨h1, h2, h3⟩ | ⟨h1, h2, h3⟩ | ⟨h1, h2, h3⟩ | ⟨h1, h2, h3⟩ | ⟨h1, h2, h3⟩ |\n                ⟨h1, h2, h3⟩ | ⟨h1, h2, h3⟩ | ⟨h1, h2, h3⟩ | ⟨h1, h2, h3⟩ | ⟨h1, h2, h3⟩\n  · exact triangle_from_three_neighbors c hsym 1 2 3 (by decide) (by decide) (by decide) b h1 h2 h3\n  · exact triangle_from_three_neighbors c hsym 1 2 4 (by decide) (by decide) (by decide) b h1 h2 h3\n  · exact triangle_from_three_neighbors c hsym 1 2 5 (by decide) (by decide) (by decide) b h1 h2 h3\n  · exact triangle_from_three_neighbors c hsym 1 3 4 (by decide) (by decide) (by decide) b h1 h2 h3\n  · exact triangle_from_three_neighbors c hsym 1 3 5 (by decide) (by decide) (by decide) b h1 h2 h3\n  · exact triangle_from_three_neighbors c hsym 1 4 5 (by decide) (by decide) (by decide) b h1 h2 h3\n  · exact triangle_from_three_neighbors c hsym 2 3 4 (by decide) (by decide) (by decide) b h1 h2 h3\n  · exact triangle_from_three_neighbors c hsym 2 3 5 (by decide) (by decide) (by decide) b h1 h2 h3\n  · exact triangle_from_three_neighbors c hsym 2 4 5 (by decide) (by decide) (by decide) b h1 h2 h3\n  · exact triangle_from_three_neighbors c hsym 3 4 5 (by decide) (by decide) (by decide) b h1 h2 h3\n\nend ProofChain.PC005\n",
       "audit": {
         "path": "ProofChain/PC005.lean",
         "passed": true,
@@ -1277,8 +1277,8 @@
           "triangle_from_three_neighbors",
           "ramsey_3_3_upper_6"
         ],
-        "normalized_sha256": "13d89d9eacdd3e4fef116a3235dacfeb98886425ee95e627b1bd65dd667374fa",
-        "ast_token_count": 1069,
+        "normalized_sha256": "cb8c88f6c46a3b87ea1cf042a06a2d79c24e1effe47a41bc6b3df48aad1cda58",
+        "ast_token_count": 1072,
         "findings": [],
         "kernel_output": null
       },
@@ -1401,7 +1401,7 @@
           "counterexamples": []
         }
       },
-      "block_hash": "0xb50886f51bba81b7d9096f7c751e0e03960cf75894807d94a5e09a74dabcd0f0",
+      "block_hash": "0x5f3fbaa593dbd3291659b5cf32600064ae78946dff5b02175b1b0611a2277cd0",
       "block_height": 5
     },
     {
@@ -1573,7 +1573,7 @@
           "counterexamples": []
         }
       },
-      "block_hash": "0xb0edc68f8dc932efc19421e22e463e07a8f40dd47afb07bad2ea0685009345b4",
+      "block_hash": "0x82e8f0f3636010c9916f8f50bc759e98ae03a210fbe5159ae06530f7ddbf2e7a",
       "block_height": 6
     },
     {
@@ -1650,7 +1650,7 @@
           "lean_code": "theorem vdw_two_colors_three_ap (c : Fin 10 → Bool) : ∃ a d, ... := by sorry"
         }
       ],
-      "lean_source": "/-\n  ProofChain Problem PC-007 (TIER 2 · OPEN BOUNTY)\n  Theorem: Van der Waerden Number W(2, 3) = 9 (Monochromatic 3-Term Arithmetic Progression)\n  Status: Explicit 3-AP-free 2-coloring of {1..8} KERNEL-VERIFIED; Upper bound W(2,3) ≤ 9 OPEN!\n-/\nimport Mathlib.Tactic\n\nnamespace ProofChain.PC007\n\n/-- [W1] Author: AlphaFormal-v2 | Explicit 3-AP-free 2-coloring of {1..8}:\n    false = {1, 2, 5, 6}, true = {3, 4, 7, 8}. -/\ndef vdwWitness8 (x : Fin 9) : Bool :=\n  match x.val with\n  | 3 | 4 | 7 | 8 => true\n  | _ => false\n\nlemma vdw_2_3_lower_8 :\n    ∀ a d : Fin 9, 1 ≤ a.val → 1 ≤ d.val → a.val + 2 * d.val ≤ 8 →\n      ¬ (vdwWitness8 a = vdwWitness8 ⟨a.val + d.val, by omega⟩ ∧\n         vdwWitness8 a = vdwWitness8 ⟨a.val + 2 * d.val, by omega⟩) := by\n  decide\n\n/-- [W2] Author: Gemini-Proof-Ultra | Color-inversion symmetry for 3-AP search on {1..9}. -/\nlemma vdw_color_symmetry (c : Fin 10 → Bool) :\n    (∃ a d : ℕ, 1 ≤ a ∧ 1 ≤ d ∧ a + 2 * d ≤ 9 ∧\n      c ⟨a, by omega⟩ = c ⟨a + d, by omega⟩ ∧ c ⟨a, by omega⟩ = c ⟨a + 2 * d, by omega⟩) ↔\n    (∃ a d : ℕ, 1 ≤ a ∧ 1 ≤ d ∧ a + 2 * d ≤ 9 ∧\n      (!c ⟨a, by omega⟩) = (!c ⟨a + d, by omega⟩) ∧ (!c ⟨a, by omega⟩) = (!c ⟨a + 2 * d, by omega⟩)) := by\n  constructor <;> rintro ⟨a, d, ha, hd, hle, h1, h2⟩\n  · exact ⟨a, d, ha, hd, hle, by rw [h1], by rw [h2]⟩\n  · refine ⟨a, d, ha, hd, hle, ?_, ?_⟩ <;> simp_all\n\n/-- [MAIN] OPEN TARGET (`sorry`) | Every 2-coloring of {1..9} contains a monochromatic 3-term AP. -/\ntheorem vdw_two_colors_three_ap (c : Fin 10 → Bool) :\n    ∃ a d : ℕ, 1 ≤ a ∧ 1 ≤ d ∧ a + 2 * d ≤ 9 ∧\n      c ⟨a, by omega⟩ = c ⟨a + d, by omega⟩ ∧ c ⟨a, by omega⟩ = c ⟨a + 2 * d, by omega⟩ := by\n  sorry\n\nend ProofChain.PC007\n",
+      "lean_source": "/-\n  ProofChain Problem PC-007 (TIER 2 · OPEN BOUNTY)\n  Theorem: Van der Waerden Number W(2, 3) = 9 (Monochromatic 3-Term Arithmetic Progression)\n  Status: Explicit 3-AP-free 2-coloring of {1..8} KERNEL-VERIFIED; Upper bound W(2,3) ≤ 9 OPEN!\n-/\nimport Mathlib.Tactic\n\nnamespace ProofChain.PC007\n\n/-- [W1] Author: AlphaFormal-v2 | Explicit 3-AP-free 2-coloring of {1..8}:\n    false = {1, 2, 5, 6}, true = {3, 4, 7, 8}. -/\ndef vdwWitness8 (x : Fin 9) : Bool :=\n  match x.val with\n  | 3 | 4 | 7 | 8 => true\n  | _ => false\n\nlemma vdw_2_3_lower_8 :\n    ∀ a d : Fin 9, 1 ≤ a.val → 1 ≤ d.val → ∀ hle : a.val + 2 * d.val ≤ 8,\n      ¬ (vdwWitness8 a = vdwWitness8 ⟨a.val + d.val, by omega⟩ ∧\n         vdwWitness8 a = vdwWitness8 ⟨a.val + 2 * d.val, by omega⟩) := by\n  decide\n\n/-- [W2] Author: Gemini-Proof-Ultra | Color-inversion symmetry for 3-AP search on {1..9}. -/\nlemma vdw_color_symmetry (c : Fin 10 → Bool) :\n    (∃ (a d : ℕ) (h : 1 ≤ a ∧ 1 ≤ d ∧ a + 2 * d ≤ 9),\n      c ⟨a, by omega⟩ = c ⟨a + d, by omega⟩ ∧ c ⟨a, by omega⟩ = c ⟨a + 2 * d, by omega⟩) ↔\n    (∃ (a d : ℕ) (h : 1 ≤ a ∧ 1 ≤ d ∧ a + 2 * d ≤ 9),\n      (!c ⟨a, by omega⟩) = (!c ⟨a + d, by omega⟩) ∧ (!c ⟨a, by omega⟩) = (!c ⟨a + 2 * d, by omega⟩)) := by\n  constructor <;> rintro ⟨a, d, h, h1, h2⟩\n  · exact ⟨a, d, h, by rw [h1], by rw [h2]⟩\n  · refine ⟨a, d, h, ?_, ?_⟩ <;> simp_all\n\n/-- [MAIN] OPEN TARGET (`sorry`) | Every 2-coloring of {1..9} contains a monochromatic 3-term AP. -/\ntheorem vdw_two_colors_three_ap (c : Fin 10 → Bool) :\n    ∃ (a d : ℕ) (h : 1 ≤ a ∧ 1 ≤ d ∧ a + 2 * d ≤ 9),\n      c ⟨a, by omega⟩ = c ⟨a + d, by omega⟩ ∧ c ⟨a, by omega⟩ = c ⟨a + 2 * d, by omega⟩ := by\n  sorry\n\nend ProofChain.PC007\n",
       "audit": {
         "path": "ProofChain/PC007.lean",
         "passed": true,
@@ -1663,8 +1663,8 @@
           "vdw_color_symmetry",
           "vdw_two_colors_three_ap"
         ],
-        "normalized_sha256": "b1a3e9be5fccfd7569da9391d957462ede00222c40c5852940f68b1584aac3b9",
-        "ast_token_count": 412,
+        "normalized_sha256": "ed678b52874447129d3fbff98acf16fcf27c54b6bc1d7fb44f9fefcc2ee82a89",
+        "ast_token_count": 418,
         "findings": [],
         "kernel_output": null
       },
@@ -1769,7 +1769,7 @@
           "counterexamples": []
         }
       },
-      "block_hash": "0xc51f2cc5111679b01a6407d75ba3ea07aa3e74db451df960296e00af70d7b7ec",
+      "block_hash": "0x4e1c4dfb8538c9f33d4cd6f532b5711f14acf82a408890983d2a27b2ceb8def0",
       "block_height": 7
     },
     {
@@ -1861,7 +1861,7 @@
           "lean_code": "theorem erdos_ginzburg_ziv (n : ℕ) (hn : 1 ≤ n) (f : Fin (2 * n - 1) → ℤ) : ... := by sorry"
         }
       ],
-      "lean_source": "/-\n  ProofChain Problem PC-008 (TIER 2 · OPEN BOUNTY)\n  Theorem: Erdős–Ginzburg–Ziv (EGZ) Theorem Decomposition\n  Statement: Among any 2n - 1 integers, some n have sum divisible by n.\n  Status: Base cases n = 2 and n = 3 KERNEL-VERIFIED; Prime case & Multiplicative Reduction OPEN!\n-/\nimport Mathlib.Tactic\n\nnamespace ProofChain.PC008\n\n/-- [G1] Author: AlphaFormal-v2 | EGZ base case n = 2: among 3 integers, 2 have even sum. -/\nlemma egz_n_eq_2 (f : Fin 3 → ℤ) :\n    ∃ i j : Fin 3, i < j ∧ (2 : ℤ) ∣ (f i + f j) := by\n  by_cases h01 : (2 : ℤ) ∣ (f 0 + f 1)\n  · exact ⟨0, 1, by decide, h01⟩\n  · by_cases h02 : (2 : ℤ) ∣ (f 0 + f 2)\n    · exact ⟨0, 2, by decide, h02⟩\n    · refine ⟨1, 2, by decide, ?_⟩\n      omega\n\n/-- Helper on Fin 3 residues for n = 3 (checked over 3⁵ = 243 cases by kernel `decide`). -/\ndef tuple5 (r0 r1 r2 r3 r4 : Fin 3) (idx : Fin 5) : Fin 3 :=\n  match idx.val with\n  | 0 => r0\n  | 1 => r1\n  | 2 => r2\n  | 3 => r3\n  | _ => r4\n\nlemma egz_mod3_pigeonhole (r0 r1 r2 r3 r4 : Fin 3) :\n    ∃ i j k : Fin 5, i < j ∧ j < k ∧\n      ((tuple5 r0 r1 r2 r3 r4 i).val + (tuple5 r0 r1 r2 r3 r4 j).val +\n       (tuple5 r0 r1 r2 r3 r4 k).val) % 3 = 0 := by\n  decide\n\n/-- [G2] Author: DeepSeek-Prover-X | EGZ base case n = 3: among 5 integers, 3 have sum divisible by 3. -/\nlemma egz_n_eq_3 (f : Fin 5 → ℤ) :\n    ∃ i j k : Fin 5, i < j ∧ j < k ∧ (3 : ℤ) ∣ (f i + f j + f k) := by\n  let r : Fin 5 → Fin 3 := fun idx => ⟨(f idx % 3).toNat, by omega⟩\n  obtain ⟨i, j, k, hij, hjk, hmod⟩ := egz_mod3_pigeonhole (r 0) (r 1) (r 2) (r 3) (r 4)\n  refine ⟨i, j, k, hij, hjk, ?_⟩\n  fin_cases i <;> fin_cases j <;> fin_cases k <;> simp_all [tuple5, r] <;> omega\n\n/-- [G3] OPEN BOUNTY (`sorry`) | Prime case via Chevalley–Warning / Cauchy–Davenport. -/\nlemma egz_prime_case (p : ℕ) (hp : Nat.Prime p) (f : Fin (2 * p - 1) → ℤ) :\n    ∃ S : Finset (Fin (2 * p - 1)), S.card = p ∧ (p : ℤ) ∣ S.sum f := by\n  sorry\n\n/-- [MAIN] OPEN TARGET (`sorry`) | General Erdős–Ginzburg–Ziv Theorem for all n ≥ 1. -/\ntheorem erdos_ginzburg_ziv (n : ℕ) (hn : 1 ≤ n) (f : Fin (2 * n - 1) → ℤ) :\n    ∃ S : Finset (Fin (2 * n - 1)), S.card = n ∧ (n : ℤ) ∣ S.sum f := by\n  sorry\n\nend ProofChain.PC008\n",
+      "lean_source": "/-\n  ProofChain Problem PC-008 (TIER 2 · OPEN BOUNTY)\n  Theorem: Erdős–Ginzburg–Ziv (EGZ) Theorem Decomposition\n  Statement: Among any 2n - 1 integers, some n have sum divisible by n.\n  Status: Base cases n = 2 and n = 3 KERNEL-VERIFIED; Prime case & Multiplicative Reduction OPEN!\n-/\nimport Mathlib.Tactic\n\nnamespace ProofChain.PC008\n\n/-- [G1] Author: AlphaFormal-v2 | EGZ base case n = 2: among 3 integers, 2 have even sum. -/\nlemma egz_n_eq_2 (f : Fin 3 → ℤ) :\n    ∃ i j : Fin 3, i < j ∧ (2 : ℤ) ∣ (f i + f j) := by\n  by_cases h01 : (2 : ℤ) ∣ (f 0 + f 1)\n  · exact ⟨0, 1, by decide, h01⟩\n  · by_cases h02 : (2 : ℤ) ∣ (f 0 + f 2)\n    · exact ⟨0, 2, by decide, h02⟩\n    · refine ⟨1, 2, by decide, ?_⟩\n      omega\n\n/-- Helper on Fin 3 residues for n = 3 (checked over 3⁵ = 243 cases by kernel `decide`). -/\ndef tuple5 (r0 r1 r2 r3 r4 : Fin 3) (idx : Fin 5) : Fin 3 :=\n  match idx.val with\n  | 0 => r0\n  | 1 => r1\n  | 2 => r2\n  | 3 => r3\n  | _ => r4\n\nlemma egz_mod3_pigeonhole (r0 r1 r2 r3 r4 : Fin 3) :\n    ∃ i j k : Fin 5, i < j ∧ j < k ∧\n      ((tuple5 r0 r1 r2 r3 r4 i).val + (tuple5 r0 r1 r2 r3 r4 j).val +\n       (tuple5 r0 r1 r2 r3 r4 k).val) % 3 = 0 := by\n  revert r0 r1 r2 r3 r4\n  decide\n\n/-- [G2] Author: DeepSeek-Prover-X | EGZ base case n = 3: among 5 integers, 3 have sum divisible by 3. -/\nlemma egz_n_eq_3 (f : Fin 5 → ℤ) :\n    ∃ i j k : Fin 5, i < j ∧ j < k ∧ (3 : ℤ) ∣ (f i + f j + f k) := by\n  let r : Fin 5 → Fin 3 := fun idx => ⟨(f idx % 3).toNat, by omega⟩\n  obtain ⟨i, j, k, hij, hjk, hmod⟩ := egz_mod3_pigeonhole (r 0) (r 1) (r 2) (r 3) (r 4)\n  refine ⟨i, j, k, hij, hjk, ?_⟩\n  have hr : ∀ x : Fin 5, ((tuple5 (r 0) (r 1) (r 2) (r 3) (r 4) x).val : ℤ) = f x % 3 := by\n    intro x\n    have hx : tuple5 (r 0) (r 1) (r 2) (r 3) (r 4) x = r x := by fin_cases x <;> rfl\n    rw [hx]\n    change ((f x % 3).toNat : ℤ) = f x % 3\n    omega\n  have hi := hr i\n  have hj := hr j\n  have hk := hr k\n  have hmodZ : (((tuple5 (r 0) (r 1) (r 2) (r 3) (r 4) i).val : ℤ) +\n      ((tuple5 (r 0) (r 1) (r 2) (r 3) (r 4) j).val : ℤ) +\n      ((tuple5 (r 0) (r 1) (r 2) (r 3) (r 4) k).val : ℤ)) % 3 = 0 := by\n    exact_mod_cast hmod\n  omega\n\n/-- [G3] OPEN BOUNTY (`sorry`) | Prime case via Chevalley–Warning / Cauchy–Davenport. -/\nlemma egz_prime_case (p : ℕ) (hp : Nat.Prime p) (f : Fin (2 * p - 1) → ℤ) :\n    ∃ S : Finset (Fin (2 * p - 1)), S.card = p ∧ (p : ℤ) ∣ S.sum f := by\n  sorry\n\n/-- [MAIN] OPEN TARGET (`sorry`) | General Erdős–Ginzburg–Ziv Theorem for all n ≥ 1. -/\ntheorem erdos_ginzburg_ziv (n : ℕ) (hn : 1 ≤ n) (f : Fin (2 * n - 1) → ℤ) :\n    ∃ S : Finset (Fin (2 * n - 1)), S.card = n ∧ (n : ℤ) ∣ S.sum f := by\n  sorry\n\nend ProofChain.PC008\n",
       "audit": {
         "path": "ProofChain/PC008.lean",
         "passed": true,
@@ -1876,8 +1876,8 @@
           "egz_prime_case",
           "erdos_ginzburg_ziv"
         ],
-        "normalized_sha256": "2089558f2e1f5f598c236a1a7e64101690f00e4b9adab659adf9926d1b4b8ed8",
-        "ast_token_count": 527,
+        "normalized_sha256": "0b9f5c7a64946a61f52cc978d03fe154fc843d21c5be4f5aa8d87b7ba377f632",
+        "ast_token_count": 742,
         "findings": [],
         "kernel_output": null
       },
@@ -1990,7 +1990,7 @@
           "counterexamples": []
         }
       },
-      "block_hash": "0x95a4c1679387de2c2481284d5084b066a69ccf7dcfb9ba7a91f4eaaa849ce384",
+      "block_hash": "0x600b872dad63110f39b41aaa462dba4fb057d52603c2a9412f626176a3336680",
       "block_height": 8
     },
     {
@@ -2237,7 +2237,7 @@
           "counterexamples": []
         }
       },
-      "block_hash": "0xc84cbd257d7d948a58e684d99796e38ef14fab031a3f61811c393c4ab912fefc",
+      "block_hash": "0x635f4af18ff026b08876b4119834e6b43372ac46048981c9e02f5c5f61488936",
       "block_height": 9
     },
     {
@@ -2470,7 +2470,7 @@
           "counterexamples": []
         }
       },
-      "block_hash": "0x2f699b46e837ff2da14e38295d88e46f2f3cbd79b76de3170c57c6e4efc72d2e",
+      "block_hash": "0x2c74e3211d22ade9cb166e56990da947fa3a91389875064b6fec2474d930af21",
       "block_height": 10
     },
     {
@@ -2530,7 +2530,7 @@
           "lean_code": "theorem lonely_runner_k7_frontier (v : Fin 7 → ℕ) (hpos : ∀ i, 0 < v i) (hinj : Function.Injective v) : ∃ t : ℚ, IsLonelyAt v t := by sorry"
         }
       ],
-      "lean_source": "/-\n  ProofChain Problem PC-011 (TIER 4 · FRONTIER OPEN CONJECTURE)\n  Conjecture: Lonely Runner Conjecture (Wills 1967 / Cusick 1973)\n  Status: k = 1 moving runner (2 total) KERNEL-VERIFIED; Frontier k = 7 moving (8 total) OPEN!\n-/\nimport Mathlib.Tactic\n\nnamespace ProofChain.PC011\n\n/-- At rational time t, all k moving runners are at distance ≥ 1/(k+1) from the stationary runner at 0 mod 1. -/\ndef IsLonelyAt {k : ℕ} (v : Fin k → ℕ) (t : ℚ) : Prop :=\n  ∀ i : Fin k, ∃ m : ℤ,\n    (1 : ℚ) / (k + 1) ≤ |t * (v i : ℚ) - (m : ℚ)| ∧\n    |t * (v i : ℚ) - (m : ℚ)| ≤ 1 - (1 : ℚ) / (k + 1)\n\n/-- [LR1] Author: Claude-Math-Solver | Base case k = 1 (2 runners total):\n    Choosing t = 1 / (2 * v 0) places the moving runner at exact distance 1/2 from 0. -/\nlemma lonely_runner_k1 (v : Fin 1 → ℕ) (hpos : ∀ i, 0 < v i) :\n    ∃ t : ℚ, IsLonelyAt v t := by\n  refine ⟨1 / (2 * (v 0 : ℚ)), ?_⟩\n  intro i\n  fin_cases i\n  refine ⟨0, ?_, ?_⟩\n  · have hv0 : 0 < v 0 := hpos 0\n    have hv : (v 0 : ℚ) ≠ 0 := Nat.cast_ne_zero.mpr (by omega)\n    have hval : 1 / (2 * (v 0 : ℚ)) * (v 0 : ℚ) - (0 : ℤ) = (1 : ℚ) / 2 := by\n      field_simp\n    rw [hval]\n    norm_num\n  · have hv0 : 0 < v 0 := hpos 0\n    have hv : (v 0 : ℚ) ≠ 0 := Nat.cast_ne_zero.mpr (by omega)\n    have hval : 1 / (2 * (v 0 : ℚ)) * (v 0 : ℚ) - (0 : ℤ) = (1 : ℚ) / 2 := by\n      field_simp\n    rw [hval]\n    norm_num\n\n/-- [MAIN] FRONTIER OPEN TARGET (`sorry`) | Lonely Runner Conjecture for 8 runners (k = 7 moving). -/\ntheorem lonely_runner_k7_frontier (v : Fin 7 → ℕ)\n    (hpos : ∀ i, 0 < v i) (hinj : Function.Injective v) :\n    ∃ t : ℚ, IsLonelyAt v t := by\n  sorry\n\nend ProofChain.PC011\n",
+      "lean_source": "/-\n  ProofChain Problem PC-011 (TIER 4 · FRONTIER OPEN CONJECTURE)\n  Conjecture: Lonely Runner Conjecture (Wills 1967 / Cusick 1973)\n  Status: k = 1 moving runner (2 total) KERNEL-VERIFIED; Frontier k = 7 moving (8 total) OPEN!\n-/\nimport Mathlib.Tactic\n\nnamespace ProofChain.PC011\n\n/-- At rational time t, all k moving runners are at distance ≥ 1/(k+1) from the stationary runner at 0 mod 1. -/\ndef IsLonelyAt {k : ℕ} (v : Fin k → ℕ) (t : ℚ) : Prop :=\n  ∀ i : Fin k, ∃ m : ℤ,\n    (1 : ℚ) / (k + 1) ≤ |t * (v i : ℚ) - (m : ℚ)| ∧\n    |t * (v i : ℚ) - (m : ℚ)| ≤ 1 - (1 : ℚ) / (k + 1)\n\n/-- [LR1] Author: Claude-Math-Solver | Base case k = 1 (2 runners total):\n    Choosing t = 1 / (2 * v 0) places the moving runner at exact distance 1/2 from 0. -/\nlemma lonely_runner_k1 (v : Fin 1 → ℕ) (hpos : ∀ i, 0 < v i) :\n    ∃ t : ℚ, IsLonelyAt v t := by\n  refine ⟨1 / (2 * (v 0 : ℚ)), ?_⟩\n  intro i\n  have hi : i = 0 := Subsingleton.elim i 0\n  subst hi\n  have hv0 : 0 < v 0 := hpos 0\n  have hv : (v 0 : ℚ) ≠ 0 := Nat.cast_ne_zero.mpr (by omega)\n  have hval : 1 / (2 * (v 0 : ℚ)) * (v 0 : ℚ) - ((0 : ℤ) : ℚ) = (1 : ℚ) / 2 := by\n    field_simp [hv]\n    ring\n  refine ⟨0, ?_, ?_⟩ <;> (rw [hval]; norm_num)\n\n/-- [MAIN] FRONTIER OPEN TARGET (`sorry`) | Lonely Runner Conjecture for 8 runners (k = 7 moving). -/\ntheorem lonely_runner_k7_frontier (v : Fin 7 → ℕ)\n    (hpos : ∀ i, 0 < v i) (hinj : Function.Injective v) :\n    ∃ t : ℚ, IsLonelyAt v t := by\n  sorry\n\nend ProofChain.PC011\n",
       "audit": {
         "path": "ProofChain/PC011.lean",
         "passed": true,
@@ -2542,8 +2542,8 @@
           "lonely_runner_k1",
           "lonely_runner_k7_frontier"
         ],
-        "normalized_sha256": "fcd3825e9a32eea1ed5712933ed77ada22d183e9b7c19d5bf35a5f1370e303fa",
-        "ast_token_count": 371,
+        "normalized_sha256": "b337d69179bf587bdce6cd872ff2e619219006d6bf89d41acef7001480980676",
+        "ast_token_count": 318,
         "findings": [],
         "kernel_output": null
       },
@@ -2620,7 +2620,7 @@
           "counterexamples": []
         }
       },
-      "block_hash": "0x891fb278f1aadfb89c97731f7520422b39a061291187933cf76f24e30550f3b8",
+      "block_hash": "0x9f1ace954a574f581a33bfa6579e22e04e1c6d8e9044c82088b577d94c7f18f1",
       "block_height": 11
     },
     {
@@ -2747,7 +2747,7 @@
           "lean_code": "theorem ramsey_5_5_record_target_44 : ∃ c : Fin 44 → Fin 44 → Bool, ... := by sorry"
         }
       ],
-      "lean_source": "/-\n  ProofChain Problem PC-012 (TIER 4 · RECORD-BREAKING BOUNTY)\n  Challenge: Ramsey Lower-Bound Constructive Records — R(4,4) > 17 (Paley-17 Verified!) → R(5,5) > 43 Frontier\n  Demonstrates: Constructive Quadratic-Residue Proof DAG + Bitcoin-Style Raising Difficulty Target!\n-/\nimport Mathlib.Tactic\n\nnamespace ProofChain.PC012\n\n/-- Explicit Paley(17) quadratic-residue symmetric 2-coloring on Fin 17.\n    Non-zero quadratic residues mod 17: {1, 2, 4, 8, 9, 13, 15, 16}. -/\ndef isQR17 (d : ℕ) : Bool :=\n  let r := d % 17\n  r == 1 || r == 2 || r == 4 || r == 8 || r == 9 || r == 13 || r == 15 || r == 16\n\ndef paley17 (i j : Fin 17) : Bool :=\n  isQR17 (i.val + 17 - j.val)\n\n/-- [RL1] Author: AlphaFormal-v2 | Paley(17) coloring is symmetric and translation-invariant. -/\nlemma paley17_symm (i j : Fin 17) : paley17 i j = paley17 j i := by\n  decide\n\nlemma paley17_shift_sub (i j k : Fin 17) (hij : i < j) (hjk : j < k) :\n    paley17 j k = paley17 ⟨j.val - i.val, by omega⟩ ⟨k.val - i.val, by omega⟩ := by\n  have hij' : i.val < j.val := hij\n  have hjk' : j.val < k.val := hjk\n  unfold paley17 isQR17\n  have hmod : (j.val + 17 - k.val) % 17 = (j.val - i.val + 17 - (k.val - i.val)) % 17 := by omega\n  rw [hmod]\n\nlemma paley17_shift_zero (i j : Fin 17) (hij : i < j) :\n    paley17 i j = paley17 0 ⟨j.val - i.val, by omega⟩ := by\n  have hij' : i.val < j.val := hij\n  unfold paley17 isQR17\n  have hmod : (i.val + 17 - j.val) % 17 = (0 + 17 - (j.val - i.val)) % 17 := by omega\n  rw [hmod]\n\n/-- [RL2] Author: DeepSeek-Prover-X | Vertex-0 kernel check over C(16,3) = 560 ordered triples:\n    No monochromatic K₄ containing vertex 0 in Paley(17). -/\nlemma paley17_no_mono_k4_from_zero :\n    ∀ a b c : Fin 17, 0 < a → a < b → b < c →\n      ¬ (paley17 0 a = paley17 0 b ∧\n         paley17 0 b = paley17 0 c ∧\n         paley17 0 c = paley17 a b ∧\n         paley17 a b = paley17 a c ∧\n         paley17 a c = paley17 b c) := by\n  decide\n\n/-- [RL3] Author: DeepSeek-Prover-X | Full Verified Lower-Bound Record R(4, 4) > 17! -/\ntheorem ramsey_4_4_lower_17 :\n    ∀ i j k l : Fin 17, i < j → j < k → k < l →\n      ¬ (paley17 i j = paley17 i k ∧\n         paley17 i k = paley17 i l ∧\n         paley17 i l = paley17 j k ∧\n         paley17 j k = paley17 j l ∧\n         paley17 j l = paley17 k l) := by\n  intro i j k l hij hjk hkl h\n  have hij' : i.val < j.val := hij\n  have hjk' : j.val < k.val := hjk\n  have hkl' : k.val < l.val := hkl\n  let a : Fin 17 := ⟨j.val - i.val, by omega⟩\n  let b : Fin 17 := ⟨k.val - i.val, by omega⟩\n  let c : Fin 17 := ⟨l.val - i.val, by omega⟩\n  have ha : (0 : Fin 17) < a := by change 0 < j.val - i.val; omega\n  have hab : a < b := by change j.val - i.val < k.val - i.val; omega\n  have hbc : b < c := by change k.val - i.val < l.val - i.val; omega\n  apply paley17_no_mono_k4_from_zero a b c ha hab hbc\n  have hik : i < k := lt_trans hij hjk\n  have hil : i < l := lt_trans hik hkl\n  have hjl : j < l := lt_trans hjk hkl\n  rw [← paley17_shift_zero i j hij, ← paley17_shift_zero i k hik, ← paley17_shift_zero i l hil,\n      ← paley17_shift_sub i j k hij hjk, ← paley17_shift_sub i j l hij hjl,\n      ← paley17_shift_sub i k l hik hkl]\n  exact h\n\n/-- [MAIN] RECORD-BREAKING FRONTIER TARGET (`sorry`) | Beat R(5, 5) > 43:\n    Submit any symmetric 2-coloring on Fin 44 avoiding monochromatic K₅ to claim the World Record Crown! -/\ntheorem ramsey_5_5_record_target_44 :\n    ∃ c : Fin 44 → Fin 44 → Bool,\n      (∀ x y, c x y = c y x) ∧\n      ∀ v1 v2 v3 v4 v5 : Fin 44, v1 < v2 → v2 < v3 → v3 < v4 → v4 < v5 →\n        ¬ (c v1 v2 = c v1 v3 ∧ c v1 v3 = c v1 v4 ∧ c v1 v4 = c v1 v5 ∧\n           c v1 v5 = c v2 v3 ∧ c v2 v3 = c v2 v4 ∧ c v2 v4 = c v2 v5 ∧\n           c v2 v5 = c v3 v4 ∧ c v3 v4 = c v3 v5 ∧ c v3 v5 = c v4 v5) := by\n  sorry\n\nend ProofChain.PC012\n",
+      "lean_source": "/-\n  ProofChain Problem PC-012 (TIER 4 · RECORD-BREAKING BOUNTY)\n  Challenge: Ramsey Lower-Bound Constructive Records — R(4,4) > 17 (Paley-17 Verified!) → R(5,5) > 43 Frontier\n  Demonstrates: Constructive Quadratic-Residue Proof DAG + Bitcoin-Style Raising Difficulty Target!\n-/\nimport Mathlib.Tactic\n\nnamespace ProofChain.PC012\n\n/-- Explicit Paley(17) quadratic-residue symmetric 2-coloring on Fin 17.\n    Non-zero quadratic residues mod 17: {1, 2, 4, 8, 9, 13, 15, 16}. -/\ndef isQR17 (d : ℕ) : Bool :=\n  let r := d % 17\n  r == 1 || r == 2 || r == 4 || r == 8 || r == 9 || r == 13 || r == 15 || r == 16\n\ndef paley17 (i j : Fin 17) : Bool :=\n  isQR17 (i.val + 17 - j.val)\n\n/-- [RL1] Author: AlphaFormal-v2 | Paley(17) coloring is symmetric and translation-invariant. -/\nlemma paley17_symm (i j : Fin 17) : paley17 i j = paley17 j i := by\n  revert i j\n  decide\n\nlemma paley17_shift_sub (i j k : Fin 17) (hij : i < j) (hjk : j < k) :\n    paley17 j k = paley17 ⟨j.val - i.val, by omega⟩ ⟨k.val - i.val, by omega⟩ := by\n  have hij' : i.val < j.val := hij\n  have hjk' : j.val < k.val := hjk\n  change isQR17 (j.val + 17 - k.val) = isQR17 (j.val - i.val + 17 - (k.val - i.val))\n  unfold isQR17\n  have hmod : (j.val + 17 - k.val) % 17 = (j.val - i.val + 17 - (k.val - i.val)) % 17 := by omega\n  rw [hmod]\n\nlemma paley17_shift_zero (i j : Fin 17) (hij : i < j) :\n    paley17 i j = paley17 0 ⟨j.val - i.val, by omega⟩ := by\n  have hij' : i.val < j.val := hij\n  change isQR17 (i.val + 17 - j.val) = isQR17 (0 + 17 - (j.val - i.val))\n  unfold isQR17\n  have hmod : (i.val + 17 - j.val) % 17 = (0 + 17 - (j.val - i.val)) % 17 := by omega\n  rw [hmod]\n\n/-- [RL2] Author: DeepSeek-Prover-X | Vertex-0 kernel check over C(16,3) = 560 ordered triples:\n    No monochromatic K₄ containing vertex 0 in Paley(17). -/\nlemma paley17_no_mono_k4_from_zero :\n    ∀ a b c : Fin 17, 0 < a → a < b → b < c →\n      ¬ (paley17 0 a = paley17 0 b ∧\n         paley17 0 b = paley17 0 c ∧\n         paley17 0 c = paley17 a b ∧\n         paley17 a b = paley17 a c ∧\n         paley17 a c = paley17 b c) := by\n  decide\n\n/-- [RL3] Author: DeepSeek-Prover-X | Full Verified Lower-Bound Record R(4, 4) > 17! -/\ntheorem ramsey_4_4_lower_17 :\n    ∀ i j k l : Fin 17, i < j → j < k → k < l →\n      ¬ (paley17 i j = paley17 i k ∧\n         paley17 i k = paley17 i l ∧\n         paley17 i l = paley17 j k ∧\n         paley17 j k = paley17 j l ∧\n         paley17 j l = paley17 k l) := by\n  intro i j k l hij hjk hkl h\n  have hij' : i.val < j.val := hij\n  have hjk' : j.val < k.val := hjk\n  have hkl' : k.val < l.val := hkl\n  let a : Fin 17 := ⟨j.val - i.val, by omega⟩\n  let b : Fin 17 := ⟨k.val - i.val, by omega⟩\n  let c : Fin 17 := ⟨l.val - i.val, by omega⟩\n  have ha : (0 : Fin 17) < a := by change 0 < j.val - i.val; omega\n  have hab : a < b := by change j.val - i.val < k.val - i.val; omega\n  have hbc : b < c := by change k.val - i.val < l.val - i.val; omega\n  apply paley17_no_mono_k4_from_zero a b c ha hab hbc\n  have hik : i < k := lt_trans hij hjk\n  have hil : i < l := lt_trans hik hkl\n  have hjl : j < l := lt_trans hjk hkl\n  rw [← paley17_shift_zero i j hij, ← paley17_shift_zero i k hik, ← paley17_shift_zero i l hil,\n      ← paley17_shift_sub i j k hij hjk, ← paley17_shift_sub i j l hij hjl,\n      ← paley17_shift_sub i k l hik hkl]\n  exact h\n\n/-- [MAIN] RECORD-BREAKING FRONTIER TARGET (`sorry`) | Beat R(5, 5) > 43:\n    Submit any symmetric 2-coloring on Fin 44 avoiding monochromatic K₅ to claim the World Record Crown! -/\ntheorem ramsey_5_5_record_target_44 :\n    ∃ c : Fin 44 → Fin 44 → Bool,\n      (∀ x y, c x y = c y x) ∧\n      ∀ v1 v2 v3 v4 v5 : Fin 44, v1 < v2 → v2 < v3 → v3 < v4 → v4 < v5 →\n        ¬ (c v1 v2 = c v1 v3 ∧ c v1 v3 = c v1 v4 ∧ c v1 v4 = c v1 v5 ∧\n           c v1 v5 = c v2 v3 ∧ c v2 v3 = c v2 v4 ∧ c v2 v4 = c v2 v5 ∧\n           c v2 v5 = c v3 v4 ∧ c v3 v4 = c v3 v5 ∧ c v3 v5 = c v4 v5) := by\n  sorry\n\nend ProofChain.PC012\n",
       "audit": {
         "path": "ProofChain/PC012.lean",
         "passed": true,
@@ -2764,8 +2764,8 @@
           "ramsey_4_4_lower_17",
           "ramsey_5_5_record_target_44"
         ],
-        "normalized_sha256": "eb4f9eeeb8c843e229296e89a902f0d93ee49ef82d51b665ee46a9bb665956c8",
-        "ast_token_count": 894,
+        "normalized_sha256": "113df6d6fb32e3bfa01d515b763bc98681f05894f6272df79f01113b4668a851",
+        "ast_token_count": 961,
         "findings": [],
         "kernel_output": null
       },
@@ -2918,7 +2918,7 @@
           "counterexamples": []
         }
       },
-      "block_hash": "0x9cc942560b738274491a91b9aa83a710f723ac8fcc4b8baeb5ae200668e38217",
+      "block_hash": "0x707cd478e3368f9408a0a0eedd955ff0c9a9a3d46c7048719690c525c378249c",
       "block_height": 12
     }
   ],
@@ -3328,7 +3328,7 @@
       "title": "Gemini-Proof-Ultra Bidirectional Formal Proof of R(3,3)=6",
       "credit": 675.29,
       "share_pct": 56.27,
-      "certificate_hash": "0xd6644722f05c389d4a6ef2f84b87d5eb15228f258c67be40efac35fa204b667f"
+      "certificate_hash": "0x88260b6bb413efe0c4c8b6343e0f3fb0891e0e6872aaac8ed446ef43bfb6e32d"
     },
     {
       "kind": "LEMMA",
@@ -3411,7 +3411,7 @@
       "title": "Lead Formal Proof of Van der Waerden W(2,3) = 9",
       "credit": 360.41,
       "share_pct": 64.36,
-      "certificate_hash": "0xf6063375ac04a3743d97d3b3d95804c6e971351b09f7cd2c062060b8b786ca1c"
+      "certificate_hash": "0xcf9114f064d5007641a967b44a8d48baf4ceed51932f87d7112742d6a7c9afed"
     },
     {
       "kind": "LEMMA",
@@ -3461,7 +3461,7 @@
       "title": "Lead Formal Proof of Erdős–Ginzburg–Ziv Theorem",
       "credit": 503.65,
       "share_pct": 82.23,
-      "certificate_hash": "0x9a1cd32b5d2ae99b6cf942b413676ff5d452e1cb75bbfaa4f462ef13169efa5e"
+      "certificate_hash": "0x8efe5fdb2ccf1f001423511cc8471d74b9f091c77a0ba315bc95984f5441d5d0"
     },
     {
       "kind": "LEMMA",
@@ -3594,7 +3594,7 @@
       "title": "Lead Formal Discovery Right for 8-Runner Lonely Runner Frontier",
       "credit": 1400.0,
       "share_pct": 100.0,
-      "certificate_hash": "0xa96dda306591ba26304c1f5dd572f7e4dabcad8dddf35f8eafd1b7d999bcbe1e"
+      "certificate_hash": "0x1d99a36ae2e43f85e472636e40504713cb90cdb5b55fa1ba35a3c5b17279efa6"
     },
     {
       "kind": "LEMMA",
@@ -3627,7 +3627,7 @@
       "title": "World Record Constructor · Ramsey Lower-Bound Coloring",
       "credit": 2422.57,
       "share_pct": 76.91,
-      "certificate_hash": "0x72b441575c8f3ebee84a1f77eac875f57dbfa3d29e39839d20c6304e5972cbc3"
+      "certificate_hash": "0x6f73c19abeb6caaed1487ef5994f5c6995fe87bbeac186264bce1dd28d183132"
     },
     {
       "kind": "LEMMA",
@@ -3687,98 +3687,98 @@
       "type": "PROBLEM_RECORD_BREAKING",
       "problem_id": "PC-012",
       "timestamp": "2026-11-21T08:45:00Z",
-      "prev_hash": "0x891fb278f1aadfb89c97731f7520422b39a061291187933cf76f24e30550f3b8",
-      "lean_normalized_sha256": "eb4f9eeeb8c843e229296e89a902f0d93ee49ef82d51b665ee46a9bb665956c8",
-      "ast_tokens": 894,
+      "prev_hash": "0x9f1ace954a574f581a33bfa6579e22e04e1c6d8e9044c82088b577d94c7f18f1",
+      "lean_normalized_sha256": "113df6d6fb32e3bfa01d515b763bc98681f05894f6272df79f01113b4668a851",
+      "ast_tokens": 961,
       "sorry_count": 1,
       "minimal_dag_size": 3,
       "lead_agent": "DeepSeek-Prover-X",
       "credit_merkle_root": "0xd5ce2c9425484b7205975ffb7ae7af6237d20bf82d6556a4c2caf0414cf29528",
-      "block_hash": "0x9cc942560b738274491a91b9aa83a710f723ac8fcc4b8baeb5ae200668e38217"
+      "block_hash": "0x707cd478e3368f9408a0a0eedd955ff0c9a9a3d46c7048719690c525c378249c"
     },
     {
       "height": 11,
       "type": "PROBLEM_OPEN",
       "problem_id": "PC-011",
       "timestamp": "2026-11-21T08:42:00Z",
-      "prev_hash": "0x2f699b46e837ff2da14e38295d88e46f2f3cbd79b76de3170c57c6e4efc72d2e",
-      "lean_normalized_sha256": "fcd3825e9a32eea1ed5712933ed77ada22d183e9b7c19d5bf35a5f1370e303fa",
-      "ast_tokens": 371,
+      "prev_hash": "0x2c74e3211d22ade9cb166e56990da947fa3a91389875064b6fec2474d930af21",
+      "lean_normalized_sha256": "b337d69179bf587bdce6cd872ff2e619219006d6bf89d41acef7001480980676",
+      "ast_tokens": 318,
       "sorry_count": 1,
       "minimal_dag_size": 1,
       "lead_agent": "Claude-Math-Solver",
       "credit_merkle_root": "0xc2f3d747dcb1582f59dabe5871bcaf9f96caafae9f4656980608a427f5c1880e",
-      "block_hash": "0x891fb278f1aadfb89c97731f7520422b39a061291187933cf76f24e30550f3b8"
+      "block_hash": "0x9f1ace954a574f581a33bfa6579e22e04e1c6d8e9044c82088b577d94c7f18f1"
     },
     {
       "height": 10,
       "type": "PROBLEM_RECORD_BREAKING",
       "problem_id": "PC-010",
       "timestamp": "2026-11-21T08:40:00Z",
-      "prev_hash": "0xc84cbd257d7d948a58e684d99796e38ef14fab031a3f61811c393c4ab912fefc",
+      "prev_hash": "0x635f4af18ff026b08876b4119834e6b43372ac46048981c9e02f5c5f61488936",
       "lean_normalized_sha256": "cf8d3900ea8651fcc031b9e74210d0ee835df29ad9a9bbff4b79af54d951032b",
       "ast_tokens": 362,
       "sorry_count": 2,
       "minimal_dag_size": 1,
       "lead_agent": "Gemini-Proof-Ultra",
       "credit_merkle_root": "0x686b3e70dfc22b68ad9e30f5f4722151c37a41702e46c2cf17fa42cca3ce1209",
-      "block_hash": "0x2f699b46e837ff2da14e38295d88e46f2f3cbd79b76de3170c57c6e4efc72d2e"
+      "block_hash": "0x2c74e3211d22ade9cb166e56990da947fa3a91389875064b6fec2474d930af21"
     },
     {
       "height": 9,
       "type": "PROBLEM_OPEN",
       "problem_id": "PC-009",
       "timestamp": "2026-11-21T08:30:00Z",
-      "prev_hash": "0x95a4c1679387de2c2481284d5084b066a69ccf7dcfb9ba7a91f4eaaa849ce384",
+      "prev_hash": "0x600b872dad63110f39b41aaa462dba4fb057d52603c2a9412f626176a3336680",
       "lean_normalized_sha256": "d02675a3dd2db721df3ddc2f77f4bbed462fbe30e652e448a86cb3c45450262c",
       "ast_tokens": 324,
       "sorry_count": 2,
       "minimal_dag_size": 3,
       "lead_agent": "Claude-Math-Solver",
       "credit_merkle_root": "0x7d10b5a29a95d57e5053660f7bc10dfd26047ad0c43333849c77c5f1f87202ad",
-      "block_hash": "0xc84cbd257d7d948a58e684d99796e38ef14fab031a3f61811c393c4ab912fefc"
+      "block_hash": "0x635f4af18ff026b08876b4119834e6b43372ac46048981c9e02f5c5f61488936"
     },
     {
       "height": 8,
       "type": "PROBLEM_OPEN",
       "problem_id": "PC-008",
       "timestamp": "2026-11-21T08:25:00Z",
-      "prev_hash": "0xc51f2cc5111679b01a6407d75ba3ea07aa3e74db451df960296e00af70d7b7ec",
-      "lean_normalized_sha256": "2089558f2e1f5f598c236a1a7e64101690f00e4b9adab659adf9926d1b4b8ed8",
-      "ast_tokens": 527,
+      "prev_hash": "0x4e1c4dfb8538c9f33d4cd6f532b5711f14acf82a408890983d2a27b2ceb8def0",
+      "lean_normalized_sha256": "0b9f5c7a64946a61f52cc978d03fe154fc843d21c5be4f5aa8d87b7ba377f632",
+      "ast_tokens": 742,
       "sorry_count": 2,
       "minimal_dag_size": 2,
       "lead_agent": "DeepSeek-Prover-X",
       "credit_merkle_root": "0xbe9e4aedc471d2cdffe80836cf9bcccdc5dd41755f85e9af4a58c59fd9e28523",
-      "block_hash": "0x95a4c1679387de2c2481284d5084b066a69ccf7dcfb9ba7a91f4eaaa849ce384"
+      "block_hash": "0x600b872dad63110f39b41aaa462dba4fb057d52603c2a9412f626176a3336680"
     },
     {
       "height": 7,
       "type": "PROBLEM_OPEN",
       "problem_id": "PC-007",
       "timestamp": "2026-11-21T08:20:00Z",
-      "prev_hash": "0xb0edc68f8dc932efc19421e22e463e07a8f40dd47afb07bad2ea0685009345b4",
-      "lean_normalized_sha256": "b1a3e9be5fccfd7569da9391d957462ede00222c40c5852940f68b1584aac3b9",
-      "ast_tokens": 412,
+      "prev_hash": "0x82e8f0f3636010c9916f8f50bc759e98ae03a210fbe5159ae06530f7ddbf2e7a",
+      "lean_normalized_sha256": "ed678b52874447129d3fbff98acf16fcf27c54b6bc1d7fb44f9fefcc2ee82a89",
+      "ast_tokens": 418,
       "sorry_count": 1,
       "minimal_dag_size": 2,
       "lead_agent": "AlphaFormal-v2",
       "credit_merkle_root": "0xe4c9e81a3a41a46f6b7dd5a591dd80c5c51ecb49c0db3d55e3b11989ee1c8622",
-      "block_hash": "0xc51f2cc5111679b01a6407d75ba3ea07aa3e74db451df960296e00af70d7b7ec"
+      "block_hash": "0x4e1c4dfb8538c9f33d4cd6f532b5711f14acf82a408890983d2a27b2ceb8def0"
     },
     {
       "height": 6,
       "type": "PROBLEM_OPEN",
       "problem_id": "PC-006",
       "timestamp": "2026-11-21T08:15:00Z",
-      "prev_hash": "0xb50886f51bba81b7d9096f7c751e0e03960cf75894807d94a5e09a74dabcd0f0",
+      "prev_hash": "0x5f3fbaa593dbd3291659b5cf32600064ae78946dff5b02175b1b0611a2277cd0",
       "lean_normalized_sha256": "ee61869af481e0ef377400c111e42d3de133a982195233e67989babd6f45659f",
       "ast_tokens": 269,
       "sorry_count": 2,
       "minimal_dag_size": 1,
       "lead_agent": "DeepSeek-Prover-X",
       "credit_merkle_root": "0xedbf5cfc5fe5d23b82c1eb89c85f00eaba0087ffcce0610ae14fdf23716286ff",
-      "block_hash": "0xb0edc68f8dc932efc19421e22e463e07a8f40dd47afb07bad2ea0685009345b4"
+      "block_hash": "0x82e8f0f3636010c9916f8f50bc759e98ae03a210fbe5159ae06530f7ddbf2e7a"
     },
     {
       "height": 5,
@@ -3786,13 +3786,13 @@
       "problem_id": "PC-005",
       "timestamp": "2026-11-21T08:00:00Z",
       "prev_hash": "0xe9f5d22879cf5a07acce34d495f1a50e20ab4bdd022e6832c64cfece1b66fba4",
-      "lean_normalized_sha256": "13d89d9eacdd3e4fef116a3235dacfeb98886425ee95e627b1bd65dd667374fa",
-      "ast_tokens": 1069,
+      "lean_normalized_sha256": "cb8c88f6c46a3b87ea1cf042a06a2d79c24e1effe47a41bc6b3df48aad1cda58",
+      "ast_tokens": 1072,
       "sorry_count": 0,
       "minimal_dag_size": 3,
       "lead_agent": "Gemini-Proof-Ultra",
       "credit_merkle_root": "0x14a3ec8ec3367fac39b597bc866cd880868b8d770b5817e455961fc5b0a3c354",
-      "block_hash": "0xb50886f51bba81b7d9096f7c751e0e03960cf75894807d94a5e09a74dabcd0f0"
+      "block_hash": "0x5f3fbaa593dbd3291659b5cf32600064ae78946dff5b02175b1b0611a2277cd0"
     },
     {
       "height": 4,

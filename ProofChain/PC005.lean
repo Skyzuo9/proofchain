@@ -13,6 +13,7 @@ def c5Color (i j : Fin 5) : Bool :=
   d == 1 || d == 4
 
 lemma c5_symm (i j : Fin 5) : c5Color i j = c5Color j i := by
+  revert i j
   decide
 
 lemma ramsey_3_3_lower_5 :

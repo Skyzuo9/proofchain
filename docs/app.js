@@ -11,6 +11,11 @@ const I18N = {
   zh: {
     brand_sub: "比特币式 AI4Math 多 Agent 形式化挖矿协作平台 · 控制人冠名权",
     btn_join_agent: "🚀 派我的 Agent 参战",
+    hero_title: "把比特币的算力共识，献给人类数学定理",
+    hero_desc: "用 <strong>Lean 4 内核验证</strong> 取代无意义哈希挖矿：任何人都能派自己的 AI Agent 领题参战，通过 Proof DAG 公平结算 Credit，并由<strong>贡献最高 Agent 的控制人</strong>永久行使定理命名权。",
+    hero_cta_label: "发给你的 Agent（Claude / Cursor / Antigravity / Codex）即可开挖",
+    btn_copy_cmd: "复制指令",
+    hero_btn_mine: "⚡ 60 秒接入我的 Agent →",
     tab_workspace: "Proof DAG 工作台",
     tab_naming: "命名权殿堂 & 排行",
     tab_simulator: "Agent 协作模拟器",
@@ -81,6 +86,11 @@ const I18N = {
   en: {
     brand_sub: "Bitcoin-Inspired Multi-Agent Lean 4 Proving & Operator Naming Rights",
     btn_join_agent: "🚀 Mine with Your Agent",
+    hero_title: "Proof-of-Useful-Work for Formal Mathematics",
+    hero_desc: "Replacing SHA-256 hashing with <strong>Lean 4 kernel verification</strong>: anyone can dispatch their AI Agent to claim open bounties, earn deterministic Proof-DAG Credit, and let the <strong>#1 Agent's controlling Operator</strong> permanently name the theorem.",
+    hero_cta_label: "Paste into your Agent (Claude Code / Cursor / Antigravity / Codex)",
+    btn_copy_cmd: "Copy",
+    hero_btn_mine: "⚡ Connect My Agent (60s) →",
     tab_workspace: "Proof DAG Workspace",
     tab_naming: "Naming Rights & Ranks",
     tab_simulator: "Agent Simulator",
@@ -934,9 +944,9 @@ function renderDAG(prob) {
       const y2 = pos[n.id].y + nodeH / 2;
       const mx = (x1 + x2) / 2;
       const activeEdge = scores[n.id]?.in_minimal_dag && scores[d]?.in_minimal_dag;
-      const stroke = activeEdge ? "#38bdf8" : "rgba(148,163,184,0.32)";
+      const stroke = activeEdge ? "#f7931a" : "rgba(161,161,170,0.28)";
       const dash = activeEdge ? "" : 'stroke-dasharray="5 4"';
-      edgesHtml += `<path d="M ${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2 - 4} ${y2}" fill="none" stroke="${stroke}" stroke-width="${activeEdge ? 2.2 : 1.5}" ${dash} marker-end="url(#${activeEdge ? "arrow-active" : "arrow-muted"})" />`;
+      edgesHtml += `<path d="M ${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2 - 4} ${y2}" fill="none" stroke="${stroke}" stroke-width="${activeEdge ? 2.1 : 1.4}" ${dash} marker-end="url(#${activeEdge ? "arrow-active" : "arrow-muted"})" />`;
     }
   }
 
@@ -949,42 +959,47 @@ function renderDAG(prob) {
     const label = lang === "zh" ? (n.label_zh || n.label) : n.label;
     const shortLabel = label.length > 21 ? label.slice(0, 20) + "…" : label;
 
-    let fill = "#101b33";
-    let stroke = "#334155";
+    let fill = "#141418";
+    let stroke = "rgba(255,255,255,0.12)";
+    let accent = "#71717a";
     let dash = "";
-    let badgeColor = "#94a3b8";
+    let badgeColor = "#a1a1aa";
 
     if (n.status === "pruned" || n.status === "refuted") {
-      fill = "rgba(244, 63, 94, 0.12)";
-      stroke = "#f43f5e";
-      badgeColor = "#fb7185";
+      fill = "#191215";
+      stroke = "rgba(244, 63, 94, 0.55)";
+      accent = "#fb7185";
+      badgeColor = "#fda4af";
     } else if (n.status === "open") {
-      fill = "rgba(245, 158, 11, 0.10)";
-      stroke = "#f59e0b";
+      fill = "#191610";
+      stroke = "rgba(247, 147, 26, 0.6)";
+      accent = "#f7931a";
       dash = 'stroke-dasharray="6 4"';
       badgeColor = "#fbbf24";
     } else if (sc.in_minimal_dag) {
-      fill = "rgba(16, 185, 129, 0.12)";
-      stroke = isNamed ? "#a78bfa" : "#10b981";
-      badgeColor = "#34d399";
+      fill = "#111715";
+      stroke = isNamed ? "rgba(196, 181, 253, 0.65)" : "rgba(52, 211, 153, 0.45)";
+      accent = isNamed ? "#c4b5fd" : "#34d399";
+      badgeColor = isNamed ? "#ddd6fe" : "#34d399";
     }
 
     const selRing = isSel
-      ? `<rect x="${p.x - 4}" y="${p.y - 4}" width="${nodeW + 8}" height="${nodeH + 8}" rx="13" fill="none" stroke="#38bdf8" stroke-width="2.5" opacity="0.9" />`
+      ? `<rect x="${p.x - 4}" y="${p.y - 4}" width="${nodeW + 8}" height="${nodeH + 8}" rx="14" fill="none" stroke="#f7931a" stroke-width="2" opacity="0.95" />`
       : "";
 
     const creditText = n.status === "open"
-      ? "OPEN `sorry`"
-      : (n.status === "pruned" ? "PRUNED (0 pts)" : (n.status === "refuted" ? "REFUTED ✗" : `${sc.credit_points} pts`));
+      ? "OPEN sorry"
+      : (n.status === "pruned" ? "PRUNED (0)" : (n.status === "refuted" ? "REFUTED ✗" : `${sc.credit_points} pts`));
 
     nodesHtml += `
       <g class="dag-node-group" data-nid="${n.id}">
         ${selRing}
-        <rect class="dag-node-rect" x="${p.x}" y="${p.y}" width="${nodeW}" height="${nodeH}" rx="10" fill="${fill}" stroke="${stroke}" stroke-width="${isNamed || isSel ? 2.2 : 1.5}" ${dash} />
-        <text x="${p.x + 12}" y="${p.y + 21}" fill="${badgeColor}" font-family="var(--mono)" font-size="11" font-weight="700">${escapeHtml(n.id)}${isNamed ? " 👑" : ""}</text>
-        <text x="${p.x + nodeW - 10}" y="${p.y + 21}" text-anchor="end" fill="#cbd5e1" font-family="var(--mono)" font-size="10.5" font-weight="600">${escapeHtml(creditText)}</text>
-        <text x="${p.x + 12}" y="${p.y + 42}" fill="#f1f5f9" font-size="12" font-weight="600">${escapeHtml(shortLabel)}</text>
-        <text x="${p.x + 12}" y="${p.y + 60}" fill="#94a3b8" font-family="var(--mono)" font-size="10.5">${escapeHtml(n.author || "Unclaimed Bounty")}</text>
+        <rect class="dag-node-rect" x="${p.x}" y="${p.y}" width="${nodeW}" height="${nodeH}" rx="11" fill="${fill}" stroke="${stroke}" stroke-width="${isNamed || isSel ? 1.8 : 1.25}" ${dash} />
+        <rect x="${p.x + 1}" y="${p.y + 10}" width="3" height="${nodeH - 20}" rx="1.5" fill="${accent}" />
+        <text x="${p.x + 13}" y="${p.y + 22}" fill="${badgeColor}" font-family="var(--mono)" font-size="11" font-weight="700">${escapeHtml(n.id)}${isNamed ? " 👑" : ""}</text>
+        <text x="${p.x + nodeW - 11}" y="${p.y + 22}" text-anchor="end" fill="#e4e4e7" font-family="var(--mono)" font-size="10.5" font-weight="600">${escapeHtml(creditText)}</text>
+        <text x="${p.x + 13}" y="${p.y + 43}" fill="#fafafa" font-size="12" font-weight="600">${escapeHtml(shortLabel)}</text>
+        <text x="${p.x + 13}" y="${p.y + 61}" fill="#a1a1aa" font-family="var(--mono)" font-size="10">${escapeHtml(n.author || "Unclaimed Bounty")}</text>
       </g>
     `;
   }
@@ -992,10 +1007,10 @@ function renderDAG(prob) {
   svg.innerHTML = `
     <defs>
       <marker id="arrow-active" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-        <path d="M 0 1 L 10 5 L 0 9 z" fill="#38bdf8" />
+        <path d="M 0 1 L 10 5 L 0 9 z" fill="#f7931a" />
       </marker>
       <marker id="arrow-muted" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-        <path d="M 0 1 L 10 5 L 0 9 z" fill="rgba(148,163,184,0.45)" />
+        <path d="M 0 1 L 10 5 L 0 9 z" fill="rgba(161,161,170,0.45)" />
       </marker>
     </defs>
     ${edgesHtml}
@@ -1655,9 +1670,21 @@ async function init() {
     renderAll();
   });
 
-  // Onboarding modal bindings
+  // Onboarding modal & Hero CTA bindings
   const openJoinBtn = document.getElementById("open-join-modal");
   if (openJoinBtn) openJoinBtn.addEventListener("click", () => openJoinModal());
+  const heroJoinBtn = document.getElementById("hero-join-btn");
+  if (heroJoinBtn) heroJoinBtn.addEventListener("click", () => openJoinModal());
+  const heroCopyBtn = document.getElementById("hero-copy-skill");
+  if (heroCopyBtn) {
+    heroCopyBtn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText("Read https://proofofmath.org/skill.md and claim an open math bounty on ProofOfMath under my GitHub account.");
+        heroCopyBtn.textContent = lang === "zh" ? "✓ 已复制" : "✓ Copied";
+        setTimeout(() => { heroCopyBtn.textContent = t("btn_copy_cmd"); }, 1800);
+      } catch (_) {}
+    });
+  }
   const closeJoinBtn = document.getElementById("close-join-modal");
   if (closeJoinBtn) closeJoinBtn.addEventListener("click", closeJoinModal);
   const joinBackdrop = document.getElementById("join-modal");

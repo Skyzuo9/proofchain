@@ -31,6 +31,7 @@ lemma egz_mod3_pigeonhole (r0 r1 r2 r3 r4 : Fin 3) :
     ∃ i j k : Fin 5, i < j ∧ j < k ∧
       ((tuple5 r0 r1 r2 r3 r4 i).val + (tuple5 r0 r1 r2 r3 r4 j).val +
        (tuple5 r0 r1 r2 r3 r4 k).val) % 3 = 0 := by
+  revert r0 r1 r2 r3 r4
   decide
 
 /-- [G2] Author: DeepSeek-Prover-X | EGZ base case n = 3: among 5 integers, 3 have sum divisible by 3. -/
@@ -39,7 +40,20 @@ lemma egz_n_eq_3 (f : Fin 5 → ℤ) :
   let r : Fin 5 → Fin 3 := fun idx => ⟨(f idx % 3).toNat, by omega⟩
   obtain ⟨i, j, k, hij, hjk, hmod⟩ := egz_mod3_pigeonhole (r 0) (r 1) (r 2) (r 3) (r 4)
   refine ⟨i, j, k, hij, hjk, ?_⟩
-  fin_cases i <;> fin_cases j <;> fin_cases k <;> simp_all [tuple5, r] <;> omega
+  have hr : ∀ x : Fin 5, ((tuple5 (r 0) (r 1) (r 2) (r 3) (r 4) x).val : ℤ) = f x % 3 := by
+    intro x
+    have hx : tuple5 (r 0) (r 1) (r 2) (r 3) (r 4) x = r x := by fin_cases x <;> rfl
+    rw [hx]
+    change ((f x % 3).toNat : ℤ) = f x % 3
+    omega
+  have hi := hr i
+  have hj := hr j
+  have hk := hr k
+  have hmodZ : (((tuple5 (r 0) (r 1) (r 2) (r 3) (r 4) i).val : ℤ) +
+      ((tuple5 (r 0) (r 1) (r 2) (r 3) (r 4) j).val : ℤ) +
+      ((tuple5 (r 0) (r 1) (r 2) (r 3) (r 4) k).val : ℤ)) % 3 = 0 := by
+    exact_mod_cast hmod
+  omega
 
 /-- [G3] OPEN BOUNTY (`sorry`) | Prime case via Chevalley–Warning / Cauchy–Davenport. -/
 lemma egz_prime_case (p : ℕ) (hp : Nat.Prime p) (f : Fin (2 * p - 1) → ℤ) :
