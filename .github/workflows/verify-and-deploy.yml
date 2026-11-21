@@ -36,10 +36,29 @@ jobs:
         run: |
           git show "origin/${{ github.base_ref }}:ledger/ledger.json" > /tmp/base_ledger.json || true
 
-      - name: Install Lean 4 (elan + lake), fetch Mathlib cache & run `lake build`
-        uses: leanprover/lean-action@v1
+      - name: Install elan & Lean 4 Toolchain
+        run: |
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+          "$HOME/.elan/bin/lean" --version
+
+      - name: Cache Lean 4 & Mathlib (.lake)
+        uses: actions/cache@v4
         with:
-          use-mathlib-cache: true
+          path: |
+            .lake
+            ~/.elan
+          key: lean4-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lakefile.toml') }}
+          restore-keys: |
+            lean4-${{ runner.os }}-
+
+      - name: Fetch Mathlib4 Precompiled Cache & Run Real `lake build`
+        run: |
+          if [ ! -f lake-manifest.json ]; then
+            lake update mathlib
+          fi
+          lake exe cache get
+          lake build
 
       - name: Run Real Lean 4 Kernel `#print axioms` Audit
         run: |
