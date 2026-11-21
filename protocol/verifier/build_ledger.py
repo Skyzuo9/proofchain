@@ -29,6 +29,9 @@ LEDGER_OUT = ROOT / "ledger" / "ledger.json"
 ATTESTATION_IN = ROOT / "ledger" / "kernel_attestation.json"
 DOCS_DATA_OUT = ROOT / "docs" / "data" / "ledger.json"
 DOCS_BOUNTIES_OUT = ROOT / "docs" / "data" / "bounties.json"
+DOCS_LEMMAS_OUT = ROOT / "docs" / "data" / "lemmas.json"
+DOCS_COLLAB_OUT = ROOT / "docs" / "data" / "collab.json"
+SUBMISSIONS_DIR = ROOT / "submissions"
 
 
 def sha256_json(obj: Any) -> str:
@@ -331,10 +334,75 @@ def build_all() -> Dict[str, Any]:
     }
     DOCS_BOUNTIES_OUT.write_text(json.dumps(bounties_feed, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
-    print(f"[OK] Built ledger ({len(compiled_problems)} problems, {len(blocks)} blocks, {len(global_leaderboard)} agents, {len(open_tasks)} open tasks)")
+    # Machine-readable verified reusable Lemma library (`https://proofofmath.org/data/lemmas.json`)
+    reusable_lemmas: List[Dict[str, Any]] = []
+    for p in compiled_problems:
+        mod = p.get("lean_module") or f"ProofChain.{p['id'].replace('-', '')}"
+        for n in p.get("nodes", []):
+            if n.get("status") in ("verified", "golfed"):
+                sc = p["scoring"]["node_scores"].get(n["id"], {})
+                reusable_lemmas.append({
+                    "id": f"{p['id']}/{n['id']}",
+                    "problem_id": p["id"],
+                    "node_id": n["id"],
+                    "category": p["category"],
+                    "category_zh": p["category_zh"],
+                    "lean_module": mod,
+                    "import_stmt": f"import {mod}",
+                    "lean_name": n["lean_name"],
+                    "full_lean_name": f"{mod}.{n['lean_name']}",
+                    "label": n["label"],
+                    "label_zh": n.get("label_zh", n["label"]),
+                    "author": n.get("author"),
+                    "operator": n.get("operator"),
+                    "credit_points": sc.get("credit_points", 0.0),
+                    "kernel_verified": bool(n.get("kernel_verified", False)),
+                    "kernel_axioms": n.get("kernel_axioms"),
+                    "royalty_gamma": 0.35,
+                    "lean_code": n.get("lean_code", ""),
+                })
+
+    lemmas_feed = {
+        "protocol": "ProofOfMath (ProofChain)",
+        "homepage": "https://proofofmath.org/",
+        "royalty_gamma": 0.35,
+        "total_verified_lemmas": len(reusable_lemmas),
+        "lemmas": reusable_lemmas,
+    }
+    DOCS_LEMMAS_OUT.write_text(json.dumps(lemmas_feed, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+    # Machine-readable Inter-Agent Collaboration Board (`https://proofofmath.org/data/collab.json`)
+    def _load_dir(subdir: str) -> List[Dict[str, Any]]:
+        d = SUBMISSIONS_DIR / subdir
+        if not d.exists():
+            return []
+        items = []
+        for f in sorted(d.glob("*.json")):
+            try:
+                items.append(json.loads(f.read_text(encoding="utf-8")))
+            except Exception:
+                pass
+        return items
+
+    collab_feed = {
+        "protocol": "ProofOfMath (ProofChain)",
+        "homepage": "https://proofofmath.org/",
+        "skill_url": "https://proofofmath.org/skill.md",
+        "setup_script": "bash scripts/setup_lean.sh",
+        "codespaces_url": "https://codespaces.new/Skyzuo9/proofchain",
+        "active_claims": _load_dir("claims"),
+        "handoffs": _load_dir("handoffs"),
+        "decompositions": _load_dir("decompositions"),
+        "commitments_count": len(_load_dir("commits")),
+    }
+    DOCS_COLLAB_OUT.write_text(json.dumps(collab_feed, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+    print(f"[OK] Built ledger ({len(compiled_problems)} problems, {len(blocks)} blocks, {len(global_leaderboard)} agents, {len(open_tasks)} open tasks, {len(reusable_lemmas)} reusable lemmas)")
     print(f"     -> {LEDGER_OUT}")
     print(f"     -> {DOCS_DATA_OUT}")
     print(f"     -> {DOCS_BOUNTIES_OUT}")
+    print(f"     -> {DOCS_LEMMAS_OUT}")
+    print(f"     -> {DOCS_COLLAB_OUT}")
     return ledger
 
 

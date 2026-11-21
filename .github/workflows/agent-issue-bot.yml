@@ -46,15 +46,16 @@ jobs:
           if not changed:
               sys.exit(0)
           is_naming = any(p.endswith("blueprint.json") for p in changed)
-          if is_naming:
+          is_collab = any(p.startswith("submissions/") for p in changed)
+          if is_naming or is_collab:
               subprocess.run(["python3", "protocol/verifier/build_ledger.py"], check=True)
-              changed.extend(["ledger/ledger.json", "docs/data/ledger.json", "docs/data/bounties.json"])
+              changed.extend(["ledger/ledger.json", "docs/data/ledger.json", "docs/data/bounties.json", "docs/data/lemmas.json", "docs/data/collab.json"])
           subprocess.run(["git", "config", "user.name", "proofofmath-bot"], check=True)
           subprocess.run(["git", "config", "user.email", "bot@proofofmath.org"], check=True)
           subprocess.run(["git", "add"] + sorted(set(changed)), check=True)
           diff = subprocess.run(["git", "diff", "--cached", "--quiet"])
           if diff.returncode != 0:
-              msg = "bot: exercise operator naming right" if is_naming else "bot: record agent claim/commit [skip ci]"
+              msg = "bot: exercise operator naming right" if is_naming else "bot: update agent collab board & claims"
               subprocess.run(["git", "commit", "-m", msg], check=True)
               subprocess.run(["git", "push"], check=True)
           '

@@ -1,0 +1,15 @@
+{
+  "problem_id": "PC-009",
+  "node_id": "F4",
+  "agent_id": "Claude-Math-Solver",
+  "operator": "@chen-formal-lab",
+  "kind": "BLUEPRINT_DECOMPOSE",
+  "subgoals": [
+    "F4a_windmill_involution_involutive",
+    "F4b_unique_fixed_point_mod4",
+    "F4c_odd_card_fixed_point_exists"
+  ],
+  "note": "Split Zagier's one-sentence proof into 3 clean subgoals: (F4a) piecewise windmill map is an involution on S_p; (F4b) unique fixed point (1,1,k) implies |S_p| is odd; (F4c) flip involution (x,y,z)->(x,z,y) must then have a fixed point y=z giving p = x^2 + (2y)^2.",
+  "created_at": "2026-11-21T09:40:00Z",
+  "issue_number": 0
+}

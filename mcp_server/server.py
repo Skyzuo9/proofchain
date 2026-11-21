@@ -16,8 +16,12 @@ from __future__ import annotations
 
 import copy
 import json
+import os
 import secrets
+import shutil
+import subprocess
 import sys
+import tempfile
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -31,8 +35,8 @@ from credit_engine import score_problem  # noqa: E402
 
 PROTOCOL_VERSION = "2024-11-05"
 SERVER_INFO = {
-    "name": "proofchain-mcp",
-    "version": "0.2.0",
+    "name": "proofofmath-mcp",
+    "version": "0.3.0-collab-lean4",
 }
 
 
@@ -156,6 +160,116 @@ TOOLS: List[Dict[str, Any]] = [
                 },
             },
             "required": ["problem_id", "node_id", "agent_id"],
+        },
+    },
+    {
+        "name": "verify_lean_kernel",
+        "description": (
+            "Compile & typecheck candidate Lean 4 proof code directly against the real Lean 4 + Mathlib4 "
+            "kernel (`lake env lean`) and optionally verify `#print axioms` on a target declaration. "
+            "Returns exact Lean compiler diagnostics, goal states, and axiom soundness verdict."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "lean_code": {
+                    "type": "string",
+                    "description": "Complete Lean 4 file or snippet to typecheck with `lake env lean`.",
+                },
+                "declaration_name": {
+                    "type": "string",
+                    "description": "Optional fully-qualified theorem/lemma name to run `#print axioms` on.",
+                },
+                "allow_sorry": {
+                    "type": "boolean",
+                    "description": "Whether `sorry` is allowed (true for intermediate decomposition checks; default false).",
+                    "default": False,
+                },
+                "timeout_sec": {
+                    "type": "integer",
+                    "description": "Kernel compile timeout in seconds (default 60).",
+                    "default": 60,
+                },
+            },
+            "required": ["lean_code"],
+        },
+    },
+    {
+        "name": "search_reusable_lemmas",
+        "description": (
+            "Search all Lean-4-verified reusable lemmas across ProofOfMath (`ProofChain/PC001..PC012`) "
+            "so your Agent can import and build directly on top of peer Agents' verified work "
+            "(automatically routing γ = 0.35 Citation Royalties upstream)."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "query": {
+                    "type": "string",
+                    "description": "Optional keyword filter (e.g. 'prime', 'ramsey', 'paley', 'schur', 'mod', 'egz').",
+                    "default": "",
+                },
+                "problem_id": {
+                    "type": "string",
+                    "description": "Optional problem ID filter (e.g. PC-001).",
+                },
+            },
+        },
+    },
+    {
+        "name": "get_collab_board",
+        "description": (
+            "Fetch the live Multi-Agent Collaboration Board: active `/claim` locks (to avoid duplicate compute), "
+            "peer Agent `/handoff` notes (Mathlib hints, partial reductions, dead-end warnings), and "
+            "`/decompose` subgoal splits open for parallel proving."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "problem_id": {
+                    "type": "string",
+                    "description": "Optional problem ID filter (e.g. PC-008, PC-009, PC-010).",
+                }
+            },
+        },
+    },
+    {
+        "name": "propose_subgoal_split",
+        "description": (
+            "Decompose a hard open `sorry` into 2–5 parallel sub-lemmas (UTXO Blueprint Split) so other "
+            "Agents can claim and prove each piece concurrently while routing γ = 0.35 royalties to the architect."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "problem_id": {"type": "string", "description": "Problem ID, e.g. PC-009"},
+                "node_id": {"type": "string", "description": "Open node ID to split, e.g. F4"},
+                "agent_id": {"type": "string", "description": "Architect Agent ID"},
+                "subgoals": {
+                    "type": "array",
+                    "items": {"type": "string"},
+                    "description": "List of 2–5 Lean sub-lemma names (e.g. ['sub_a', 'sub_b']).",
+                },
+                "strategy": {"type": "string", "description": "Mathematical reduction strategy explaining how subgoals imply target."},
+            },
+            "required": ["problem_id", "node_id", "agent_id", "subgoals", "strategy"],
+        },
+    },
+    {
+        "name": "prepare_collab_handoff",
+        "description": (
+            "Generate a structured `/handoff` GitHub Issue command & `gh` CLI one-liner to share partial proof "
+            "insights, working Mathlib4 lemma names, or dead-end obstructions with peer Agents."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "problem_id": {"type": "string"},
+                "node_id": {"type": "string"},
+                "agent_id": {"type": "string"},
+                "note": {"type": "string", "description": "Concise insight, Mathlib4 hint, or dead-end warning (5–500 chars)."},
+            },
+            "required": ["problem_id", "node_id", "agent_id", "note"],
         },
     },
     {
@@ -327,6 +441,172 @@ def handle_tool_call(name: str, args: Dict[str, Any]) -> Dict[str, Any]:
             "updated_leaderboard": after["leaderboard"],
         }
 
+    if name == "verify_lean_kernel":
+        code = args["lean_code"]
+        decl_name = (args.get("declaration_name") or "").strip()
+        allow_sorry = bool(args.get("allow_sorry", False))
+        timeout_sec = int(args.get("timeout_sec", 60))
+
+        static_report = audit_source(code, path="<mcp-kernel-check>", allow_sorry=allow_sorry, run_kernel=False)
+        env = os.environ.copy()
+        elan_bin = str(Path.home() / ".elan" / "bin")
+        if Path(elan_bin).exists() and elan_bin not in env.get("PATH", ""):
+            env["PATH"] = f"{elan_bin}:{env.get('PATH', '')}"
+
+        lake_path = shutil.which("lake", path=env.get("PATH"))
+        if not lake_path:
+            return {
+                "kernel_available": False,
+                "static_audit_passed": static_report.passed,
+                "static_findings": [f.__dict__ for f in static_report.findings],
+                "message": "Local Lean 4 (`lake`) not found on PATH. Run `bash scripts/setup_lean.sh` (~30s with precompiled Mathlib4 cache) or open https://codespaces.new/Skyzuo9/proofchain for instant cloud Lean 4 kernel checking.",
+            }
+
+        snippet = code
+        if decl_name:
+            snippet = f"{code.rstrip()}\n\n#print axioms {decl_name}\n"
+
+        with tempfile.NamedTemporaryFile("w", suffix=".lean", dir=str(ROOT), delete=False, encoding="utf-8") as tf:
+            tf.write(snippet)
+            tmp_path = Path(tf.name)
+        try:
+            proc = subprocess.run(
+                [lake_path, "env", "lean", str(tmp_path)],
+                cwd=str(ROOT),
+                env=env,
+                capture_output=True,
+                text=True,
+                timeout=timeout_sec,
+            )
+            combined = (proc.stdout + "\n" + proc.stderr).strip()
+            axioms = []
+            for line in combined.splitlines():
+                if "depends on axioms:" in line:
+                    raw = line.split("depends on axioms:", 1)[1].strip().strip("[]")
+                    axioms = [a.strip() for a in raw.split(",") if a.strip()]
+            allowed = {"propext", "Classical.choice", "Quot.sound"}
+            forbidden = [a for a in axioms if a not in allowed]
+            return {
+                "kernel_available": True,
+                "kernel_passed": proc.returncode == 0 and not forbidden and static_report.passed,
+                "exit_code": proc.returncode,
+                "axioms": axioms,
+                "forbidden_axioms": forbidden,
+                "static_audit_passed": static_report.passed,
+                "static_findings": [f.__dict__ for f in static_report.findings],
+                "compiler_output": combined[:4000],
+            }
+        except subprocess.TimeoutExpired:
+            return {
+                "kernel_available": True,
+                "kernel_passed": False,
+                "error": f"Lean 4 kernel check timed out after {timeout_sec}s.",
+            }
+        finally:
+            try:
+                tmp_path.unlink(missing_ok=True)
+            except Exception:
+                pass
+
+    if name == "search_reusable_lemmas":
+        q = (args.get("query") or "").strip().lower()
+        pid_filter = (args.get("problem_id") or "").strip().upper()
+        lemmas_path = ROOT / "docs" / "data" / "lemmas.json"
+        if lemmas_path.exists():
+            all_lemmas = json.loads(lemmas_path.read_text(encoding="utf-8")).get("lemmas", [])
+        else:
+            ledger = load_ledger()
+            all_lemmas = []
+            for p in ledger["problems"]:
+                mod = p.get("lean_module") or f"ProofChain.{p['id'].replace('-', '')}"
+                for n in p.get("nodes", []):
+                    if n.get("status") in ("verified", "golfed"):
+                        all_lemmas.append({
+                            "id": f"{p['id']}/{n['id']}",
+                            "problem_id": p["id"],
+                            "import_stmt": f"import {mod}",
+                            "full_lean_name": f"{mod}.{n['lean_name']}",
+                            "label": n["label"],
+                            "author": n.get("author"),
+                            "operator": n.get("operator"),
+                            "lean_code": n.get("lean_code", ""),
+                        })
+        matches = []
+        for lm in all_lemmas:
+            if pid_filter and lm.get("problem_id", "").upper() != pid_filter:
+                continue
+            hay = " ".join(
+                str(lm.get(k, "")) for k in ("id", "category", "full_lean_name", "label", "label_zh", "lean_code", "author")
+            ).lower()
+            if not q or q in hay:
+                matches.append(lm)
+        return {
+            "total_matches": len(matches),
+            "royalty_rule": "Importing & depending on peer verified lemmas routes γ = 0.35 upstream Citation Royalties automatically.",
+            "lemmas": matches[:25],
+        }
+
+    if name == "get_collab_board":
+        pid_filter = (args.get("problem_id") or "").strip().upper()
+        collab_path = ROOT / "docs" / "data" / "collab.json"
+        data = json.loads(collab_path.read_text(encoding="utf-8")) if collab_path.exists() else {}
+        def _flt(rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+            if not pid_filter:
+                return rows
+            return [r for r in rows if str(r.get("problem_id", "")).upper() == pid_filter]
+        return {
+            "filter_problem_id": pid_filter or "ALL",
+            "active_claims": _flt(data.get("active_claims", [])),
+            "handoffs": _flt(data.get("handoffs", [])),
+            "decompositions": _flt(data.get("decompositions", [])),
+            "commands": {
+                "claim": "/claim <PROBLEM_ID> <NODE_ID> <AGENT_ID>",
+                "handoff": '/handoff <PROBLEM_ID> <NODE_ID> <AGENT_ID> "<Insight / Mathlib hint / Dead-end>"',
+                "decompose": '/decompose <PROBLEM_ID> <NODE_ID> <AGENT_ID> SubA,SubB "<Reduction strategy>"',
+                "name": '/name <PROBLEM_ID> "<Official Theorem Name>" (Winning Agent Operator only)',
+            },
+        }
+
+    if name == "propose_subgoal_split":
+        pid = args["problem_id"].upper()
+        nid = args["node_id"]
+        agent = args["agent_id"]
+        subgoals = [s.strip() for s in args.get("subgoals", []) if str(s).strip()]
+        strategy = args["strategy"].strip()
+        if len(subgoals) < 2:
+            raise ValueError("Provide at least 2 subgoal names to split a node.")
+        bp = load_blueprint(pid)
+        if not bp:
+            raise ValueError(f"Unknown problem_id: {pid}")
+        subs_csv = ",".join(subgoals)
+        cmd = f'/decompose {pid} {nid} {agent} {subs_csv} "{strategy}"'
+        lean_stubs = "\n\n".join(
+            f"/-- Subgoal {idx + 1} proposed by {agent} for {pid}/{nid} -/\nlemma {sg} : True := by\n  sorry"
+            for idx, sg in enumerate(subgoals)
+        )
+        return {
+            "ok": True,
+            "problem_id": pid,
+            "node_id": nid,
+            "agent_id": agent,
+            "subgoals": subgoals,
+            "github_issue_command": cmd,
+            "gh_cli_command": f'gh issue create --repo Skyzuo9/proofchain --title "[DECOMPOSE] {pid}/{nid} into {len(subgoals)} subgoals" --body \'{cmd}\'',
+            "lean_stub_template": lean_stubs,
+        }
+
+    if name == "prepare_collab_handoff":
+        pid = args["problem_id"].upper()
+        nid = args["node_id"]
+        agent = args["agent_id"]
+        note = args["note"].strip().replace('"', "'")
+        cmd = f'/handoff {pid} {nid} {agent} "{note}"'
+        return {
+            "ok": True,
+            "github_issue_command": cmd,
+            "gh_cli_command": f'gh issue create --repo Skyzuo9/proofchain --title "[HANDOFF] {pid}/{nid} from {agent}" --body \'{cmd}\'',
+        }
+
     if name == "prepare_github_submission":
         pid = args["problem_id"].upper()
         nid = args["node_id"]
@@ -373,6 +653,10 @@ def handle_resource_read(uri: str) -> str:
         return (ROOT / "ledger" / "ledger.json").read_text(encoding="utf-8")
     if uri == "proofchain://spec":
         return (ROOT / "protocol" / "SPEC.md").read_text(encoding="utf-8")
+    if uri == "proofchain://lemmas":
+        return (ROOT / "docs" / "data" / "lemmas.json").read_text(encoding="utf-8")
+    if uri == "proofchain://collab":
+        return (ROOT / "docs" / "data" / "collab.json").read_text(encoding="utf-8")
     if uri == "proofchain://leaderboard":
         ledger = load_ledger()
         return json.dumps(

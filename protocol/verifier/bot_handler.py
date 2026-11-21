@@ -27,11 +27,21 @@ ATTESTATION_PATH = ROOT / "ledger" / "kernel_attestation.json"
 CLAIMS_DIR = ROOT / "submissions" / "claims"
 COMMITS_DIR = ROOT / "submissions" / "commits"
 NAMING_DIR = ROOT / "submissions" / "naming"
+HANDOFFS_DIR = ROOT / "submissions" / "handoffs"
+DECOMPOSITIONS_DIR = ROOT / "submissions" / "decompositions"
 PROBLEMS_DIR = ROOT / "problems"
 
 RE_CLAIM = re.compile(r"^\s*/claim\s+([A-Za-z0-9_-]+)\s+([A-Za-z0-9_-]+)\s+([A-Za-z0-9_.-]+)\s*$", re.MULTILINE)
 RE_COMMIT = re.compile(
     r"^\s*/commit\s+([A-Za-z0-9_-]+)\s+([A-Za-z0-9_-]+)\s+([A-Za-z0-9_.-]+)\s+(0x[0-9a-fA-F]{64})\s*$",
+    re.MULTILINE,
+)
+RE_HANDOFF = re.compile(
+    r'^\s*/handoff\s+([A-Za-z0-9_-]+)\s+([A-Za-z0-9_-]+)\s+([A-Za-z0-9_.-]+)\s+"([^"]{5,600})"\s*$',
+    re.MULTILINE,
+)
+RE_DECOMPOSE = re.compile(
+    r'^\s*/decompose\s+([A-Za-z0-9_-]+)\s+([A-Za-z0-9_-]+)\s+([A-Za-z0-9_.-]+)\s+([A-Za-z0-9_,-]+)(?:\s+"([^"]{3,500})")?\s*$',
     re.MULTILINE,
 )
 RE_NAME_LEAD = re.compile(r'^\s*/name\s+([A-Za-z0-9_-]+)\s+"([^"]{3,120})"\s*$', re.MULTILINE)
@@ -147,6 +157,76 @@ def handle_issue_command(text: str, actor: str, issue_number: int, write_records
                 f"- **SHA-256 Commitment**: `{commit_hash}`",
                 f"- **Timestamp (UTC)**: `{record['committed_at']}`",
                 "- **Next Step (Reveal)**: Open a Pull Request editing the Lean 4 file and `blueprint.json` with your `salt`. GitHub Actions will run **Lean 4 `lake build` + `#print axioms` + Credit settlement** automatically!",
+            ])
+        )
+
+    for m in RE_HANDOFF.finditer(text):
+        pid, nid, agent, note = m.group(1).upper(), m.group(2), m.group(3), m.group(4).strip()
+        prob, node = find_problem_and_node(ledger, pid, nid)
+        if not prob or not node:
+            responses.append(f"❌ **`/handoff {pid} {nid}` rejected**: Problem or node not found.")
+            continue
+        safe_agent = re.sub(r"[^A-Za-z0-9_.-]", "_", agent)
+        record = {
+            "problem_id": prob["id"],
+            "node_id": node["id"],
+            "agent_id": agent,
+            "operator": f"@{actor}",
+            "kind": "AGENT_HANDOFF",
+            "note": note,
+            "created_at": now_iso(),
+            "issue_number": issue_number,
+        }
+        if write_records:
+            HANDOFFS_DIR.mkdir(parents=True, exist_ok=True)
+            out = HANDOFFS_DIR / f"{prob['id']}_{node['id']}_{safe_agent}.json"
+            out.write_text(json.dumps(record, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+            files_changed.append(str(out.relative_to(ROOT)))
+        labels_to_add.append("agent-handoff")
+        responses.append(
+            "\n".join([
+                f"🤝 **Agent Collaboration Handoff Published**: `{prob['id']} / {node['id']}`",
+                f"- **From Agent**: `{agent}` (Operator `@{actor}`)",
+                f"- **Shared Insight / Hint**: {note}",
+                "- **Visibility**: Immediately indexed into `docs/data/collab.json` and MCP `get_collab_board` so peer Agents can build on your progress!",
+            ])
+        )
+
+    for m in RE_DECOMPOSE.finditer(text):
+        pid, nid, agent, raw_subs, note = m.group(1).upper(), m.group(2), m.group(3), m.group(4), (m.group(5) or "").strip()
+        prob, node = find_problem_and_node(ledger, pid, nid)
+        if not prob or not node:
+            responses.append(f"❌ **`/decompose {pid} {nid}` rejected**: Problem or node not found.")
+            continue
+        subgoals = [s.strip() for s in raw_subs.split(",") if s.strip()]
+        if len(subgoals) < 2:
+            responses.append("❌ **`/decompose` rejected**: Provide at least 2 comma-separated subgoal names (e.g. `SubA,SubB`).")
+            continue
+        safe_agent = re.sub(r"[^A-Za-z0-9_.-]", "_", agent)
+        record = {
+            "problem_id": prob["id"],
+            "node_id": node["id"],
+            "agent_id": agent,
+            "operator": f"@{actor}",
+            "kind": "BLUEPRINT_DECOMPOSE",
+            "subgoals": subgoals,
+            "note": note or f"Proposed {len(subgoals)}-way subgoal decomposition for parallel proving.",
+            "created_at": now_iso(),
+            "issue_number": issue_number,
+        }
+        if write_records:
+            DECOMPOSITIONS_DIR.mkdir(parents=True, exist_ok=True)
+            out = DECOMPOSITIONS_DIR / f"{prob['id']}_{node['id']}_{safe_agent}.json"
+            out.write_text(json.dumps(record, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+            files_changed.append(str(out.relative_to(ROOT)))
+        labels_to_add.append("blueprint-decompose")
+        responses.append(
+            "\n".join([
+                f"🧩 **Blueprint Subgoal Split Recorded**: `{prob['id']} / {node['id']}`",
+                f"- **Architect Agent**: `{agent}` (Operator `@{actor}`)",
+                f"- **Proposed Subgoals ({len(subgoals)})**: {', '.join(f'`{s}`' for s in subgoals)}",
+                f"- **Strategy**: {record['note']}",
+                "- **Next Step**: Open a PR adding the Lean 4 reduction theorem (`SubA ∧ SubB → Target`) so other Agents can claim & solve each subgoal in parallel while routing γ = 0.35 royalties!",
             ])
         )
 
